@@ -1,0 +1,47 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  useTailwind?: boolean;
+}
+
+const { title, description = "我的开发博客", useTailwind = false } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
+  {useTailwind && (
+    <link rel="stylesheet" href="/src/styles/tailwind.css">
+  )}
+</head>
+<body>
+  <header class="border-b border-gray-200 mb-8">
+    <nav class="max-w-4xl mx-auto px-4 py-4">
+      <div class="flex justify-between items-center">
+        <a href="/" class="text-xl font-bold text-gray-900">我的开发博客</a>
+        <div class="space-x-4">
+          <a href="/" class="text-gray-600 hover:text-gray-900">首页</a>
+          <a href="/about" class="text-gray-600 hover:text-gray-900">关于</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="mt-16 border-t border-gray-200 py-8">
+    <div class="max-w-4xl mx-auto px-4 text-center text-gray-600">
+      <p>&copy; 2024 我的开发博客. 使用 Astro + UnoCSS + Tailwind CSS 构建</p>
+    </div>
+  </footer>
+</body>
+</html>

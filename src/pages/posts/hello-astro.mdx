@@ -1,0 +1,82 @@
+---
+layout: ../../components/layout/BaseLayout.astro
+title: 'Hello Astro!'
+description: '探索 Astro 的强大功能和现代开发体验'
+pubDate: 2024-01-15
+author: '博主'
+tags: ['Astro', 'Web开发', '前端']
+---
+
+import CounterReact from '../../components/islands/CounterReact.tsx';
+import ThemeSwitcherVue from '../../components/islands/ThemeSwitcherVue.vue';
+import ButtonUno from '../../components/ui/ButtonUno.astro';
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+
+# Hello Astro! 🚀
+
+欢迎来到我的第一篇 Astro 博客文章！在这篇文章中，我将分享 Astro 的一些令人兴奋的特性。
+
+## 什么是 Astro？
+
+Astro 是一个现代的静态站点生成器，它允许你：
+
+- 🏝️ **组件岛屿架构**：只在需要时加载 JavaScript
+- 🎨 **多框架支持**：在同一个项目中使用 React、Vue、Svelte 等
+- ⚡ **极致性能**：默认生成零 JavaScript 的静态 HTML
+- 🔧 **开发体验**：出色的 TypeScript 支持和开发工具
+
+## 交互式组件演示
+
+下面是一些在 MDX 中嵌入的交互式组件：
+
+### React 计数器
+
+<CounterReact client:load initialCount={10} />
+
+### Vue 主题切换器
+
+<ThemeSwitcherVue client:load />
+
+## 代码示例
+
+这是一个简单的 Astro 组件示例：
+
+```astro
+---
+// Component Script (runs at build time)
+const greeting = 'Hello, Astro!';
+---
+
+<!-- Component Template -->
+<div class="greeting">
+  <h1>{greeting}</h1>
+  <p>这是一个 Astro 组件</p>
+</div>
+
+<style>
+  .greeting {
+    padding: 1rem;
+    border: 1px solid #ccc;
+  }
+</style>
+```
+
+## 为什么选择 Astro？
+
+1. **性能优先**：Astro 生成的网站加载速度极快
+2. **开发者体验**：熟悉的语法，强大的工具链
+3. **灵活性**：可以渐进式地添加交互性
+4. **SEO 友好**：服务端渲染，搜索引擎优化
+
+## 总结
+
+Astro 为现代 Web 开发提供了一个完美的平衡点：既有静态站点的性能优势，又保留了现代框架的开发体验。
+
+<div class="text-center mt-8">
+  <ButtonUno href="/" variant="primary">
+    返回首页
+  </ButtonUno>
+</div>
+
+</div>

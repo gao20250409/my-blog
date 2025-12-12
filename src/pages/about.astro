@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import CardTailwind from '../components/ui/CardTailwind.astro';
+---
+
+<BaseLayout title="关于我 - 我的开发博客" useTailwind={true}>
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">关于我</h1>
+      <p class="text-xl text-gray-600">
+        全栈开发者，热爱探索新技术和分享开发经验
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+      <CardTailwind title="技术栈">
+        <ul class="space-y-2">
+          <li class="flex items-center">
+            <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+            前端：React, Vue, Astro, TypeScript
+          </li>
+          <li class="flex items-center">
+            <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+            CSS：Tailwind CSS, UnoCSS, Sass
+          </li>
+          <li class="flex items-center">
+            <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+            后端：Node.js, Python, Go
+          </li>
+          <li class="flex items-center">
+            <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+            数据库：PostgreSQL, MongoDB, Redis
+          </li>
+        </ul>
+      </CardTailwind>
+
+      <CardTailwind title="关于这个博客">
+        <p class="mb-4">
+          这个博客使用 <strong>Astro</strong> 构建，展示了现代前端开发的最佳实践：
+        </p>
+        <ul class="space-y-2 text-sm">
+          <li>• <strong>多框架支持</strong>：React 和 Vue 组件岛屿</li>
+          <li>• <strong>双 CSS 框架</strong>：UnoCSS + Tailwind CSS</li>
+          <li>• <strong>类型安全</strong>：TypeScript + Content Collections</li>
+          <li>• <strong>性能优化</strong>：静态生成 + 选择性水合</li>
+        </ul>
+      </CardTailwind>
+    </div>
+
+    <CardTailwind title="联系方式" className="text-center">
+      <p class="mb-6">欢迎与我交流技术话题或合作机会</p>
+      <div class="flex justify-center space-x-4">
+        <a href="mailto:hello@example.com" class="tailwind-btn">
+          📧 邮箱
+        </a>
+        <a href="https://github.com" class="tailwind-btn">
+          🐙 GitHub
+        </a>
+        <a href="https://twitter.com" class="tailwind-btn">
+          🐦 Twitter
+        </a>
+      </div>
+    </CardTailwind>
+  </div>
+</BaseLayout>

@@ -1,16 +1,93 @@
 ---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ButtonUno from '../components/ui/ButtonUno.astro';
+import CounterReact from '../components/islands/CounterReact.tsx';
+import ThemeSwitcherVue from '../components/islands/ThemeSwitcherVue.vue';
 
+// 模拟文章数据
+const posts = [
+  {
+    slug: 'hello-astro',
+    title: 'Hello Astro!',
+    description: '探索 Astro 的强大功能和现代开发体验',
+    pubDate: new Date('2024-01-15'),
+    tags: ['Astro', 'Web开发', '前端']
+  },
+  {
+    slug: 'unocss-vs-tailwind',
+    title: 'UnoCSS vs Tailwind CSS',
+    description: '比较两个流行的原子化 CSS 框架的优缺点',
+    pubDate: new Date('2024-01-10'),
+    tags: ['CSS', 'UnoCSS', 'Tailwind']
+  }
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="首页 - 我的开发博客">
+  <div class="max-w-4xl mx-auto px-4">
+    <!-- 头部介绍 -->
+    <section class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">
+        欢迎来到我的开发博客
+      </h1>
+      <p class="text-xl text-gray-600 mb-6">
+        探索现代前端技术，分享开发经验和最佳实践
+      </p>
+      <div class="flex justify-center space-x-4">
+        <ButtonUno variant="primary" href="/about">
+          了解更多
+        </ButtonUno>
+        <ButtonUno variant="secondary" href="#posts">
+          查看文章
+        </ButtonUno>
+      </div>
+    </section>
+
+    <!-- 交互式组件展示 -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">
+        交互式组件岛屿
+      </h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <CounterReact client:load initialCount={5} />
+        <ThemeSwitcherVue client:load />
+      </div>
+    </section>
+
+    <!-- 文章列表 -->
+    <section id="posts">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">
+        最新文章
+      </h2>
+      <div class="space-y-6">
+        {posts.map((post) => (
+          <article class="card hover:shadow-xl transition-shadow">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-xl font-semibold text-gray-900">
+                <a href={`/posts/${post.slug}`} class="hover:text-primary transition-colors">
+                  {post.title}
+                </a>
+              </h3>
+              <time class="text-sm text-gray-500">
+                {post.pubDate.toLocaleDateString('zh-CN')}
+              </time>
+            </div>
+            <p class="text-gray-600 mb-4">{post.description}</p>
+            <div class="flex justify-between items-center">
+              <div class="flex space-x-2">
+                {post.tags.map((tag) => (
+                  <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <ButtonUno size="sm" href={`/posts/${post.slug}`}>
+                阅读更多
+              </ButtonUno>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

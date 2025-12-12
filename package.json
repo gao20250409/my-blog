@@ -1,5 +1,5 @@
 {
-  "name": "my-blog",
+  "name": "my-dev-blog",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -9,6 +9,20 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.16.5"
+    "astro": "^5.16.5",
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/react": "^4.0.0",
+    "@astrojs/vue": "^5.0.0",
+    "@astrojs/tailwind": "^6.0.0",
+    "@unocss/astro": "^0.62.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "vue": "^3.5.0",
+    "tailwindcss": "^3.4.0",
+    "unocss": "^0.62.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0"
   }
 }
