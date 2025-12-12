@@ -5,12 +5,9 @@ import react from '@astrojs/react';
 import vue from '@astrojs/vue';
 import tailwind from '@astrojs/tailwind';
 import UnoCSS from '@unocss/astro';
-import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'static',
-  adapter: vercel(),
   integrations: [
     mdx(),
     react(),
