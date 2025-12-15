@@ -1,22 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import react from '@astrojs/react';
-import vue from '@astrojs/vue';
-import tailwind from '@astrojs/tailwind';
-import UnoCSS from '@unocss/astro';
 
-// https://astro.build/config
+// 最简化配置，移除所有可能导致问题的集成
 export default defineConfig({
-  integrations: [
-    mdx(),
-    react(),
-    vue(),
-    tailwind({
-      applyBaseStyles: false, // 避免与 UnoCSS 冲突
-    }),
-    UnoCSS({
-      injectReset: true,
-    }),
-  ],
+  // 暂时移除所有集成来测试基本部署
 });
