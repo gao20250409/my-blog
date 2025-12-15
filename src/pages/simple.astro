@@ -1,0 +1,57 @@
+---
+// 最简单的测试页面
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 部署成功！</h1>
+        <p class="success">如果你能看到这个页面，说明 Astro 博客已经成功部署到 Vercel！</p>
+        
+        <h2>项目信息</h2>
+        <ul>
+            <li>框架：Astro 5.x</li>
+            <li>部署平台：Vercel</li>
+            <li>构建时间：{new Date().toLocaleString('zh-CN')}</li>
+        </ul>
+        
+        <h2>导航链接</h2>
+        <ul>
+            <li><a href="/">返回首页</a></li>
+            <li><a href="/about">关于页面</a></li>
+            <li><a href="/posts/hello-astro">示例文章</a></li>
+        </ul>
+        
+        <p><strong>注意：</strong>如果其他页面无法访问，可能是 CSS 框架配置问题。</p>
+    </div>
+</body>
+</html>
