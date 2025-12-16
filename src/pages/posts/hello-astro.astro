@@ -1,0 +1,108 @@
+---
+// Hello Astro 文章页面
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Astro! - 我的开发博客</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            color: #2c3e50; 
+            text-align: center; 
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        h2 { 
+            color: #34495e; 
+            border-bottom: 2px solid #3498db; 
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        .back-link {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 30px;
+            transition: background 0.3s ease;
+        }
+        .back-link:hover { 
+            background: #2980b9; 
+        }
+        .meta-info {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 8px;
+        }
+        .feature-list {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Hello Astro!</h1>
+        
+        <div class="meta-info">
+            <p>📅 发布于 2024年1月15日 | 👤 作者：博主 | 🏷️ 标签：Astro, Web开发, 前端</p>
+        </div>
+
+        <p>欢迎来到我的第一篇 Astro 博客文章！在这篇文章中，我将分享 Astro 的一些令人兴奋的特性。</p>
+
+        <h2>什么是 Astro？</h2>
+        <p>Astro 是一个现代的静态站点生成器，它为现代 Web 开发带来了革命性的变化。</p>
+
+        <div class="feature-list">
+            <h3>🌟 Astro 的核心特性：</h3>
+            <ul>
+                <li><strong>🏝️ 组件岛屿架构</strong>：只在需要时加载 JavaScript</li>
+                <li><strong>🎨 多框架支持</strong>：在同一个项目中使用 React、Vue、Svelte 等</li>
+                <li><strong>⚡ 极致性能</strong>：默认生成零 JavaScript 的静态 HTML</li>
+                <li><strong>🔧 开发体验</strong>：出色的 TypeScript 支持和开发工具</li>
+            </ul>
+        </div>
+
+        <h2>为什么选择 Astro？</h2>
+        <ol>
+            <li><strong>性能优先</strong>：Astro 生成的网站加载速度极快</li>
+            <li><strong>开发者体验</strong>：熟悉的语法，强大的工具链</li>
+            <li><strong>灵活性</strong>：可以渐进式地添加交互性</li>
+            <li><strong>SEO 友好</strong>：服务端渲染，搜索引擎优化</li>
+        </ol>
+
+        <h2>总结</h2>
+        <p>Astro 为现代 Web 开发提供了一个完美的平衡点：既有静态站点的性能优势，又保留了现代框架的开发体验。</p>
+
+        <div style="text-align: center;">
+            <a href="/" class="back-link">← 返回首页</a>
+        </div>
+    </div>
+</body>
+</html>

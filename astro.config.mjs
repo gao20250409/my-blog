@@ -1,7 +1,10 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
 
-// 最简化配置，移除所有可能导致问题的集成
+// 添加 MDX 支持以处理文章
 export default defineConfig({
-  // 暂时移除所有集成来测试基本部署
+  integrations: [
+    mdx(),
+  ],
 });
