@@ -2,11 +2,18 @@
 // 首页 - 包含文章列表
 const posts = [
   {
-    title: 'Hello Astro!',
-    description: '探索 Astro 的强大功能和现代开发体验',
-    url: '/posts/hello-astro',
-    date: '2024-01-15',
-    tags: ['Astro', 'Web开发', '前端']
+    title: '"attribute"和"property"有什么不同',
+    description: ' property 属于 DOM Object，atrribute 属于 HTML。',
+    url: '/posts/attribute-property',
+    date: '2025-12-16',
+    tags: ['attribute','property', 'Web开发', '前端', '面试']
+  },
+    {
+    title: '::before和:after中单冒号和双冒号的区别是什么',
+    description: '::表示伪元素， :表示伪类，是一种样式',
+    url: '/posts/before-after',
+    date: '2025-12-16',
+    tags: ['::before',':after', 'Web开发', '前端', '面试']
   }
 ];
 ---
@@ -165,29 +172,6 @@ const posts = [
                     </div>
                 </article>
             ))}
-        </div>
-
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="emoji">⚡</div>
-                <h3>极速加载</h3>
-                <p>Astro 静态生成，零 JavaScript 运行时</p>
-            </div>
-            <div class="feature-card">
-                <div class="emoji">🎨</div>
-                <h3>现代设计</h3>
-                <p>响应式布局，优雅的用户界面</p>
-            </div>
-            <div class="feature-card">
-                <div class="emoji">🔧</div>
-                <h3>易于维护</h3>
-                <p>TypeScript 支持，组件化开发</p>
-            </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 40px; opacity: 0.8;">
-            <p>构建时间：{new Date().toLocaleString('zh-CN')}</p>
-            <p>框架：Astro 5.x | 部署：Vercel</p>
         </div>
     </div>
 </body>
