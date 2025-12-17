@@ -1,0 +1,151 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BFC规范的理解</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 BFC规范的理解</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："BFC", Web开发, 前端,
+          面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、什么是 BFC？</h2>
+      <p>
+        BFC就相当于一个盒子，内部的元素与外界的元素互不干扰。它不会影响外部的布局，外部的布局也不会影响到它。
+      </p>
+      <h2>二、如何触发（创建）BFC？</h2>
+      <div class="feature-list">
+        <h3>🌟 触发方式（“浮绝溢显，内联块表柔”）：</h3>
+        <ul>
+          <li>
+            <strong>🏝️float ≠ none</strong>：如 float: left/right
+          </li>
+          <li>
+            <strong>🎨 position = absolute 或 fixed 脱离文档流的定位元素</strong
+            >
+          </li>
+          <li>
+            <strong
+              >⚡display = inline-block/ table-cell/ flex/grid/ flow-root</strong
+            >：block不触发，flow-root 是专为 BFC 设计
+          </li>
+          <li>
+            <strong>📋overflow ≠ visible </strong>：
+            最常用技巧：overflow:hidden/auto/scroll
+          </li>
+          <li>
+            <strong>🌐 contain = layout / content / paint </strong>：
+            （较新属性）
+          </li>
+        </ul>
+      </div>
+      <div class="feature-list">
+        <h3>🌟 推荐实践：</h3>
+        <ul>
+          <li>
+            <strong>⚡若只为创建 BFC 且不影响布局，优先使用：</strong><br />
+            display:flow-root; ✅ 最语义化，无副作用（现代浏览器支持好） 或<br
+            />
+            overflow: hidden; ✅ 兼容性好，但注意可能意外裁剪内容
+          </li>
+        </ul>
+      </div>
+      <h2>三、用途</h2>
+      <p>包浮防塌避覆盖（隔离、包裹、避让、防塌陷）</p>
+      <div>
+        <strong> 1️⃣ 防止外边距塌陷（Margin Collapse）</strong>：<br />👉
+        问题：相邻两个块级元素的上下 margin 会合并取最大值，而非相加。<br />✅
+        解决：使父元素形成 BFC，即可“包裹住”浮动子元素。
+      </div>
+      <div>
+        <strong> 2️⃣ 包含浮动元素（清除内部浮动）</strong>：<br />👉
+        问题：父元素高度塌陷（子元素 float 后脱离文档流）。<br />✅
+        解决：使父元素形成 BFC，即可“包裹住”浮动子元素。
+      </div>
+      <div>
+        <strong> 3️⃣ 阻止浮动元素覆盖</strong>：<br />👉 
+        问题：文字环绕浮动元素 → 非浮动块级盒子可能被浮动元素覆盖。<br />✅ 
+        解决：让非浮动元素创建 BFC，使其“感知”到浮动边界，不被覆盖。（
+        应用：经典左侧固定 + 右侧自适应布局（无需 flex/grid）。）
+      </div>
+      <div>
+        <strong>  4️⃣ 隔离布局影响</strong>：<br />👉
+        BFC 内部的浮动、margin 等不会影响外部元素，提高组件封装性。
+      </div>
+      <div style="text-align: center;">
+        <a href="/" class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

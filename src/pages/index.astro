@@ -2,177 +2,194 @@
 // 首页 - 包含文章列表 (重新部署)
 const posts = [
   {
-    title: '"attribute"和"property"有什么不同',
-    description: ' property 属于 DOM Object，atrribute 属于 HTML。',
-    url: './posts/attribute-property',
-    date: '2025-12-16',
-    tags: ['attribute','property', 'Web开发', '前端', '面试']
+    title: "css常用的布局方式有哪些",
+    description:
+      "Flexbox（弹性盒子），Grid（网格布局）， Positioning（定位布局），Float + Clear（浮动布局）， Multi-column Layout（多栏布局） —— 报纸式布局",
+    url: "./posts/css-layout",
+    date: "2025-12-17",
+    tags: ["css", "Web开发", "前端", "面试"],
   },
-    {
-    title: '::before和:after中单冒号和双冒号的区别是什么',
-    description: '::表示伪元素， :表示伪类，是一种样式',
-    url: './posts/before-after',
-    date: '2025-12-16',
-    tags: ['::before',':after', 'Web开发', '前端', '面试']
-  }
+  {
+    title: "BFC规范的理解",
+    description:
+      " BFC就相当于一个盒子，内部的元素与外界的元素互不干扰。它不会影响外部的布局，外部的布局也不会影响到它。",
+    url: "./posts/bfc",
+    date: "2025-12-17",
+    tags: ["BFC", "Web开发", "前端", "面试"],
+  },
+  {
+    title: '"attribute"和"property"有什么不同',
+    description: " property 属于 DOM Object，atrribute 属于 HTML。",
+    url: "./posts/attribute-property",
+    date: "2025-12-16",
+    tags: ["attribute", "property", "Web开发", "前端", "面试"],
+  },
+  {
+    title: "::before和:after中单冒号和双冒号的区别是什么",
+    description: "::表示伪元素， :表示伪类，是一种样式",
+    url: "./posts/before-after",
+    date: "2025-12-16",
+    tags: ["::before", ":after", "Web开发", "前端", "面试"],
+  },
 ];
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>前端开发</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: white;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        h1 {
-            text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .success {
-            background: rgba(40, 167, 69, 0.2);
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #28a745;
-            margin: 20px 0;
-        }
-        .nav-links {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 30px 0;
-        }
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-        }
-        .emoji {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        .posts-section {
-            margin: 40px 0;
-        }
-        .posts-section h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
-        .post-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-        .post-card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-        .post-title {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-        .post-title a {
-            color: inherit;
-            text-decoration: none;
-        }
-        .post-title a:hover {
-            text-decoration: underline;
-        }
-        .post-meta {
-            font-size: 0.9em;
-            opacity: 0.8;
-            margin-bottom: 15px;
-        }
-        .post-description {
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        .post-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .tag {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: white;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      h1 {
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .success {
+        background: rgba(40, 167, 69, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #28a745;
+        margin: 20px 0;
+      }
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin: 30px 0;
+      }
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        transition: all 0.3s ease;
+      }
+      .nav-links a:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+      .feature-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+      }
+      .emoji {
+        font-size: 2em;
+        margin-bottom: 10px;
+      }
+      .posts-section {
+        margin: 40px 0;
+      }
+      .posts-section h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2em;
+      }
+      .post-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+      .post-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+      .post-title {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        color: #fff;
+      }
+      .post-title a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .post-title a:hover {
+        text-decoration: underline;
+      }
+      .post-meta {
+        font-size: 0.9em;
+        opacity: 0.8;
+        margin-bottom: 15px;
+      }
+      .post-description {
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+      .post-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .tag {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8em;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>前端开发</h1>
-        <div class="nav-links">
-            <a href="#">最新文章</a>
-            <a href="/about">关于页面</a>
-            <a href="https://github.com/gao20250409/my-blog">GitHub 源码</a>
-        </div>
+      <h1>前端开发</h1>
+      <div class="nav-links">
+        <a href="#">最新文章</a>
+        <a href="/about">关于页面</a>
+        <a href="https://github.com/gao20250409/my-blog">GitHub 源码</a>
+      </div>
 
-        <!-- 文章列表 -->
-        <div class="posts-section">
-            <h2>📝 最新文章</h2>
-            {posts.map((post) => (
-                <article class="post-card">
-                    <h3 class="post-title">
-                        <a href={post.url}>{post.title}</a>
-                    </h3>
-                    <div class="post-meta">
-                        📅 发布于 {post.date}
-                    </div>
-                    <p class="post-description">{post.description}</p>
-                    <div class="post-tags">
-                        {post.tags.map((tag) => (
-                            <span class="tag">{tag}</span>
-                        ))}
-                    </div>
-                </article>
-            ))}
-        </div>
+      <!-- 文章列表 -->
+      <div class="posts-section">
+        <h2>📝 最新文章</h2>
+        {
+          posts.map((post) => (
+            <article class="post-card">
+              <h3 class="post-title">
+                <a href={post.url}>{post.title}</a>
+              </h3>
+              <div class="post-meta">📅 发布于 {post.date}</div>
+              <p class="post-description">{post.description}</p>
+              <div class="post-tags">
+                {post.tags.map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            </article>
+          ))
+        }
+      </div>
     </div>
-</body>
+  </body>
 </html>

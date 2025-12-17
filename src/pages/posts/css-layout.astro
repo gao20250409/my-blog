@@ -1,0 +1,147 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>css常用的布局方式有哪些</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+
+      /* 图片样式 */
+      .img-small {
+        width: 64px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+
+      .img-medium {
+        width: 128px;
+        height: 128px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 css常用的布局方式有哪些</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："css", Web开发, 前端,
+          面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>1. Flexbox（弹性盒子） —— 单轴布局首选</h2>
+      <p>
+        ✅ 适用：一维布局（水平 or
+        垂直），如导航栏、卡片列表、居中对齐、响应式组件
+      </p>
+      <h2>2. Grid（网格布局） —— 二维布局的强大工具</h2>
+      <p>
+        ✅ 适用：一维布局（水平 or
+        垂直），如导航栏、卡片列表、居中对齐、响应式组件
+      </p>
+      <img src="/1.png" alt="" style="width: 80%; " />
+      <h2>3. Positioning（定位布局） —— 精确定位利器</h2>
+      <p>
+        ✅ 适用：层叠/脱离文档流场景，如弹窗、Tooltip、固定头部、图标覆盖
+        <ol>
+          <li><strong>… static</strong>：默认，无定位</li>
+          <li>
+            <strong>… relative</strong>：相对定位 微调位置、为 absolute
+            子元素提供定位上下文
+          </li>
+          <li><strong>… absolute</strong>：绝对定位 下拉菜单、模态框</li>
+          <li><strong>… fixed</strong>：固定定位 固定导航栏、返回顶部按钮</li>
+          <li>
+            <strong>… sticky</strong>： 滚动到阈值后变 fixed 粘性定位
+            表头固定、侧边目录锚定
+          </li>
+        </ol>
+      </p>
+      <h2>4. Float + Clear（浮动布局） —— 传统方案，渐淘汰</h2>
+      <p>✅ 适用：简单布局，如文本环绕、图片排版</p>
+      <h2>5. Multi-column Layout（多栏布局） —— 报纸式布局</h2>
+      <p>
+        ✅ 适用：报纸式文本分栏（新闻、博客）❌ 仅适合文本，不适合结构化布局❌
+        跨栏元素控制困难
+      </p>
+      <pre>
+        <code class="language-css">
+            {`.article {
+              column-count: 3;
+              column-gap: 2rem;
+              column-rule: 1px solid #ccc;
+            }`}
+        </code>
+      </pre>
+      <div style="text-align: center;">
+        <a href="/" class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
