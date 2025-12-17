@@ -2,203 +2,216 @@
 // 关于我页面
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>关于我 - 我的开发博客</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-            background: #f8f9fa;
-            color: #333;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 { 
-            color: #2c3e50; 
-            text-align: center; 
-            font-size: 2.5em;
-            margin-bottom: 30px;
-        }
-        h2 { 
-            color: #34495e; 
-            border-bottom: 2px solid #3498db; 
-            padding-bottom: 10px;
-            margin-top: 30px;
-        }
-        .back-link {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 6px;
-            margin-top: 30px;
-            transition: background 0.3s ease;
-        }
-        .back-link:hover { 
-            background: #2980b9; 
-        }
-        .intro-section {
-            text-align: center;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #ecf0f1;
-            border-radius: 8px;
-        }
-        .intro-section h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        .tech-stack {
-            background: #e8f5e8;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #27ae60;
-            margin: 20px 0;
-        }
-        .tech-stack ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .tech-stack li {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-        }
-        .tech-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .dot-blue { background: #3498db; }
-        .dot-green { background: #27ae60; }
-        .dot-purple { background: #9b59b6; }
-        .dot-red { background: #e74c3c; }
-        .blog-info {
-            background: #fff3cd;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #ffc107;
-            margin: 20px 0;
-        }
-        .contact-section {
-            background: #d1ecf1;
-            padding: 25px;
-            border-radius: 8px;
-            border-left: 4px solid #17a2b8;
-            text-align: center;
-            margin: 30px 0;
-        }
-        .contact-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        .contact-link {
-            display: inline-block;
-            background: #17a2b8;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: background 0.3s ease;
-        }
-        .contact-link:hover {
-            background: #138496;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .intro-section {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .intro-section h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+      .tech-stack {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .tech-stack ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .tech-stack li {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+      }
+      .tech-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .dot-blue {
+        background: #3498db;
+      }
+      .dot-green {
+        background: #27ae60;
+      }
+      .dot-purple {
+        background: #9b59b6;
+      }
+      .dot-red {
+        background: #e74c3c;
+      }
+      .blog-info {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ffc107;
+        margin: 20px 0;
+      }
+      .contact-section {
+        background: #d1ecf1;
+        padding: 25px;
+        border-radius: 8px;
+        border-left: 4px solid #17a2b8;
+        text-align: center;
+        margin: 30px 0;
+      }
+      .contact-links {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .contact-link {
+        display: inline-block;
+        background: #17a2b8;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+      }
+      .contact-link:hover {
+        background: #138496;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>👨‍💻 关于我</h1>
-        
-        <div class="intro-section">
-            <h3>全栈开发者</h3>
-            <p>热爱探索新技术和分享开发经验，专注于现代前端开发和用户体验优化</p>
-        </div>
+      <h1>👨‍💻 关于我</h1>
 
-        <h2>🛠️ 技术栈</h2>
-        <div class="tech-stack">
-            <ul>
-                <li>
-                    <span class="tech-dot dot-blue"></span>
-                    <strong>前端</strong>：React, Vue, Astro, TypeScript, JavaScript
-                </li>
-                <li>
-                    <span class="tech-dot dot-green"></span>
-                    <strong>CSS</strong>：Tailwind CSS, UnoCSS, Sass, CSS Modules
-                </li>
-                <li>
-                    <span class="tech-dot dot-purple"></span>
-                    <strong>后端</strong>：Node.js, Python
-                </li>
-                <li>
-                    <span class="tech-dot dot-red"></span>
-                    <strong>数据库</strong>：MongoDB, Redis, MySQL
-                </li>
-            </ul>
-        </div>
+      <div class="intro-section">
+        <h3>全栈开发者</h3>
+        <p>热爱探索新技术和分享开发经验，专注于现代前端开发和用户体验优化</p>
+      </div>
 
-        <h2>📝 关于这个博客</h2>
-        <div class="blog-info">
-            <p>这个博客使用 <strong>Astro</strong> 构建，展示了现代前端开发的最佳实践：</p>
-            <ul style="margin-top: 15px; padding-left: 20px;">
-                <li><strong>🏝️ 组件岛屿架构</strong>：React 和 Vue 组件岛屿</li>
-                <li><strong>🎨 双 CSS 框架</strong>：UnoCSS + Tailwind CSS</li>
-                <li><strong>🔒 类型安全</strong>：TypeScript + Content Collections</li>
-                <li><strong>⚡ 性能优化</strong>：静态生成 + 选择性水合</li>
-                <li><strong>📱 响应式设计</strong>：适配各种设备屏幕</li>
-            </ul>
-        </div>
-
-        <h2>🎯 专业领域</h2>
+      <h2>🛠️ 技术栈</h2>
+      <div class="tech-stack">
         <ul>
-            <li><strong>前端开发</strong>：现代 JavaScript 框架和工具链</li>
-            <li><strong>用户体验</strong>：界面设计和交互优化</li>
-            <li><strong>性能优化</strong>：网站速度和 SEO 优化</li>
-            <li><strong>工程化</strong>：构建工具和开发流程优化</li>
+          <li>
+            <span class="tech-dot dot-blue"></span>
+            <strong>前端</strong>：React, Vue, Astro, TypeScript, JavaScript
+          </li>
+          <li>
+            <span class="tech-dot dot-green"></span>
+            <strong>CSS</strong>：Tailwind CSS, UnoCSS, Sass, CSS Modules
+          </li>
+          <li>
+            <span class="tech-dot dot-purple"></span>
+            <strong>后端</strong>：Node.js, Python
+          </li>
+          <li>
+            <span class="tech-dot dot-red"></span>
+            <strong>数据库</strong>：MongoDB, Redis, MySQL
+          </li>
         </ul>
+      </div>
 
-        <h2>💡 开发理念</h2>
-        <p>我相信优秀的代码不仅要功能完善，更要简洁易读、性能优异。始终追求：</p>
-        <ul>
-            <li>🎯 <strong>用户至上</strong>：以用户体验为核心的设计思维</li>
-            <li>🔧 <strong>工程质量</strong>：可维护、可扩展的代码架构</li>
-            <li>📚 <strong>持续学习</strong>：跟上技术发展，分享实践经验</li>
-            <li>🤝 <strong>团队协作</strong>：良好的沟通和协作能力</li>
+      <h2>📝 关于这个博客</h2>
+      <div class="blog-info">
+        <p>
+          这个博客使用 <strong>Astro</strong> 构建，展示了现代前端开发的最佳实践：
+        </p>
+        <ul style="margin-top: 15px; padding-left: 20px;">
+          <li><strong>🏝️ 组件岛屿架构</strong>：React 和 Vue 组件岛屿</li>
+          <li><strong>🎨 双 CSS 框架</strong>：UnoCSS + Tailwind CSS</li>
+          <li>
+            <strong>🔒 类型安全</strong>：TypeScript + Content Collections
+          </li>
+          <li><strong>⚡ 性能优化</strong>：静态生成 + 选择性水合</li>
+          <li><strong>📱 响应式设计</strong>：适配各种设备屏幕</li>
         </ul>
+      </div>
 
-        <div class="contact-section">
-            <h3>📬 联系方式</h3>
-            <p>欢迎与我交流技术话题或合作机会(791301642@qq.com)</p>
-            <div class="contact-links">
-                <a href="mailto:791301642@qq.com" class="contact-link">
-                    📧 邮箱联系
-                </a>
-                <a href="https://github.com/gao20250409" class="contact-link">
-                    🐙 GitHub
-                </a>
-            </div>
-        </div>
+      <h2>🎯 专业领域</h2>
+      <ul>
+        <li><strong>前端开发</strong>：现代 JavaScript 框架和工具链</li>
+        <li><strong>用户体验</strong>：界面设计和交互优化</li>
+        <li><strong>性能优化</strong>：网站速度和 SEO 优化</li>
+        <li><strong>工程化</strong>：构建工具和开发流程优化</li>
+      </ul>
 
-        <div style="text-align: center;">
-            <a href="/" class="back-link">← 返回首页</a>
+      <h2>💡 开发理念</h2>
+      <p>我相信优秀的代码不仅要功能完善，更要简洁易读、性能优异。始终追求：</p>
+      <ul>
+        <li>🎯 <strong>用户至上</strong>：以用户体验为核心的设计思维</li>
+        <li>🔧 <strong>工程质量</strong>：可维护、可扩展的代码架构</li>
+        <li>📚 <strong>持续学习</strong>：跟上技术发展，分享实践经验</li>
+        <li>🤝 <strong>团队协作</strong>：良好的沟通和协作能力</li>
+      </ul>
+
+      <div class="contact-section">
+        <h3>📬 联系方式</h3>
+        <p>欢迎与我交流技术话题或合作机会(791301642@qq.com)</p>
+        <div class="contact-links">
+          <a href="mailto:791301642@qq.com" class="contact-link">
+            📧 邮箱联系
+          </a>
+          <a href="https://github.com/gao20250409" class="contact-link">
+            🐙 GitHub
+          </a>
         </div>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
     </div>
-</body>
+  </body>
 </html>

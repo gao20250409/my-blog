@@ -134,17 +134,17 @@
         解决：使父元素形成 BFC，即可“包裹住”浮动子元素。
       </div>
       <div>
-        <strong> 3️⃣ 阻止浮动元素覆盖</strong>：<br />👉 
-        问题：文字环绕浮动元素 → 非浮动块级盒子可能被浮动元素覆盖。<br />✅ 
-        解决：让非浮动元素创建 BFC，使其“感知”到浮动边界，不被覆盖。（
-        应用：经典左侧固定 + 右侧自适应布局（无需 flex/grid）。）
+        <strong> 3️⃣ 阻止浮动元素覆盖</strong>：<br />👉 问题：文字环绕浮动元素 →
+        非浮动块级盒子可能被浮动元素覆盖。<br />✅ 解决：让非浮动元素创建
+        BFC，使其“感知”到浮动边界，不被覆盖。（ 应用：经典左侧固定 +
+        右侧自适应布局（无需 flex/grid）。）
       </div>
       <div>
-        <strong>  4️⃣ 隔离布局影响</strong>：<br />👉
-        BFC 内部的浮动、margin 等不会影响外部元素，提高组件封装性。
+        <strong> 4️⃣ 隔离布局影响</strong>：<br />👉 BFC 内部的浮动、margin
+        等不会影响外部元素，提高组件封装性。
       </div>
       <div style="text-align: center;">
-        <a href="/" class="back-link">← 返回首页</a>
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
       </div>
     </div>
   </body>
