@@ -1,0 +1,152 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>你对new操作符的理解是啥，手写一个new方法</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀浅说new操作符的理解,手写一个new方法</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："new", Web开发, 前端,
+          面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、new本质</h2>
+      <p>
+        🌟 一句话核心： new 就是「造一个对象，并让构造函数为它打工」的过程。
+      </p>
+      <ol>
+        <li>先批一块地（空对象）</li>
+        <li>挂上统一招牌（继承原型）</li>
+        <li>派店长（构造函数）入驻装修、招人、定菜单（初始化）</li>
+        <li>
+          店长可能说：“别开店了，我直接给你一栋现成商场！”（显式 return 对象）→
+          那就用商场；否则就用你批的那块地。
+        </li>
+      </ol>
+      <h2>二、举个完整例子</h2>
+      <div class="feature-list">
+        <pre>
+        {
+          `
+          // 🔹 Step 1: 批地 + 挂招牌
+          const obj = Object.create(Car.prototype); 
+          // obj = { __proto__: Car.prototype }
+
+          // 🔹 Step 2+3: 派店长入驻装修
+          Car.apply(obj, ['Tesla']); 
+          // → 执行后 obj 变成：
+          // {
+          //   brand: 'Tesla',
+          //   start: [Function],
+          //   __proto__: Car.prototype
+          // }
+
+          // 🔹 Step 4: 店长没说“换地方”，就用这块地
+          // Car 没 return → 返回 obj
+
+          //关键转折：当构造函数 显式 return 时！
+          function Car(brand) {
+            this.brand = brand;
+            
+            // 👇 店长说：“别开店了，我直接给你一栋现成商场！”
+            return { brand: 'BMW', type: 'Electric' };
+          }
+
+          const myCar = new Car('Tesla');
+          console.log(myCar); 
+          // { brand: 'BMW', type: 'Electric' }  ← 不是 Tesla！也没 start 方法！
+          `
+        }
+       </pre>
+      </div>
+      <h2>三、 手写new方法：</h2>
+      <div class="feature-list">
+        <pre>
+        {
+          `
+          function _new(Fn, ...arg) {
+            const obj = Object.create(Fn.prototype);
+            const obj1 = Fn.apply(obj, arg);
+            return obj1 instanceof Object ? obj1 : obj;
+          }
+          `
+        }
+       </pre>
+      </div>
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
