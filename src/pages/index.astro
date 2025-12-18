@@ -131,6 +131,61 @@ const posts = [
         font-size: 2em;
         margin-bottom: 10px;
       }
+      
+      /* 搜索功能样式 */
+      .search-container {
+        margin: 30px 0;
+        text-align: center;
+      }
+      
+      .search-box {
+        width: 100%;
+        max-width: 500px;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        outline: none;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        backdrop-filter: blur(10px);
+      }
+      
+      .search-box::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .search-box:focus {
+        border-color: rgba(255, 255, 255, 0.6);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.15);
+      }
+      
+      .search-stats {
+        margin-top: 15px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+      }
+      
+      .no-results {
+        text-align: center;
+        padding: 40px 20px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .no-results h3 {
+        margin-bottom: 10px;
+        font-size: 1.2em;
+      }
+      
+      .highlight {
+        background: rgba(255, 255, 255, 0.3);
+        padding: 1px 3px;
+        border-radius: 2px;
+        color: #fff;
+        font-weight: bold;
+      }
       .posts-section {
         margin: 40px 0;
       }
@@ -194,9 +249,25 @@ const posts = [
         <a href="https://github.com/gao20250409/my-blog">GitHub 源码</a>
       </div>
 
+      <!-- 搜索功能 -->
+      <div class="search-container">
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-box" 
+          placeholder="🔍 搜索文章标题、描述或标签..."
+          autocomplete="off"
+        >
+        <div id="searchStats" class="search-stats"></div>
+      </div>
+
       <!-- 文章列表 -->
       <div class="posts-section">
         <h2>📝 最新文章</h2>
+        <div id="noResults" class="no-results" style="display: none;">
+          <h3>😔 没有找到相关文章</h3>
+          <p>试试其他关键词，或者浏览所有文章</p>
+        </div>
         {
           posts.map((post) => (
             <article class="post-card">
@@ -215,5 +286,202 @@ const posts = [
         }
       </div>
     </div>
+
+    <script>
+      // 搜索功能实现
+      const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+      const searchStats = document.getElementById('searchStats') as HTMLElement;
+      const noResults = document.getElementById('noResults') as HTMLElement;
+      const postCards = document.querySelectorAll('.post-card');
+      
+      // 文章数据类型定义
+      interface PostData {
+        title: string;
+        description: string;
+        tags: string[];
+        element: HTMLElement | null;
+      }
+      
+      // 文章数据
+      const posts: PostData[] = [
+        {
+          title: "0.1 + 0.2、0.1 * 0.2分别等于多少？解释原因",
+          description: "计算机用二进制表示小数，而 0.1、0.2 在二进制中是「无限循环小数」，必须舍入 → 累积误差",
+          tags: ["浮点数精度", "Web开发", "前端", "面试"],
+          element: null
+        },
+        {
+          title: "CSS的优先级是如何计算的",
+          description: "!important > 内联样式（1000） > id 选择器（100） > class 选择器（10） > tag（1） > *",
+          tags: ["css", "Web开发", "前端", "面试"],
+          element: null
+        },
+        {
+          title: "浅说new操作符的理解,手写一个new方法",
+          description: "一句话核心： new 就是「造一个对象，并让构造函数为它打工」的过程",
+          tags: ["new", "Web开发", "前端", "面试"],
+          element: null
+        },
+        {
+          title: "css常用的布局方式有哪些",
+          description: "Flexbox（弹性盒子），Grid（网格布局）， Positioning（定位布局），Float + Clear（浮动布局）， Multi-column Layout（多栏布局） —— 报纸式布局",
+          tags: ["css", "Web开发", "前端", "面试"],
+          element: null
+        },
+        {
+          title: "BFC规范的理解",
+          description: " BFC就相当于一个盒子，内部的元素与外界的元素互不干扰。它不会影响外部的布局，外部的布局也不会影响到它。",
+          tags: ["BFC", "Web开发", "前端", "面试"],
+          element: null
+        },
+        {
+          title: '"attribute"和"property"有什么不同',
+          description: " property 属于 DOM Object，atrribute 属于 HTML。",
+          tags: ["attribute", "property", "Web开发", "前端", "面试"],
+          element: null
+        },
+        {
+          title: "::before和:after中单冒号和双冒号的区别是什么",
+          description: "::表示伪元素， :表示伪类，是一种样式",
+          tags: ["::before", ":after", "Web开发", "前端", "面试"],
+          element: null
+        }
+      ];
+      
+      // 初始化：将DOM元素与数据关联
+      postCards.forEach((card, index) => {
+        posts[index].element = card as HTMLElement;
+      });
+      
+      // 高亮搜索关键词
+      function highlightText(text: string, searchTerm: string): string {
+        if (!searchTerm) return text;
+        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+      }
+      
+      // 移除高亮
+      function removeHighlight(element: HTMLElement): void {
+        const highlighted = element.querySelectorAll('.highlight');
+        highlighted.forEach((span: Element) => {
+          span.outerHTML = span.innerHTML;
+        });
+      }
+      
+      // 搜索函数
+      function performSearch(searchTerm: string): void {
+        const term = searchTerm.toLowerCase().trim();
+        let visibleCount = 0;
+        
+        posts.forEach(post => {
+          const element = post.element;
+          if (!element) return;
+          
+          // 移除之前的高亮
+          removeHighlight(element);
+          
+          if (!term) {
+            // 如果搜索词为空，显示所有文章
+            element.style.display = 'block';
+            visibleCount++;
+            return;
+          }
+          
+          // 检查标题、描述和标签是否匹配
+          const titleMatch = post.title.toLowerCase().includes(term);
+          const descMatch = post.description.toLowerCase().includes(term);
+          const tagMatch = post.tags.some(tag => tag.toLowerCase().includes(term));
+          
+          if (titleMatch || descMatch || tagMatch) {
+            element.style.display = 'block';
+            visibleCount++;
+            
+            // 高亮匹配的文本
+            const titleElement = element.querySelector('.post-title a') as HTMLElement;
+            const descElement = element.querySelector('.post-description') as HTMLElement;
+            const tagElements = element.querySelectorAll('.tag');
+            
+            if (titleMatch && titleElement) {
+              titleElement.innerHTML = highlightText(post.title, term);
+            }
+            if (descMatch && descElement) {
+              descElement.innerHTML = highlightText(post.description, term);
+            }
+            if (tagMatch) {
+              tagElements.forEach((tagEl: Element, index: number) => {
+                if (post.tags[index] && post.tags[index].toLowerCase().includes(term)) {
+                  tagEl.innerHTML = highlightText(post.tags[index], term);
+                }
+              });
+            }
+          } else {
+            element.style.display = 'none';
+          }
+        });
+        
+        // 更新搜索统计
+        if (searchStats) {
+          if (term) {
+            if (visibleCount === 0) {
+              searchStats.textContent = '没有找到相关文章';
+              if (noResults) noResults.style.display = 'block';
+            } else {
+              searchStats.textContent = `找到 ${visibleCount} 篇相关文章`;
+              if (noResults) noResults.style.display = 'none';
+            }
+          } else {
+            searchStats.textContent = `共 ${posts.length} 篇文章`;
+            if (noResults) noResults.style.display = 'none';
+          }
+        }
+      }
+      
+      // 防抖函数
+      function debounce<T extends (...args: any[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
+        let timeout: NodeJS.Timeout;
+        return function executedFunction(...args: Parameters<T>) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+      
+      // 绑定搜索事件
+      const debouncedSearch = debounce((e: Event) => {
+        const target = e.target as HTMLInputElement;
+        if (target) {
+          performSearch(target.value);
+        }
+      }, 300);
+      
+      if (searchInput) {
+        searchInput.addEventListener('input', debouncedSearch);
+        
+        // 支持回车键搜索
+        searchInput.addEventListener('keydown', (e: KeyboardEvent) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            performSearch(searchInput.value);
+          }
+        });
+        
+        // 清空搜索时恢复所有文章
+        searchInput.addEventListener('keyup', (e: KeyboardEvent) => {
+          const target = e.target as HTMLInputElement;
+          if (e.key === 'Escape' || (!target.value && e.key === 'Backspace')) {
+            searchInput.value = '';
+            performSearch('');
+          }
+        });
+      }
+      
+      // 初始化显示统计
+      if (searchStats) {
+        searchStats.textContent = `共 ${posts.length} 篇文章`;
+      }
+    </script>
   </body>
 </html>
