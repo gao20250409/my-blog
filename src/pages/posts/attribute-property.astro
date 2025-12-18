@@ -100,23 +100,22 @@
             </li>
           </li>
         </ul>
-        <div class="feature-list">
-          <h3>🌟 attribute 的核心特性：</h3>
-          <ul>
-            <li><strong>🏝️ 初始值由 HTML 决定</strong></li>
+      </div>
+      <div class="feature-list">
+        <h3>🌟 attribute 的核心特性：</h3>
+        <ul>
+          <li><strong>🏝️ 初始值由 HTML 决定</strong></li>
+          <li>
+            <strong>🎨 attribute 是静态的，不能直接通过 JavaScript 修改</strong>
             <li>
               <strong
-                >🎨 attribute 是静态的，不能直接通过 JavaScript 修改</strong
-              >
-              <li>
-                <strong
-                  >⚡ 可通过 getAttribute() / setAttribute() 操作
-                </strong>：例如，el.getAttribute('id') 返回初始值，而 el.id
-                返回当前值，有了 data-* 的属性后，一般就利用 data-* 来存放数据了
-              </li>
+                >⚡ 可通过 getAttribute() / setAttribute() 操作
+              </strong>：例如，el.getAttribute('id') 返回初始值，而 el.id
+              返回当前值，有了 data-* 的属性后，一般就利用 data-* 来存放数据了
             </li>
-          </ul>
-          <!-- <h2>为什么选择 Astro？</h2>
+          </li>
+        </ul>
+        <!-- <h2>为什么选择 Astro？</h2>
         <ol>
             <li><strong>性能优先</strong>：Astro 生成的网站加载速度极快</li>
             <li><strong>开发者体验</strong>：熟悉的语法，强大的工具链</li>
@@ -124,12 +123,12 @@
             <li><strong>SEO 友好</strong>：服务端渲染，搜索引擎优化</li>
         </ol> -->
 
-          <div style="text-align: center;">
-            <a href={`${import.meta.env.BASE_URL}`} class="back-link"
-              >← 返回首页</a
-            >
-          </div>
+        <div style="text-align: center;">
+          <a href={`${import.meta.env.BASE_URL}`} class="back-link"
+            >← 返回首页</a
+          >
         </div>
       </div>
-    </div></body>
+    </div>
+    </body>
 </html>
