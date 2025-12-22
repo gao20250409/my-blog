@@ -1,0 +1,127 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fisher–Yates shuffle(洗牌算法)，快速让一个数组乱序</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Fisher–Yates shuffle(洗牌算法)，快速让一个数组乱序</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️
+          标签："css盒模型","box-sizing", Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>
+        欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。
+      </p>
+
+      <h2>总结</h2>
+      <p>从后往前遍历数组，每次将当前位置 i 与 [0, i] 范围内（包含自身）的一个随机位置 j 交换。</p>
+
+      <div class="feature-list">
+        <h3>🌟 正确实现示例：</h3>
+       <pre>
+        {`
+        function fisherYatesShuffle(arr) {
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1)); // 0 到 i 的整数
+            [arr[i], arr[j]] = [arr[j], arr[i]];           // ES6 解构交换
+          }
+          return arr;
+        }
+
+        // 注意：不要用 arr.sort(() => Math.random() - 0.5)！
+        // 它的分布不均匀（见下方⚠️）
+        `}
+       </pre>
+      </div>
+      <div class="feature-list">
+        <h3>🌟 为什么 arr.sort(() => Math.random() - 0.5) 是错的？</h3>
+        <ul>
+          <li><strong>🏝️ 在 V8（Chrome）中，偏差可达 20%+：</strong>v8处理排序是小于10个是插入排序，大于10个是快排，排序算法复杂度介于O(n)与O(n2)之间，也就是存在两个元素都没有比较的机会，因此不是完全随机</li>
+         
+        </ul>
+        <!-- <h2>为什么选择 Astro？</h2>
+        <ol>
+            <li><strong>性能优先</strong>：Astro 生成的网站加载速度极快</li>
+            <li><strong>开发者体验</strong>：熟悉的语法，强大的工具链</li>
+            <li><strong>灵活性</strong>：可以渐进式地添加交互性</li>
+            <li><strong>SEO 友好</strong>：服务端渲染，搜索引擎优化</li>
+        </ol> -->
+
+        <div style="text-align: center;">
+          <a href={`${import.meta.env.BASE_URL}`} class="back-link"
+            >← 返回首页</a
+          >
+        </div>
+      </div>
+    </div>
+    </body>
+</html>

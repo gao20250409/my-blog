@@ -1,6 +1,47 @@
 ---
 // 首页 - 包含文章列表 (重新部署)
-const posts = [
+// 文章数据类型定义
+interface PostData {
+  title: string;
+  description: string;
+  url: string;
+  date: string;
+  tags: string[];
+}
+
+const posts: PostData[] = [
+  {
+    title: "flex,grid实现圣杯布局",
+    description:
+      "<script>立即下载，下载完成后立即执行。<script async>异步下载（与 HTML 解析并行），下载完成后立即执行（可能打断 HTML 解析）。<script defer>异步下载（与 HTML 解析并行）延迟到 HTML 解析完成后、DOMContentLoaded 事件前按顺序执行。",
+    url: "./posts/holy-grail",
+    date: "2025-12-22",
+    tags: ["圣杯布局","flex圣杯布局","grid圣杯布局", "Web开发", "前端", "面试"],
+  },
+  {
+    title: "<script>、<script async>和<script defer>的区别",
+    description:
+      "<script>立即下载，下载完成后立即执行。<script async>异步下载（与 HTML 解析并行），下载完成后立即执行（可能打断 HTML 解析）。<script defer>异步下载（与 HTML 解析并行）延迟到 HTML 解析完成后、DOMContentLoaded 事件前按顺序执行。",
+    url: "./posts/script-async-defer",
+    date: "2025-12-22",
+    tags: ["<script defer>","<script async>", "Web开发", "前端", "面试"],
+  },
+  {
+    title: "css盒子模型的理解",
+    description:
+      " 是浏览器渲染每个元素时遵循的一套‘占地规则’——把所有 HTML 元素抽象成一个矩形盒子，由内容（content）、内边距（padding）、边框（border）、外边距（margin）四层组成。”",
+    url: "./posts/css-box",
+    date: "2025-12-19",
+    tags: ["css盒模型","box-sizing", "Web开发", "前端", "面试"],
+  },
+  {
+    title: "Fisher–Yates shuffle(洗牌算法)，快速让一个数组乱序",
+    description:
+      "从后往前遍历数组，每次将当前位置 i 与 [0, i] 范围内（包含自身）的一个随机位置 j 交换。",
+    url: "./posts/Fisher-Yates-shuffle",
+    date: "2025-12-19",
+    tags: ["洗牌算法","Fisher–Yates", "shuffle", "Web开发", "前端", "面试"],
+  },
   {
     title: "0.1 + 0.2、0.1 * 0.2分别等于多少？解释原因",
     description:
@@ -245,7 +286,7 @@ const posts = [
       <h1>前端开发</h1>
       <div class="nav-links">
         <a href="#">最新文章</a>
-        <a href={`${import.meta.env.BASE_URL}about`}>关于页面</a>
+        <a href={`${import.meta.env.BASE_URL}about`}>关于我</a>
         <a href="https://github.com/gao20250409/my-blog">GitHub 源码</a>
       </div>
 
@@ -294,63 +335,26 @@ const posts = [
       const noResults = document.getElementById('noResults') as HTMLElement;
       const postCards = document.querySelectorAll('.post-card');
       
-      // 文章数据类型定义
-      interface PostData {
+      // 搜索功能的文章数据类型定义
+      interface SearchPostData {
         title: string;
         description: string;
         tags: string[];
         element: HTMLElement | null;
       }
       
-      // 文章数据
-      const posts: PostData[] = [
-        {
-          title: "0.1 + 0.2、0.1 * 0.2分别等于多少？解释原因",
-          description: "计算机用二进制表示小数，而 0.1、0.2 在二进制中是「无限循环小数」，必须舍入 → 累积误差",
-          tags: ["浮点数精度", "Web开发", "前端", "面试"],
-          element: null
-        },
-        {
-          title: "CSS的优先级是如何计算的",
-          description: "!important > 内联样式（1000） > id 选择器（100） > class 选择器（10） > tag（1） > *",
-          tags: ["css", "Web开发", "前端", "面试"],
-          element: null
-        },
-        {
-          title: "浅说new操作符的理解,手写一个new方法",
-          description: "一句话核心： new 就是「造一个对象，并让构造函数为它打工」的过程",
-          tags: ["new", "Web开发", "前端", "面试"],
-          element: null
-        },
-        {
-          title: "css常用的布局方式有哪些",
-          description: "Flexbox（弹性盒子），Grid（网格布局）， Positioning（定位布局），Float + Clear（浮动布局）， Multi-column Layout（多栏布局） —— 报纸式布局",
-          tags: ["css", "Web开发", "前端", "面试"],
-          element: null
-        },
-        {
-          title: "BFC规范的理解",
-          description: " BFC就相当于一个盒子，内部的元素与外界的元素互不干扰。它不会影响外部的布局，外部的布局也不会影响到它。",
-          tags: ["BFC", "Web开发", "前端", "面试"],
-          element: null
-        },
-        {
-          title: '"attribute"和"property"有什么不同',
-          description: " property 属于 DOM Object，atrribute 属于 HTML。",
-          tags: ["attribute", "property", "Web开发", "前端", "面试"],
-          element: null
-        },
-        {
-          title: "::before和:after中单冒号和双冒号的区别是什么",
-          description: "::表示伪元素， :表示伪类，是一种样式",
-          tags: ["::before", ":after", "Web开发", "前端", "面试"],
-          element: null
-        }
-      ];
+      // 从服务端传递的posts数据
+      const postsData = JSON.parse(`{JSON.stringify(posts)}`);
+      
+      // 创建搜索用的数据，添加element属性
+      const searchPosts: SearchPostData[] = postsData.map((post: any) => ({
+        ...post,
+        element: null
+      }));
       
       // 初始化：将DOM元素与数据关联
       postCards.forEach((card, index) => {
-        posts[index].element = card as HTMLElement;
+        searchPosts[index].element = card as HTMLElement;
       });
       
       // 高亮搜索关键词
@@ -373,7 +377,7 @@ const posts = [
         const term = searchTerm.toLowerCase().trim();
         let visibleCount = 0;
         
-        posts.forEach(post => {
+        searchPosts.forEach(post => {
           const element = post.element;
           if (!element) return;
           
@@ -430,7 +434,7 @@ const posts = [
               if (noResults) noResults.style.display = 'none';
             }
           } else {
-            searchStats.textContent = `共 ${posts.length} 篇文章`;
+            searchStats.textContent = `共 ${searchPosts.length} 篇文章`;
             if (noResults) noResults.style.display = 'none';
           }
         }
@@ -480,7 +484,7 @@ const posts = [
       
       // 初始化显示统计
       if (searchStats) {
-        searchStats.textContent = `共 ${posts.length} 篇文章`;
+        searchStats.textContent = `共 ${searchPosts.length} 篇文章`;
       }
     </script>
   </body>

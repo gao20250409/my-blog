@@ -1,0 +1,231 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      &lt;script&gt;、&lt;script async&gt;和&lt;script defer&gt;的区别
+    </title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+
+      /* 表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+        font-size: 0.85em;
+      }
+
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 0.8em;
+      }
+
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .comparison-table code {
+        background: #f1f3f4;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.8em;
+        white-space: nowrap;
+      }
+
+      .comparison-table td:nth-child(4) {
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.8em;
+      }
+
+      .comparison-table td:nth-child(5) {
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        🚀 &lt;script&gt;、&lt;script async&gt;和&lt;script defer&gt;的区别
+      </h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："&lt;script
+          async&gt;","&lt;script defer&gt;", Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        &lt;script&gt;、&lt;script async&gt;和&lt;script
+        defer&gt;的区别主要体现在加载行为、执行时机和是否阻塞HTML解析上。
+      </p>
+
+      <h3>Script标签属性对比表格：</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>属性</th>
+            <th>加载行为</th>
+            <th>执行时机</th>
+            <th>是否阻塞 HTML</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>&lt;script&gt;</code></td>
+            <td>立即下载</td>
+            <td>下载完成后立即执行</td>
+            <td>是（暂停 HTML 解析）</td>
+          </tr>
+          <tr>
+            <td><code>&lt;script async&gt;</code></td>
+            <td>异步下载（与 HTML 解析并行）</td>
+            <td>下载完成后立即执行（可能打断 HTML 解析）</td>
+            <td> 否（下载不阻塞），但执行会阻塞</td>
+          </tr>
+          <tr>
+            <td><code>&lt;script defer&gt;</code></td>
+            <td>异步下载（与 HTML 解析并行）</td>
+            <td>延迟到 HTML 解析完成后、DOMContentLoaded 事件前按顺序执行</td>
+            <td>否（下载和执行均不阻塞解析）</td>
+          </tr>
+        </tbody>
+      </table>
+      <img src={`${import.meta.env.BASE_URL}2.png`} alt="" />
+      <div class="feature-list">
+        <h3>🌟 关键理解要点：</h3>
+        <ul>
+          <li>
+            <strong>🏝️ async 是「谁先下完谁先执行</strong
+            >：执行时机不确定，适合完全独立的脚本（如 Google Analytics）。
+          </li>
+          <li>
+            <strong>⚡ defer 是「下完也不急，等 DOM 构建完再按顺序执行」</strong
+            >：适合应用主逻辑（如 React/Vue 初始化）。
+          </li>
+        </ul>
+      </div>
+      <div class="feature-list">
+        <h3>🌟  最佳实践建议：</h3>
+        <ul>
+          <li>
+            <strong>🏝️ 优先用 defer</strong
+            >：多数现代应用主脚本。
+          </li>
+          <li>
+            <strong>⚡用 async</strong
+            >：独立第三方脚本（分析、广告)。
+          </li>
+           <li>
+            <strong>⚡放在 &lt;head &gt; 里用普通  &lt;script &gt;（但尽量避免阻塞）</strong
+            >：小型内联关键逻辑（如 polyfill)。
+          </li>
+           <li>
+            <strong>⚡模块化脚本（type="module"）天然具有 defer 行为</strong
+            >：无需额外加 defer。
+          </li>
+        </ul>
+        <pre>
+          {`
+          <!-- 1. 普通 script：阻塞解析 -->
+          <script src="a.js"></script>  <!-- 下载 + 执行 → 阻塞 -->
+
+          <!-- 2. async：不阻塞下载，但可能中途执行 -->
+          <script async src="b.js"></script> 
+           <!-- 下载与解析并行；b.js 下完立刻执行（可能打断解析） -->
+
+          <!-- 3. defer：完全不阻塞，最后按序执行 -->
+          <script defer src="c.js"></script>
+          <script defer src="d.js"></script>
+          <!-- c.js → d.js 顺序执行，在 DOMContentLoaded 之前 -->
+          `}
+        </pre>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

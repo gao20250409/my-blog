@@ -1,0 +1,285 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>css盒子模型的理解</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+
+      /* 表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .comparison-table code {
+        background: #f1f3f4;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+      }
+
+      .comparison-table td:nth-child(3) {
+        text-align: center;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 css盒子模型的理解</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️
+          标签："css盒模型","box-sizing", "shuffle", Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        是浏览器渲染每个元素时遵循的一套‘占地规则’——把所有 HTML
+        元素抽象成一个矩形盒子，由内容（content）、内边距（padding）、边框（border）、外边距（margin）四层组成。
+      </p>
+
+      <div class="feature-list">
+        <h3>🌟 关键点：</h3>
+        <p>
+          默认的 box-sizing: content-box 会导致 width 只代表内容区，加上 padding
+          和 border
+          后实际宽度变大，容易引发布局溢出。我在开发中就遇到过：给一个width:100%的输入框加了
+          10px padding，结果水平滚动条出现了。后来我统一采用 border-box
+          模式——通过全局设置 <pre>{`*, *::before, *::after { box-sizing: border-box }`}</pre>这样
+          width 就包含 padding
+          和border，尺寸更可控，尤其在响应式和组件复用时特别稳。这也是
+          Bootstrap、Tailwind 等主流框架的默认做法
+        </p>
+        <br />
+        <div>
+          <p><strong>中级岗：</strong></p>
+          <p>
+            “我还了解它和 BFC 的关系——比如用 overflow: hidden 创建 BFC 可阻止
+            margin 折叠” “在做自适应卡片布局时，border-box 配合 flex-basis
+            能精准控制列宽” 高级/架构岗：延伸： “盒子模型是 Layout
+            阶段的核心输入，后续的 Paint/Composite 依赖它” “在微前端或 SSR
+            场景下，需确保各子应用 box-sizing 一致，避免样式污染”
+          </p>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h3>🌟 专业知识：</h3>
+        <ul>
+          <li>
+            <strong>🏝️ 关键区别：</strong>padding / border 是盒子的一部分；
+            margin是盒子外部的空白，用于控制元素间距。
+          </li>
+          <li>
+            <strong>🔔 现象 原因 解决方案：</strong> margin 折叠 相邻块元素上下margin取最大值而非相加
+            用 padding、border、flex/grid 避免；或设 overflow: hidden 创建 BFC outline
+            不占空间 在 border 外绘制，不影响布局 可放心用于 :focus 可访问性样式。
+          </li>
+        </ul>
+      </div>
+      <h2>flex-basis 是什么？</h2>
+      <p>
+        一句话总览（记忆锚点）
+        <pre>
+         Flex 项目宽度 = 基础尺寸（flex-basis）
+        　　　　　　　± 剩余空间分配（flex-grow / flex-shrink）（受 min-width/max-width 约束）
+       </pre>
+        像“分红机制”：先定底薪（flex-basis），再看公司赚钱了（剩余空间 > 0）就按股份（flex-grow）分奖金；亏钱了（空间不足）就按股权比例（flex-shrink）扣工资。
+      </p>
+      <div class="feature-list">
+        对比常见写法：
+        <ul>
+          <li>
+            flex: 1 → 等价于 flex: 1 1 0（flex-grow:1, flex-shrink:1,
+            flex-basis:0）
+          </li>
+          <li>flex: 0 0 250px → 不伸缩，固定宽 250px</li>
+          <li>
+            flex-basis: 300px（配合 flex-grow: 0）→ 初始宽 300px，不自动伸缩
+          </li>
+        </ul>
+        💡 关键点：flex-basis 的值是否包含 padding/border？取决于 box-sizing！
+      </div>
+      <h2>:focus 可访问性样式</h2>
+      <pre>{` *:focus { outline: none; } /* ⚠️ 高危操作！严重损害可访问性（Accessibility） 的行为 */`}</pre>
+      <p>
+        ✅ outline
+        是专为键盘用户设计的视觉焦点指示器，它不参与布局（不撑开盒子、不影响其他元素位置），因此可以安全地用于
+        :focus 状态，而不会导致页面“跳动”或错位。 对比：为什么不用 border /
+        box-shadow 直接替代？
+      </p>
+
+      <h3>对比方案表格：</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>方案</th>
+            <th>问题</th>
+            <th>是否影响布局？</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>outline: 2px solid #0066cc;</code></td>
+            <td>✅ 完美：位置固定、不占空间、浏览器默认行为</td>
+            <td>❌ 不影响</td>
+          </tr>
+          <tr>
+            <td><code>border: 2px solid #0066cc;</code></td>
+            <td>❌ 加 border 会让元素变大 → 邻居元素被挤动（"布局抖动"）</td>
+            <td>✅ 会撑大盒子</td>
+          </tr>
+          <tr>
+            <td><code>box-shadow: 0 0 0 2px #0066cc;</code></td>
+            <td>⚠️ 大部分情况OK，但某些旧浏览器/打印样式可能不显示</td>
+            <td>❌ 不影响布局（推荐替代方案）</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        ✅ 所以说：outline 是“可放心用”的，因为它专为无障碍设计，且无副作用。
+      </p>
+      <div class="feature-list">
+        <h3>🌟正确做法：不删 outline，而是美化它！</h3>
+        <dl>
+          <dd>
+            <strong>🎨 推荐方案 1：用 box-shadow 替代（最常用）</strong>
+            <pre>
+          {`
+          /* 全局重置：保留焦点指示，但更美观 */
+            *:focus {
+                outline: none;
+                /* 先去掉默认样式 */
+                box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.5);
+                /* 蓝色发光边框，不占空间 */
+                /* 或用品牌色 */
+                /* box-shadow: 0 0 0 2px #1890ff; */
+            }
+
+            /* 特殊元素可单独优化 */
+            button:focus,
+            input:focus {
+                transition: box-shadow 0.2s;
+            }
+          `}
+        </pre>
+          </dd>
+          <dd>
+            <strong>⚡进阶：用 :focus-visible 做智能区分（现代最佳实践）</strong
+            ><p> CSS 新增伪类 :focus-visible 可自动判断：</p>
+            <pre>
+              {`
+                /* 默认隐藏 outline */
+                *:focus {
+                    outline: none;
+                }
+
+                /* 仅当浏览器检测到“可能是键盘操作”时显示 */
+                *:focus-visible {
+                    outline: 2px solid #1890ff;
+                    outline-offset: 2px;
+                  }
+              `}
+            </pre>
+            ✅ 效果： 鼠标点按钮 → 无 outline（视觉干净） 键盘 Tab 到按钮 → 有清晰
+            outline（无障碍保障）
+          </dd>
+        </dl>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
