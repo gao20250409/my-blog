@@ -11,6 +11,30 @@ interface PostData {
 
 const posts: PostData[] = [
   {
+    title: "怎样修改浏览器记住密码后自动填充表单的黄色背景？",
+    description:
+      "-webkit-text-fill-color 设置文本颜色，-webkit-box-shadow inset设置填充",
+    url: "./posts/autocomplete",
+    date: "2025-12-23",
+    tags: ["autocomplete","自动填充", "Web开发", "前端", "面试"],
+  },
+  {
+    title: "说说你对影子(Shadow)DOM的了解",
+    description:
+      "Shadow DOM 可以想象成我们在 Vue 或者 React 中使用的一个个组件，是一种将 HTML 结构、Style 封装起来的结构。我们熟悉的 <video> 标签，其实就是 Shadow DOM 的封装",
+    url: "./posts/shadow-dom",
+    date: "2025-12-23",
+    tags: ["Shadow DOM","Shadow Root","Shadow Tree", "Web开发", "前端", "面试"],
+  },
+   {
+    title: "bind、call、apply的区别？并手写实现一个bind的方法",
+    description:
+      "call和apply,bind都是为了解决改变this的指向。作用都是相同的，只是传参的方式不同。除了第一个参数外，call可以接收一个参数列表，apply只接受一个参数数组。 bind绑定完之后返回一个新的函数，不执行。",
+    url: "./posts/bind-call-apply",
+    date: "2025-12-23",
+    tags: ["bind","call","apply", "Web开发", "前端", "面试"],
+  },
+  {
     title: "flex,grid实现圣杯布局",
     description:
       "<script>立即下载，下载完成后立即执行。<script async>异步下载（与 HTML 解析并行），下载完成后立即执行（可能打断 HTML 解析）。<script defer>异步下载（与 HTML 解析并行）延迟到 HTML 解析完成后、DOMContentLoaded 事件前按顺序执行。",

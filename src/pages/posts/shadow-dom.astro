@@ -1,0 +1,114 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+     说说你对影子(Shadow)DOM的了解
+    </title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        🚀 说说你对影子(Shadow)DOM的了解
+      </h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："Shadow DOM","Shadow Root","Shadow Tree", 
+          Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+       Shadow DOM 可以想象成我们在 Vue 或者 React 中使用的一个个组件，是一种将 HTML 结构、Style 封装起来的结构。我们熟悉的 &lt;video&gt; 标签，其实就是 Shadow DOM 的封装。是浏览器提供的“组件沙箱”，拥有私密的内部世界，既不受外界干扰，也不干扰外界。
+      </p>
+
+      <div class="feature-list">
+        <h3>🌟 关键概念：</h3>
+        <ul>
+          <li>
+            <strong>🏝️ Shadow Host</strong>：挂载影子 DOM 的普通 DOM 元素，如  &lt;my-button&gt;
+          </li>
+           <li>
+            <strong>⚡Shadow Root</strong >：影子 DOM 的根节点
+          </li>
+          <li>
+            <strong>🎨Shadow Tree</strong >：整个影子 DOM 子树，包含 &lt;style &gt;、模板、插槽等
+          </li>
+        </ul>
+        
+      </div>
+      <p>如果你在开发可复用的 UI 组件库（尤其需要跨项目/跨框架使用），Shadow DOM 是非常值得掌握的技术；如果是普通业务应用，现代框架的 scoped 样式可能更高效。</p>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
