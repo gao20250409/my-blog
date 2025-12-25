@@ -1,0 +1,117 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>..args剩余参数与arguments的区别</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 ..args剩余参数与arguments的区别</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签"...args","arguments",
+          Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        ...args剩余参数,它是真正的数组。arguments类数组对象，它本身不是真正的数组。
+      </p>
+
+      <div class="feature-list">
+        <h3>🌟 arguments 的核心特性：</h3>
+        <ul>
+          <li>
+            <strong>🏝️实参列表</strong>：它有 length
+            属性，可以通过索引访问，不具备数组的内置方法，比如 .push()
+          </li>
+          <li>
+            <strong>⚡是传入参数的一个镜像(浅拷贝)</strong>
+          </li>
+          <li>
+            <strong>🎨可转为真正的数组</strong>Array.from(arguments);[...arguments]; Array.prototype.slice.call(arguments);
+          </li>
+        </ul>
+      </div>
+      <div class="feature-list">
+        <h3>🌟 现代替代方案：剩余参数（rest parameters）：</h3>
+        <ul>
+          <li>
+            <strong>⚡...args 更推荐用于替代 arguments，它是真正的数组：</strong
+            >
+          </li>
+        </ul>
+      </div>
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
