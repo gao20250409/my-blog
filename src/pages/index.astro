@@ -161,6 +161,10 @@ const posts: PostData[] = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>前端开发</title>
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_BEACON_TOKEN"}'></script>
+    
     <style>
       body {
         font-family:
@@ -533,4 +537,9 @@ const posts: PostData[] = [
       }
     </script>
   </body>
+  <!-- 为了防止在开发环境加载脚本，你可以用条件判断包裹它： -->
+  {import.meta.env.PROD && (
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "bd1ae315e3fb4d41b8c70e2500d99c1e"}'></script><!-- End Cloudflare Web Analytics -->
+)}
+ 
 </html>
