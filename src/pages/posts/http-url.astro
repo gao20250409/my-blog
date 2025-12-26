@@ -1,0 +1,232 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>输入URL到页面渲染发生了什么?</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+
+      /* Definition List Styling */
+      .process-list {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        border-left: 4px solid #3498db;
+        margin: 20px 0;
+      }
+
+      .process-list dl {
+        margin: 0;
+      }
+
+      .process-list dt {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-top: 15px;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+        display: flex;
+        align-items: center;
+      }
+
+      .process-list dt:first-child {
+        margin-top: 0;
+      }
+
+      .process-list dt::before {
+        content: "🔹";
+        margin-right: 8px;
+        color: #3498db;
+      }
+
+      .process-list dd {
+        margin: 0 0 10px 25px;
+        color: #555;
+      }
+
+      .process-list dd ul {
+        margin: 8px 0;
+        padding-left: 20px;
+      }
+
+      .process-list dd li {
+        margin: 5px 0;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 输入URL到页面渲染发生了什么?</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："URL","HTTP", Web开发,
+          前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        URL解析与DNS查询-TCP三次握手-发送HTTP请求-服务器返回响应-HTML解析,构建DOM树-加载CSS,构建CSSOM树,布局-绘制-合成"
+      </p>
+
+      <h2>URL到页面渲染完整流程</h2>
+
+      <div class="process-list">
+        <dl>
+          <dt>URL解析与DNS查询</dt>
+          <dd>
+            <ul>
+              <li>解析协议（https）、主机名（example.com）、路径等</li>
+              <li>
+                检查本地缓存 → 若无，发起 DNS 查询，将域名解析为 IP 地址（如
+                93.184.216.34）
+              </li>
+            </ul>
+          </dd>
+
+          <dt>TCP三次握手</dt>
+          <dd>
+            <ul>
+              <li>建立 TCP 连接（三次握手）</li>
+              <li>
+                若为 HTTPS，还需进行 TLS
+                握手（协商加密算法、验证证书、生成会话密钥）
+              </li>
+            </ul>
+          </dd>
+
+          <dt>发送HTTP请求</dt>
+          <dd>
+            <ul>
+              <li>浏览器向服务器发送 HTTP 请求</li>
+              <li>包含请求方法、头部信息、请求体等</li>
+            </ul>
+          </dd>
+
+          <dt>服务器返回响应</dt>
+          <dd>
+            <ul>
+              <li>服务器处理请求并返回 HTTP 响应</li>
+              <li>包含状态码、响应头、响应体（HTML内容）</li>
+            </ul>
+          </dd>
+
+          <dt>HTML解析，构建DOM树</dt>
+          <dd>
+            <ul>
+              <li>浏览器解析 HTML，构建 DOM 树</li>
+              <li>CSS 不阻塞 DOM 构建，但阻塞渲染（需 CSSOM）</li>
+              <li>
+                同步 &lt;script&gt; 阻塞 HTML 解析（DOM 构建暂停），直到 JS
+                下载并执行完毕
+              </li>
+              <li>推荐使用 async/defer 优化 JS 加载</li>
+            </ul>
+          </dd>
+
+          <dt>加载CSS，构建CSSOM树</dt>
+          <dd>
+            <ul>
+              <li>加载 CSS，构建 CSSOM 树</li>
+              <li>DOM + CSSOM 合并 → Render Tree（渲染树）</li>
+            </ul>
+          </dd>
+
+          <dt>布局</dt>
+          <dd>
+            <ul>
+              <li>浏览器计算 Render Tree 中各元素的几何信息（位置、大小）</li>
+              <li>即布局（Layout）或重排（Reflow）</li>
+            </ul>
+          </dd>
+
+          <dt>绘制</dt>
+          <dd>
+            <ul>
+              <li>将布局后的元素绘制到屏幕上</li>
+              <li>包括颜色、边框、阴影等视觉效果</li>
+            </ul>
+          </dd>
+
+          <dt>合成</dt>
+          <dd>
+            <ul>
+              <li>若页面有多个图层（如 transform, opacity 变化的元素）</li>
+              <li>
+                浏览器在合成线程（Compositor Thread）将图层按 Z 轴顺序合并
+              </li>
+            </ul>
+          </dd>
+        </dl>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

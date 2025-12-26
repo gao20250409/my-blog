@@ -11,6 +11,22 @@ interface PostData {
 
 const posts: PostData[] = [
   {
+    title: "写一个获取数组的最大值、最小值的方法",
+    description:
+      "Math.max(...arr);Math.min(...arr);Math.max.apply(Array,arr)",
+    url: "./posts/max-min",
+    date: "2025-12-25",
+    tags: ["最大值","最小值", "Web开发", "前端", "面试"],
+  },
+  {
+    title: "输入URL到页面渲染发生了什么?",
+    description:
+      "URL解析与DNS查询-TCP三次握手-发送HTTP请求-服务器返回响应-HTML解析,构建DOM树-加载CSS,构建CSSOM树,布局-绘制-合成",
+    url: "./posts/http-url",
+    date: "2025-12-25",
+    tags: ["URL","HTTP", "Web开发", "前端", "面试"],
+  },
+  {
     title: "GraphQL与REST在前端的应用",
     description:
       "GraphQL是一种客户端主动声明数据需求的查询语言与运行时 —— 你“要什么”，它就“给什么”，不多不少。",
@@ -368,52 +384,41 @@ const posts: PostData[] = [
       </div>
     </div>
 
-    <script>
+    <script define:vars={{ posts }}>
       // 搜索功能实现
-      const searchInput = document.getElementById('searchInput') as HTMLInputElement;
-      const searchStats = document.getElementById('searchStats') as HTMLElement;
-      const noResults = document.getElementById('noResults') as HTMLElement;
+      const searchInput = document.getElementById('searchInput');
+      const searchStats = document.getElementById('searchStats');
+      const noResults = document.getElementById('noResults');
       const postCards = document.querySelectorAll('.post-card');
       
       // 搜索功能的文章数据类型定义
-      interface SearchPostData {
-        title: string;
-        description: string;
-        tags: string[];
-        element: HTMLElement | null;
-      }
-      
-      // 从服务端传递的posts数据
-      const postsData = JSON.parse(`{JSON.stringify(posts)}`);
-      
-      // 创建搜索用的数据，添加element属性
-      const searchPosts: SearchPostData[] = postsData.map((post: any) => ({
+      const searchPosts = posts.map(post => ({
         ...post,
         element: null
       }));
       
       // 初始化：将DOM元素与数据关联
       postCards.forEach((card, index) => {
-        searchPosts[index].element = card as HTMLElement;
+        searchPosts[index].element = card;
       });
       
       // 高亮搜索关键词
-      function highlightText(text: string, searchTerm: string): string {
+      function highlightText(text, searchTerm) {
         if (!searchTerm) return text;
         const regex = new RegExp(`(${searchTerm})`, 'gi');
         return text.replace(regex, '<span class="highlight">$1</span>');
       }
       
       // 移除高亮
-      function removeHighlight(element: HTMLElement): void {
+      function removeHighlight(element) {
         const highlighted = element.querySelectorAll('.highlight');
-        highlighted.forEach((span: Element) => {
+        highlighted.forEach((span) => {
           span.outerHTML = span.innerHTML;
         });
       }
       
       // 搜索函数
-      function performSearch(searchTerm: string): void {
+      function performSearch(searchTerm) {
         const term = searchTerm.toLowerCase().trim();
         let visibleCount = 0;
         
@@ -441,8 +446,8 @@ const posts: PostData[] = [
             visibleCount++;
             
             // 高亮匹配的文本
-            const titleElement = element.querySelector('.post-title a') as HTMLElement;
-            const descElement = element.querySelector('.post-description') as HTMLElement;
+            const titleElement = element.querySelector('.post-title a');
+            const descElement = element.querySelector('.post-description');
             const tagElements = element.querySelectorAll('.tag');
             
             if (titleMatch && titleElement) {
@@ -452,7 +457,7 @@ const posts: PostData[] = [
               descElement.innerHTML = highlightText(post.description, term);
             }
             if (tagMatch) {
-              tagElements.forEach((tagEl: Element, index: number) => {
+              tagElements.forEach((tagEl, index) => {
                 if (post.tags[index] && post.tags[index].toLowerCase().includes(term)) {
                   tagEl.innerHTML = highlightText(post.tags[index], term);
                 }
@@ -481,9 +486,9 @@ const posts: PostData[] = [
       }
       
       // 防抖函数
-      function debounce<T extends (...args: any[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
-        let timeout: NodeJS.Timeout;
-        return function executedFunction(...args: Parameters<T>) {
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
           const later = () => {
             clearTimeout(timeout);
             func(...args);
@@ -494,8 +499,8 @@ const posts: PostData[] = [
       }
       
       // 绑定搜索事件
-      const debouncedSearch = debounce((e: Event) => {
-        const target = e.target as HTMLInputElement;
+      const debouncedSearch = debounce((e) => {
+        const target = e.target;
         if (target) {
           performSearch(target.value);
         }
@@ -505,7 +510,7 @@ const posts: PostData[] = [
         searchInput.addEventListener('input', debouncedSearch);
         
         // 支持回车键搜索
-        searchInput.addEventListener('keydown', (e: KeyboardEvent) => {
+        searchInput.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
             performSearch(searchInput.value);
@@ -513,8 +518,8 @@ const posts: PostData[] = [
         });
         
         // 清空搜索时恢复所有文章
-        searchInput.addEventListener('keyup', (e: KeyboardEvent) => {
-          const target = e.target as HTMLInputElement;
+        searchInput.addEventListener('keyup', (e) => {
+          const target = e.target;
           if (e.key === 'Escape' || (!target.value && e.key === 'Backspace')) {
             searchInput.value = '';
             performSearch('');
