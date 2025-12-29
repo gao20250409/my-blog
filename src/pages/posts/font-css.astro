@@ -1,0 +1,135 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS如何让网页的字体变细变清晰？</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 CSS如何让网页的字体变细变清晰？</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："font","css", Web开发,
+          前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>font-weight + font-family,-webkit-font-smoothing,text-rendering</p>
+
+      <div class="feature-list">
+        <h3>🌟 推荐方案：</h3>
+        <pre>
+        {`
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+          font-weight: 300; /* 或 200、100，越小越细（取决于字体是否支持） */
+          -webkit-font-smoothing: antialiased;     /* macOS / WebKit 下更清晰 */
+          -moz-osx-font-smoothing: grayscale;      /* Firefox on macOS */
+          text-rendering: optimizeLegibility;      /* 提升小字号文字的可读性 */
+        }
+        `}
+       </pre>
+      </div>
+      <div class="feature-list">
+        <h3>🌟 适配高 DPI（Retina）屏幕：</h3>
+        <pre>
+        {`
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+          body {
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+          }
+        }
+        `}
+       </pre>
+      </div>
+      <div class="feature-list">
+        <h3>❌ 不推荐的做法：</h3>
+        <ul>
+          <li>
+            <strong>⚡单纯用font-weight: lighter</strong
+            >：浏览器可能无法可靠映射到细体
+          </li>
+        </ul>
+      </div>
+      <!-- <h2>为什么选择 Astro？</h2>
+        <ol>
+            <li><strong>性能优先</strong>：Astro 生成的网站加载速度极快</li>
+            <li><strong>开发者体验</strong>：熟悉的语法，强大的工具链</li>
+            <li><strong>灵活性</strong>：可以渐进式地添加交互性</li>
+            <li><strong>SEO 友好</strong>：服务端渲染，搜索引擎优化</li>
+        </ol> -->
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
