@@ -7,7 +7,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CSS如何让网页的字体变细变清晰？</title>
+    <title>
+     如何把0和1互转？
+    </title>
     <style>
       body {
         font-family:
@@ -69,64 +71,75 @@
   </head>
   <body>
     <div class="container">
-      <h1>🚀 CSS如何让网页的字体变细变清晰？</h1>
+      <h1>
+        🚀 如何把0和1互转？
+      </h1>
 
       <div class="meta-info">
         <p>
-          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："font","css", Web开发,
-          前端, 面试
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："0和1互转",
+          Web开发, 前端, 面试
         </p>
       </div>
 
       <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
 
       <h2>总结</h2>
-      <p>font-weight + font-family,-webkit-font-smoothing,text-rendering</p>
+      <p>
+        +!n;n ^ 1;n === 0 ? 1 : 0;1 - n;
+      </p>
 
       <div class="feature-list">
-        <h3>🌟 推荐方案：</h3>
-        <pre>
+        <h3>🌟  方法 1：逻辑非 + 转数字（最直观）：</h3>
+       <pre>
         {`
-        body {
-font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-          font-weight: 300; /* 或 200、100，越小越细（取决于字体是否支持） */
-          -webkit-font-smoothing: antialiased;     /* macOS / WebKit 下更清晰 */
-          -moz-osx-font-smoothing: grayscale;      /* Firefox on macOS */
-          text-rendering: optimizeLegibility;      /* 提升小字号文字的可读性 */
+        function toggleBit(n) {
+          return +!n;  // 或 Number(!n)
         }
-        `}
-       </pre>
-      </div>
-      <div class="feature-list">
-        <h3>🌟 适配高 DPI（Retina）屏幕：</h3>
-        <pre>
-        {`
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-          body {
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-          }
-        }
-        `}
-       </pre>
-      </div>
-      <div class="feature-list">
-        <h3>❌ 不推荐的做法：</h3>
-        <ul>
-          <li>
-            <strong>⚡单纯用font-weight: lighter</strong
-            >：浏览器可能无法可靠映射到细体
-          </li>
-        </ul>
-      </div>
-      <!-- <h2>为什么选择 Astro？</h2>
-        <ol>
-            <li><strong>性能优先</strong>：Astro 生成的网站加载速度极快</li>
-            <li><strong>开发者体验</strong>：熟悉的语法，强大的工具链</li>
-            <li><strong>灵活性</strong>：可以渐进式地添加交互性</li>
-            <li><strong>SEO 友好</strong>：服务端渲染，搜索引擎优化</li>
-        </ol> -->
 
+        // 示例
+        toggleBit(0); // → 1
+        toggleBit(1); // → 0
+        `}
+       </pre>
+       <p>⚠️ 注意：仅适用于输入严格为 0 或 1；若传入其他“假值”（如 null, undefined, ''），也会转成 1。</p>
+      </div>
+
+      <div class="feature-list">
+        <h3>🌟 方法 2：异或（XOR）——高效且精准：</h3>
+       <pre>
+        {`
+        function toggleBit(n) {
+          return n ^ 1;
+        }
+
+        // 示例
+        toggleBit(0); // 0 ^ 1 = 1
+        toggleBit(1); // 1 ^ 1 = 0
+        `}
+       </pre>
+       <p>✅ 优点：运算快、严格只对 0/1 有效</p>
+      </div>
+
+       <div class="feature-list">
+        <h3>🌟  方法 3：三元运算符（最易读）：</h3>
+       <pre>
+        {`
+        const toggleBit = n => n === 1 ? 0 : 1;
+        `}
+       </pre>
+       <p>⚠️ 注意：仅适用于输入严格为 0 或 1；</p>
+      </div>
+      
+       <div class="feature-list">
+        <h3>🌟   方法 4：减法（数学简洁）：</h3>
+       <pre>
+        {`
+       const toggleBit = n => 1 - n;
+        `}
+       </pre>
+       <p>⚠️ 注意：仅适用于输入严格为 0 或 1；</p>
+      </div>
       <div style="text-align: center;">
         <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
       </div>
