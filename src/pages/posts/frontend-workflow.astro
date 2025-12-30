@@ -1,0 +1,115 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端开发工作流程</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 前端开发工作流程</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："before和","after",
+          Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        产品或功能研讨阶段——UI设计阶段——开发阶段——软件测试阶段——软件发布阶段
+      </p>
+
+      <h2>项目描述</h2>
+      <p>公司开发的项目是公司官网，PC后台管理，微信公众号/小程序，后端是JAVA，只负责提供接口API等，前端采用单页面模式开发，服务端渲染较少。使用的技术主要有：react,vue, element, taro, antdesign, uniapp, astro</p>
+
+      <h2>产品或功能研讨阶段</h2>
+      <p>
+        每当开发一个新功能或新产品，首先产品经理会开一个简单的交底会议，讨论功能模块的可行性及开发难度，开发周期等。
+      </p>
+
+      <h2>UI设计阶段</h2>
+      <p>这个阶段一般没开发什么事</p>
+
+      <h2>开发阶段</h2>
+      <ol>
+        <li><strong>文档</strong>：比较重要的两样东西“UI设计稿” 和 “产品说明文档” 我们统一放在蓝湖</li>
+        <li><strong>代码托管</strong>：代码直接托管在gitlab</li>
+        <li><strong>协作开发</strong>：多人协作的话则会采用 gitflow 工作流，一般如果是新项目则会组件拆分，优先开始组件开发。</li>
+      </ol>
+
+      <h2>软件测试阶段/软件发布阶段</h2>
+      <p>开发完成后将代码上传到仓库，由运维人员进行部署及版本管理。</p>
+
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

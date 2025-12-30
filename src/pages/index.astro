@@ -11,6 +11,22 @@ interface PostData {
 
 const posts: PostData[] = [
   {
+    title: "CSS绘制一个三角形,并阐明原理",
+    description:
+      "三角形的原理就是一个盒子有四个边框交界处都是三角形(度角跟border-width设置有关)，当盒子宽高都为0，就是一个由4个三角形形成的正方形/长方形，给 border-color 设置透明，设置颜色的边就是一个三角形了。",
+    url: "./posts/css-triangle",
+    date: "2025-12-29",
+    tags: ["工作流程", "Web开发", "前端", "面试"],
+  },
+   {
+    title: "前端开发工作流程",
+    description:
+      "产品或功能研讨阶段——UI设计阶段——开发阶段——软件测试阶段——软件发布阶段。",
+    url: "./posts/frontend-workflow",
+    date: "2025-12-29",
+    tags: ["工作流程", "Web开发", "前端", "面试"],
+  },
+  {
     title: "造成内存泄漏的操作有哪些？前端如何规避",
     description:
       "内存泄漏（Memory Leak）是对象被意外长期持有引用，导致无法被回收，最终可能耗尽系统资源、引发程序卡顿甚至崩溃。",
