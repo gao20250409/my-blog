@@ -1,0 +1,293 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>造成内存泄漏的操作有哪些？前端如何规避</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      
+      /* 表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 1em;
+      }
+      
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀造成内存泄漏的操作有哪些？前端如何规避</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："内存泄漏",Web开发,
+          前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        内存泄漏（Memory
+        Leak）是对象被意外长期持有引用，导致无法被回收，最终可能耗尽系统资源、引发程序卡顿甚至崩溃。
+      </p>
+
+      <h2>🔥 JavaScript 常见内存泄漏场景</h2>
+      <div class="feature-list">
+        <h3>🌟 1. 未移除的事件监听器（Event Listeners）：</h3>
+        <p>
+          现代声明式框架（React/Vue）确实大幅降低了内存泄漏的常见风险，尤其是传统手动 DOM 操作中最易出错的事件监听部分。事件监听用 @click/onClick 基本无忧,尽量用虚拟dom.
+        </p>
+        <pre>
+          {`
+          const btn = document.getElementById('btn');
+          function handleClick() { /* ... */ }
+
+          btn.addEventListener('click', handleClick);
+          // ❌ 页面跳转 / 组件销毁时未移除：应添加如下代码
+          // btn.removeEventListener('click', handleClick);
+
+          `}
+        </pre>
+        <p>
+          ✅ 修复：组件销毁时（如 React 的 useEffect cleanup、Vue 的
+          beforeUnmount）主动移除。
+        </p>
+        <p>✅ React（函数组件 + useEffect）</p>
+        <pre>
+          {`
+        import { useEffect, useRef } from 'react';
+
+        function MyButton() {
+          const btnRef = useRef<HTMLButtonElement>(null);
+          const dataRef = useRef({ id: 1, hugeList: new Array(10000).fill(0) });
+
+          useEffect(() => {
+            const btn = btnRef.current;
+            if (!btn) return;
+
+            // 定义 handler（避免每次 render 生成新函数）
+            const handleClick = () => {
+              console.log('Clicked!', dataRef.current.id);
+            };
+
+            btn.addEventListener('click', handleClick);
+
+            // ✅ Cleanup 函数：组件卸载 or 依赖变化时自动执行
+            return () => {
+              btn.removeEventListener('click', handleClick);
+              // 可选：清理闭包引用（防万一）
+              dataRef.current = null;
+            };
+          }, []); // 依赖为空数组 → 仅 mount/unmount 时执行
+
+          return <button ref={btnRef}>Click Me</button>;
+        }
+          `}
+        </pre>
+        <p>✅Vue 3（Composition API）</p>
+        <pre>
+          {`
+        <template>
+          <button ref="btnRef">Click Me</button>
+        </template>
+
+        <script setup>
+        import { ref, onMounted, onUnmounted } from 'vue';
+
+        const btnRef = ref(null);
+        const localData = { id: 1, cache: new Map() };
+
+        onMounted(() => {
+          const btn = btnRef.value;
+          if (!btn) return;
+
+          const handleClick = () => {
+            console.log('Vue clicked!', localData.id);
+          };
+
+          btn.addEventListener('click', handleClick);
+
+          // ✅ 在卸载前清理
+          onUnmounted(() => {
+            btn.removeEventListener('click', handleClick);
+            // 可选：断开引用
+            localData.cache.clear();
+          });
+        });
+        </script>
+          `}
+        </pre>
+        <p>
+          ⚠️ 注意：若用 KeepAlive，应改用 onDeactivated / onActivated
+          来暂停/恢复监听，而非完全移除。
+        </p>
+      </div>
+
+      <div class="feature-list">
+        <h3>🌟 2. 闭包意外捕获大对象：</h3>
+        <pre>
+          {`
+          function createHandler(data) {
+            const hugeArray = new Array(1e6).fill(0); // 大数组
+            return function onClick() {
+              console.log(data, hugeArray.length); // 闭包引用了 hugeArray！
+            };
+          }
+          element.addEventListener('click', createHandler(someData));
+          // 即使 hugeArray 不再需要，也因闭包被持有 → 泄漏
+          `}
+        </pre>
+        <p>
+          ✅
+          修复：避免在闭包中引用不必要的大对象；将需保留的数据显式提取为轻量副本。
+        </p>
+      </div>
+      <div class="feature-list">
+        <h3>🌟 3. 定时器未清除（setInterval / setTimeout）：</h3>
+      </div>
+      <div class="feature-list">
+        <h3>🌟 4. 控制台日志（console.log）持有引用（开发时易忽略！）：</h3>
+      </div>
+        <div class="feature-list">
+        <h3>🌟 5. 全局变量 / 模块级缓存无限增长：</h3>
+      </div>
+       <h2>🔍 如何检测 JS 内存泄漏？</h2>
+        <ol>
+            <li><strong>打开 DevTools → Memory Tab</strong>：</li>
+            <li><strong>先做一次 强制 GC（点击垃圾箱图标 🗑️）</strong></li>
+            <li><strong>点击 Heap Snapshot 记录初始状态</strong></li>
+            <li><strong>再强制 GC → 再拍快照</strong></li>
+            <li><strong>执行可疑操作（如打开/关闭弹窗、切换路由）</strong></li>
+            <li><strong>对比两次快照：</strong>
+            <br>筛选 # New（新增对象）或 # Deleted（应删未删）
+            <br>查看 Detached DOM tree（脱离文档但仍被 JS 引用的 DOM 节点！⚠️ 高危泄漏点）
+            <br>
+            💡 技巧：在 Allocation instrumentation on timeline 模式下，可实时看到哪些函数在持续分配内存。
+            </li>
+        </ol>
+        <h2>🛡️ 防泄漏最佳实践（前端工程师）</h2>
+        
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>场景</th>
+              <th>推荐做法</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>React</td>
+              <td>useEffect 返回 cleanup 函数；避免在 useRef 存大对象</td>
+            </tr>
+            <tr>
+              <td>Vue</td>
+              <td>在 beforeUnmount 中解绑事件、清除定时器</td>
+            </tr>
+            <tr>
+              <td>通用</td>
+              <td>少用全局变量；慎用闭包；用 WeakMap/WeakSet 替代普通 Map/Set 存对象引用</td>
+            </tr>
+            <tr>
+              <td>调试</td>
+              <td>开发时开启 Performance monitor 面板，观察 JS heap size 是否持续上升</td>
+            </tr>
+          </tbody>
+        </table>
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
