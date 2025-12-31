@@ -1,0 +1,120 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>浏览器是怎样判断元素是否和某个CSS选择器匹配?</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 浏览器是怎样判断元素是否和某个CSS选择器匹配?</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："CSS引擎","优化",
+          Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        现代 CSS 引擎（如 Gecko、Blink）中样式匹配（Style Matching / Selector
+        Matching）优化的两个核心思想：从右向左匹配 + 基于规则驱动的集合筛选。
+      </p>
+      <p>
+        浏览器先产生一个元素集合，这个集合往往由最后一个部分的索引产生（如果没有索引就是所有元素的集合）。然后向上匹配，如果不符合上一个部分，就把元素从集合中删除，直到真个选择器都匹配完，还在集合中的元素就匹配这个选择器了。
+      </p>
+      <h2>举例：</h2>
+      <p>
+        有选择器： div.ready #wrapper > .bg-red 
+        <br>先把所有元素 class 中有 bg-red 的元素拿出来组成一个集合， 
+        <br>然后上一层，对每一个集合中的元素，如果元素的parent id 不为 #wrapper 则把元素从集合中删去。
+         <br>再向上，从这个元素的父元素开始向上找，没有找到一个 tagName 为 div 且class 中有 ready 的元素，就把原来的元素从集合中删去。
+         <br>至此这个选择器匹配结束，所有还在集合中的元素满足。大体就是这样，不过浏览器还会有一些奇怪的优化。
+      </p>
+      <h2>注意：</h2>
+      <ol>
+        <li>
+          <strong>为什么从后往前匹配因为效率和文档流的解析方向</strong
+          >：效率不必说，找元素的父亲和之前的兄弟比遍历所有儿子快而且方便。关于文档流的解析方向，是因为现在的
+          CSS，一个元素只要确定了这个元素在文档流之前出现过的所有元素，就能确定他的匹配情况；应用在即使
+          html
+          没有载入完成，浏览器也能根据已经载入的这一部分信息完全确定出现过的元素的属性。
+        </li>
+        <li>
+          <strong>为什么是用集合主要也还是效率</strong>：基于 CSS Rule
+          数量远远小于元素数量的假设和索引的运用，遍历每一条 CSS Rule
+          通过集合筛选，比遍历每一个元素再遍历每一条 Rule 匹配要快得多。
+        </li>
+      </ol>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

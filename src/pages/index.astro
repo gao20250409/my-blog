@@ -11,6 +11,22 @@ interface PostData {
 
 const posts: PostData[] = [
   {
+    title: "浏览器是怎样判断元素是否和某个CSS选择器匹配?",
+    description:
+      "从右向左匹配 + 基于规则驱动的集合筛选",
+    url: "./posts/css-dom",
+    date: "2025-12-30",
+    tags: ["CSS引擎","优化", "Web开发", "前端", "面试"],
+  },
+    {
+    title: "html5的离线储存原理",
+    description:
+      " 现代推荐方案：Service Workers + Cache Storage API",
+    url: "./posts/service-worker",
+    date: "2025-12-30",
+    tags: ["离线储存","Service Worker", "Web开发", "前端", "面试"],
+  },
+  {
     title: "CSS绘制一个三角形,并阐明原理",
     description:
       "三角形的原理就是一个盒子有四个边框交界处都是三角形(度角跟border-width设置有关)，当盒子宽高都为0，就是一个由4个三角形形成的正方形/长方形，给 border-color 设置透明，设置颜色的边就是一个三角形了。",

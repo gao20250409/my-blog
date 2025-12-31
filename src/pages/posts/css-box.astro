@@ -167,6 +167,12 @@
           </li>
         </ul>
       </div>
+      <h2>Standards模式和Quirks模式</h2>
+      <p>
+标准模式宽度就是内容本身，而怪异模式是内容加上padding加上border，但是不加margin
+
+可以看到很多网站都使用 <code>{`* { box-sizing: border-box; }`}</code> 这个样式，因为浏览器默认是标准模式，也就是 content-box , 而大家其实更习惯使用怪异模式
+      </p>
       <h2>flex-basis 是什么？</h2>
       <p>
         一句话总览（记忆锚点）
