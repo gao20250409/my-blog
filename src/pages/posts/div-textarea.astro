@@ -7,9 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      ::before和:after中单冒号和双冒号的区别是什么，这两个伪元素有什么作用
-    </title>
+    <title>用div模拟textarea的实现</title>
     <style>
       body {
         font-family:
@@ -71,13 +69,11 @@
   </head>
   <body>
     <div class="container">
-      <h1>
-        🚀 ::before和:after中单冒号和双冒号的区别是什么，这两个伪元素有什么作用
-      </h1>
+      <h1>🚀 用div模拟textarea的实现</h1>
 
       <div class="meta-info">
         <p>
-          📅 发布于 2025年12月 | 👤 作者：博主 | 🏷️ 标签："置换元素","非置换元素",
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签："模拟textarea","div",
           Web开发, 前端, 面试
         </p>
       </div>
@@ -86,33 +82,38 @@
 
       <h2>总结</h2>
       <p>
-        :before和:after其实还是表示伪元素，在css3中已经修订为::before和::after了，只是为了能兼容IE浏览器，所以也可以表示成:before和:after
+        主要是利用了 HTML5 提供的 contenteditable 属性，让普通的 div可以进行编辑。 结合 CSS 可以做到拉伸、滚动等效果。
       </p>
+      <div class="feature-list">
+        <h3>🌟 完整代码：</h3>
+        <pre>
+        {`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>用一个div模拟textarea的实现</title>
+        </head>
+        <style>
+        .edit{
+            width: 300px;
+            height: 200px;
+            padding: 5px;
+            border: solid 1px #ccc;
+            resize: both; //右下角自由拉伸
+            overflow:auto; //滚动
+        }
+        </style>
 
-      <div class="feature-list">
-        <h3>🌟 伪类 的核心特性：</h3>
-        <ul>
-          <li>
-            <strong>🏝️ :表示伪类，是一种样式</strong>：比如:hover, :active等
-          </li>
-        </ul>
+        <body>
+            <h3>用一个div模拟textarea的实现</h3>
+              <div class="edit" contenteditable="true">
+                这里是可以编辑的内容，配合容器的overflow，多行截断，自定义滚动条。
+            </div>
+        </body>
+        </html>
+        `}
+       </pre>
       </div>
-      <div class="feature-list">
-        <h3>🌟 伪元素 的核心特性：</h3>
-        <ul>
-          <li>
-            <strong>⚡ ::表示伪元素，是具体的内容</strong
-            >：比如::before是在元素前面插入内容，::after则是在元素后面插入内容，不过需要content配合，并且插入的内容是inline的
-          </li>
-        </ul>
-      </div>
-      <!-- <h2>为什么选择 Astro？</h2>
-        <ol>
-            <li><strong>性能优先</strong>：Astro 生成的网站加载速度极快</li>
-            <li><strong>开发者体验</strong>：熟悉的语法，强大的工具链</li>
-            <li><strong>灵活性</strong>：可以渐进式地添加交互性</li>
-            <li><strong>SEO 友好</strong>：服务端渲染，搜索引擎优化</li>
-        </ol> -->
 
       <div style="text-align: center;">
         <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
