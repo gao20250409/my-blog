@@ -1,0 +1,265 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>常用的前端性能优化有哪些？</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+
+      /* 性能指标卡片样式 */
+      .performance-metrics {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+        margin: 30px 0;
+        border: 1px solid #e9ecef;
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+      }
+
+      .metric-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: box-shadow 0.2s ease;
+      }
+
+      .metric-card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .metric-name {
+        font-size: 1em;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #495057;
+      }
+
+      .metric-value {
+        font-size: 1.5em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #28a745;
+      }
+
+      .metric-value.warning {
+        color: #fd7e14;
+      }
+
+      .metric-value.good {
+        color: #28a745;
+      }
+
+      .metric-full-name {
+        font-size: 0.75em;
+        color: #6c757d;
+        margin-bottom: 5px;
+      }
+
+      .metric-description {
+        font-size: 0.8em;
+        color: #6c757d;
+        line-height: 1.3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 常用的前端性能优化有哪些？</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：性能优化, Web开发,
+          前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        前端性能优化是提升用户体验的关键，通过监控和优化核心Web指标，可以显著改善网站的加载速度和交互体验。
+      </p>
+
+      <!-- 网站性能指标展示 -->
+      <div class="performance-metrics">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-icon">⚡</span>
+            <div class="metric-name">首屏加载时间</div>
+            <div class="metric-full-name">First Contentful Paint (FCP)</div>
+            <div class="metric-description">
+              首次内容绘制时间，影响用户第一印象
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-icon">👁️</span>
+            <div class="metric-name">白屏时间</div>
+            <div class="metric-full-name">Time to First Byte (TTFB)</div>
+            <div class="metric-description">
+              服务器响应时间，页面开始加载的起点
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-icon">🖱️</span>
+            <div class="metric-name">可交互时间</div>
+            <div class="metric-full-name">Time to Interactive (TTI)</div>
+            <div class="metric-description">
+              页面完全可交互，用户能够正常操作
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-icon">📊</span>
+            <div class="metric-name">最大内容绘制</div>
+            <div class="metric-full-name">Largest Contentful Paint (LCP)</div>
+            <div class="metric-description">
+              最大元素渲染完成时间，衡量感知加载速度
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-icon">📱</span>
+            <div class="metric-name">累计布局偏移</div>
+            <div class="metric-full-name">Cumulative Layout Shift (CLS)</div>
+            <div class="metric-description">
+              视觉稳定性，避免页面元素意外移动
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span class="metric-icon">⚙️</span>
+            <div class="metric-name">首次输入延迟</div>
+            <div class="metric-full-name">First Input Delay (FID)</div>
+            <div class="metric-description">
+              用户首次交互到浏览器响应的延迟时间
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h3>🌟 核心性能优化策略：</h3>
+        <ul>
+           <li>
+            <strong>⚡减少请求数量：</strong>：
+             <br>使用 CSS Sprites（适合小图标）
+             <br>使用GraphQL，前端数据聚合
+          </li>
+          <li>
+            <strong>🏝️ 资源优化</strong>：
+            <div style="margin-top: 10px; padding: 15px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; border-left: 3px solid #28a745;">
+              🏝️压缩：HTML/CSS/JS →打包工具自带Tree Shaking
+              <div style="margin-bottom: 12px;">
+                <strong style="color: #2c3e50;">📸 图片优化策略：</strong>
+                <br>
+                <span style="color: #5a6c7d; font-size: 0.95em;">统一使用WebP格式，图片质量保持80%左右，在保证视觉效果的同时显著减少文件大小</span>
+              </div>
+              <div>
+                <strong style="color: #2c3e50;">🗜️ Gzip压缩机制：</strong>
+                <br>
+                <span style="color: #5a6c7d; font-size: 0.95em;">浏览器与服务器协商压缩 → 浏览器请求头声明支持gzip → 服务器压缩响应内容 → 浏览器自动解压显示</span>
+                <br>
+                <code style="background: rgba(40, 167, 69, 0.1); padding: 3px 8px; border-radius: 4px; font-size: 0.9em; color: #28a745; border: 1px solid rgba(40, 167, 69, 0.2);">gzip on;</code>
+              </div>
+            </div>
+          </li>
+          <li>
+            <strong>⚡ 网站加载优化：</strong>：
+             <br>按需加载：代码分割技术，把大的代码包拆分成多个小模块，用户根据需求加载对应代码、
+             <br>懒加载、
+              <br>分层加载：先快后好。先看到内容，再优化质量；1.首页缩略图，为图片生成缩略图
+             
+          </li>
+          
+          <li>
+            <strong>🎯 缓存策略</strong>：
+            <br />浏览器缓存:配置web服务器的http缓存后配置，解决重复访问问题
+            <br /> CDN缓存：解决地理距离问题
+            <br />Service Worker
+          </li>
+        </ul>
+      </div>
+      <!-- <h2>为什么选择 Astro？</h2>
+        <ol>
+            <li><strong>性能优先</strong>：Astro 生成的网站加载速度极快</li>
+            <li><strong>开发者体验</strong>：熟悉的语法，强大的工具链</li>
+            <li><strong>灵活性</strong>：可以渐进式地添加交互性</li>
+            <li><strong>SEO 友好</strong>：服务端渲染，搜索引擎优化</li>
+        </ol> -->
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
