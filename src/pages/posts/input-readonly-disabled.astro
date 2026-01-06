@@ -1,0 +1,198 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>input元素中readonly和disabled属性的理解</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      
+      /* 对比表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 1em;
+      }
+      
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      
+      .highlight-box {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #28a745;
+        margin: 20px 0;
+      }
+      
+      .highlight-box strong {
+        color: #2c3e50;
+      }
+      
+      .highlight-box span {
+        color: #5a6c7d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 input元素中readonly和disabled属性的理解</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签："readonly","disabled","input", Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        在表现上readonly和disabled都不能让用户对input进行编辑，但从含义、外观、事件响应和数据传输等方面存在重要差别。
+      </p>
+
+      <h2>核心区别对比</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>对比维度</th>
+            <th>readonly（只读）</th>
+            <th>disabled（禁用）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>含义</td>
+            <td>只允许用户填写一次的信息，提交后不允许再次修改</td>
+            <td>input不允许填写和使用（权限或其他原因）</td>
+          </tr>
+          <tr>
+            <td>外观表现</td>
+            <td>与普通input无异，视觉上正常显示</td>
+            <td>呈灰色显示，明显的禁用状态</td>
+          </tr>
+          <tr>
+            <td>用户交互</td>
+            <td>可以点击和获得焦点，但无法编辑内容</td>
+            <td>不允许点击，无法获得焦点</td>
+          </tr>
+          <tr>
+            <td>事件响应</td>
+            <td>✅ 会响应各种事件（click、focus等）</td>
+            <td>❌ 不响应任何事件</td>
+          </tr>
+          <tr>
+            <td>数据传输</td>
+            <td>✅ 数据会被获取和上传到服务器</td>
+            <td>❌ 数据不会被获取和上传</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <strong>💡 使用场景建议：</strong>
+        <br><br>
+        <div style="margin-bottom: 12px;">
+          <strong style="color: #2c3e50;">📝 readonly适用场景：</strong>
+          <br>
+          <span style="color: #5a6c7d; font-size: 0.95em;">用户信息确认页面、订单详情展示、已提交的表单回显等需要显示但不允许修改的场景</span>
+        </div>
+        <div>
+          <strong style="color: #2c3e50;">🚫 disabled适用场景：</strong>
+          <br>
+          <span style="color: #5a6c7d; font-size: 0.95em;">权限不足、条件未满足、功能暂时不可用等需要完全禁用交互的场景</span>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

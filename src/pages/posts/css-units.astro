@@ -1,0 +1,263 @@
+---
+// Hello Astro 文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>px、em、rem有什么不同</title>
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_BEACON_TOKEN"}'></script>
+    
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      
+      /* 对比表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 1em;
+      }
+      
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      
+      .code-block {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+      }
+      
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      
+      .highlight-box strong {
+        color: #2c3e50;
+      }
+      
+      .highlight-box span {
+        color: #5a6c7d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 px、em、rem有什么不同</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签："px","em","rem","CSS单位", Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>总结</h2>
+      <p>
+        px是绝对单位，em相对于当前元素字体大小，rem相对于根元素字体大小。理解它们的区别对于响应式设计和可维护的CSS至关重要。
+      </p>
+
+      <h2>三种单位详细对比</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>单位</th>
+            <th>定义</th>
+            <th>特点</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>px（像素）</td>
+            <td>绝对单位，1px表示屏幕上的一个CSS像素点</td>
+            <td>固定大小，不随字体、父元素变化</td>
+            <td>边框、阴影、精确控制的小尺寸</td>
+          </tr>
+          <tr>
+            <td>em</td>
+            <td>相对单位，1em = 当前元素的font-size值</td>
+            <td>可继承、可级联，容易产生"em倍增效应"</td>
+            <td>组件内部间距、需要跟随字体缩放的场景</td>
+          </tr>
+          <tr>
+            <td>rem</td>
+            <td>相对单位，1rem = 根元素&lt;html&gt;的font-size值</td>
+            <td>不继承、不级联，全局可控，避免嵌套问题</td>
+            <td>页面布局、全局间距、响应式设计</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>代码示例</h2>
+      
+      <h3>基本用法示例：</h3>
+      <div class="code-block">
+html {`{`}<br>
+&nbsp;&nbsp;font-size: 16px; /* 默认根字号 */<br>
+{`}`}<br><br>
+
+p {`{`}<br>
+&nbsp;&nbsp;font-size: 1.5rem; /* 总是 24px (16px × 1.5) */<br>
+{`}`}<br><br>
+
+div {`{`}<br>
+&nbsp;&nbsp;padding: 2rem; /* 总是 32px (16px × 2) */<br>
+&nbsp;&nbsp;border: 1px solid #ccc; /* 固定1像素边框 */<br>
+{`}`}
+      </div>
+
+      <div class="highlight-box">
+        <strong>🌟 常用技巧：</strong>
+        <br><br>
+        <div style="margin-bottom: 12px;">
+          <strong style="color: #2c3e50;">📝 方便计算的根字号设置：</strong>
+          <br>
+          <span style="color: #5a6c7d; font-size: 0.95em;">为方便计算，很多项目会重置根字号</span>
+        </div>
+        <div class="code-block" style="margin: 10px 0;">
+html {`{`}<br>
+&nbsp;&nbsp;font-size: 62.5%; /* 16px × 62.5% = 10px → 1rem = 10px */<br>
+{`}`}<br><br>
+
+body {`{`}<br>
+&nbsp;&nbsp;font-size: 1.6rem; /* = 16px，恢复正常字体大小 */<br>
+{`}`}<br><br>
+
+.container {`{`}<br>
+&nbsp;&nbsp;padding: 2rem; /* = 20px，计算更直观 */<br>
+&nbsp;&nbsp;margin: 1.5rem; /* = 15px */<br>
+{`}`}
+        </div>
+        <div>
+          <strong style="color: #2c3e50;">💡 优势：</strong>
+          <br>
+          <span style="color: #5a6c7d; font-size: 0.95em;">1rem = 10px，计算更加直观，设计稿转换更容易</span>
+        </div>
+      </div>
+
+      <h2>em的倍增效应示例</h2>
+      <div class="code-block">
+.parent {`{`}<br>
+&nbsp;&nbsp;font-size: 1.2em; /* 相对于父元素 */<br>
+{`}`}<br><br>
+
+.child {`{`}<br>
+&nbsp;&nbsp;font-size: 1.2em; /* 1.2 × 1.2 = 1.44倍 */<br>
+{`}`}<br><br>
+
+.grandchild {`{`}<br>
+&nbsp;&nbsp;font-size: 1.2em; /* 1.44 × 1.2 = 1.728倍 */<br>
+{`}`}<br><br>
+
+/* 使用rem避免倍增效应 */<br>
+.parent-rem {`{`}<br>
+&nbsp;&nbsp;font-size: 1.2rem; /* 始终相对于根元素 */<br>
+{`}`}<br><br>
+
+.child-rem {`{`}<br>
+&nbsp;&nbsp;font-size: 1.2rem; /* 仍然是1.2倍，不会累积 */<br>
+{`}`}
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
