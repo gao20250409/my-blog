@@ -1,0 +1,403 @@
+---
+// JavaScript缓存机制文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript的缓存机制来提高性能 - 四大缓存策略全解析</title>
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_BEACON_TOKEN"}'></script>
+    
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      
+      /* 代码块样式 */
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      
+      .code-comment {
+        color: #68d391;
+      }
+      
+      /* 对比表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 0.95em;
+      }
+      
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+        min-width: 120px;
+      }
+      
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      
+      .highlight-box strong {
+        color: #2c3e50;
+      }
+      
+      .section-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #2196f3;
+        margin: 25px 0;
+        font-size: 1.1em;
+      }
+      
+      .optimization-tip {
+        background: #f0f8ff;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #4299e1;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+      
+      .emoji-large {
+        font-size: 1.2em;
+        margin-right: 8px;
+      }
+      
+      .strategy-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+      
+      .strategy-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #6c757d;
+      }
+      
+      .strategy-card.runtime {
+        border-left-color: #28a745;
+        background: #f8fff8;
+      }
+      
+      .strategy-card.code-level {
+        border-left-color: #007bff;
+        background: #f0f8ff;
+      }
+      
+      .strategy-card.build-time {
+        border-left-color: #ffc107;
+        background: #fffdf0;
+      }
+      
+      .strategy-card.persistent {
+        border-left-color: #dc3545;
+        background: #fff8f8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 JavaScript的缓存机制来提高性能</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：JavaScript缓存, 性能优化, 记忆化, HTTP缓存, Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+
+      <h2>🔹 一、运行时内置缓存（浏览器/Node.js 提供）</h2>
+      
+      <h3>HTTP 缓存</h3>
+      <p>浏览器对 script/import 的 JS 文件按 Cache-Control 等头缓存</p>
+      
+      <h3>V8 引擎优化</h3>
+      <ul>
+        <li><strong>内联缓存（Inline Caching）</strong>：加速属性访问</li>
+        <li><strong>代码缓存（Code Caching）</strong>：加快二次执行</li>
+      </ul>
+
+      <div class="highlight-box">
+        <strong>✅ 工程建议：</strong>在 Vite + 模块联邦项目中，确保：
+        <div class="code-block">
+<span class="code-comment">// vite.config.ts</span><br>
+build: {`{`}<br>
+&nbsp;&nbsp;rollupOptions: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;output: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;entryFileNames: `[name].[hash].js`, <span class="code-comment">// 利用长期缓存</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chunkFileNames: `[name].[hash].js`,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`}
+        </div>
+        <p>并配置 CDN 缓存策略，让 Remote 模块只更新变动部分。</p>
+      </div>
+
+      <h2>🔹 二、代码级显式缓存（开发者可控）</h2>
+
+      <h3>记忆化（Memoization）—— 缓存纯函数结果</h3>
+      <p><strong>适用于：</strong>计算密集、输入可序列化的场景（如数学公式、格式转换、React 计算属性）。</p>
+
+      <div class="code-block">
+<span class="code-comment">// 基础版：用 Map 缓存</span><br>
+function memoize(fn) {`{`}<br>
+&nbsp;&nbsp;const cache = new Map();<br>
+&nbsp;&nbsp;return (...args) => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const key = JSON.stringify(args); <span class="code-comment">// 注意：循环引用会报错！</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (cache.has(key)) return cache.get(key);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const result = fn(...args);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cache.set(key, result);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return result;<br>
+&nbsp;&nbsp;{`}`};<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+const calcTax = memoize((income, rate) => {`{`}<br>
+&nbsp;&nbsp;console.log("计算中..."); <span class="code-comment">// 仅首次打印</span><br>
+&nbsp;&nbsp;return income * rate;<br>
+{`}`});<br><br>
+
+calcTax(10000, 0.1); <span class="code-comment">// 计算中... → 1000</span><br>
+calcTax(10000, 0.1); <span class="code-comment">// 直接返回 1000</span>
+      </div>
+
+      <div class="optimization-tip">
+        <strong>🔧 进阶优化：</strong>
+        <ul>
+          <li>用 <strong>WeakMap + 引用作为 key</strong>（避免内存泄漏，适合缓存 DOM 节点相关计算）</li>
+          <li><strong>限制缓存大小</strong>（LRU 策略），防内存爆炸</li>
+          <li>React 中可用 <strong>useMemo / useCallback</strong> 实现组件级记忆化</li>
+        </ul>
+      </div>
+
+      <h3>请求级缓存（前端 API 层）</h3>
+      <p>在 fetch 封装层中加入缓存：</p>
+
+      <div class="code-block">
+const apiCache = new Map&lt;string, {`{`} data: any; expires: number {`}`}&gt;();<br><br>
+
+async function cachedFetch(url: string, ttl = 5 * 60 * 1000) {`{`}<br>
+&nbsp;&nbsp;const now = Date.now();<br>
+&nbsp;&nbsp;const cached = apiCache.get(url);<br><br>
+&nbsp;&nbsp;if (cached && cached.expires > now) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return cached.data;<br>
+&nbsp;&nbsp;{`}`}<br><br>
+&nbsp;&nbsp;const res = await fetch(url);<br>
+&nbsp;&nbsp;const data = await res.json();<br>
+&nbsp;&nbsp;apiCache.set(url, {`{`} data, expires: now + ttl {`}`});<br>
+&nbsp;&nbsp;return data;<br>
+{`}`}
+      </div>
+
+      <div class="optimization-tip">
+        <strong>💡 搭配建议：</strong>配合 SWR / React Query 等库，可实现自动 stale-while-revalidate 策略。
+      </div>
+
+      <h2>🔹 三、构建时缓存（工程化加速）</h2>
+      <div class="feature-list">
+        <h4>主要优化点：</h4>
+        <ul>
+          <li><strong>依赖缓存</strong>：复用 .vite + node_modules 缓存</li>
+          <li><strong>CI 缓存策略</strong>：缓存构建产物和依赖</li>
+          <li><strong>pnpm store</strong>：全局依赖存储，避免重复下载</li>
+          <li><strong>增量构建</strong>：只构建变更的模块</li>
+        </ul>
+      </div>
+
+      <h2>🔹 四、持久化缓存（用户设备级）</h2>
+      <p>当页面刷新后仍需保留缓存时使用：</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>方案</th>
+            <th>容量</th>
+            <th>生命周期</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>localStorage</td>
+            <td>~5MB</td>
+            <td>永久（除非清除）</td>
+            <td>用户偏好、低频配置</td>
+          </tr>
+          <tr>
+            <td>sessionStorage</td>
+            <td>~5MB</td>
+            <td>会话级</td>
+            <td>临时表单数据</td>
+          </tr>
+          <tr>
+            <td>IndexedDB</td>
+            <td>~50% 磁盘空间</td>
+            <td>永久</td>
+            <td>大量结构化数据（如离线文档、缓存 API 响应）</td>
+          </tr>
+          <tr>
+            <td>Cache API（Service Worker）</td>
+            <td>大</td>
+            <td>可编程控制</td>
+            <td>PWA 资源缓存、离线 fallback</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>✅ 综合建议（前端组长视角）</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>场景</th>
+            <th>推荐缓存策略</th>
+            <th>工具/库</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>频繁计算（数学/格式）</td>
+            <td>记忆化（memoize）</td>
+            <td>自研 / lodash.memoize</td>
+          </tr>
+          <tr>
+            <td>远程模块加载</td>
+            <td>模块缓存 + eager 共享</td>
+            <td>Webpack Module Federation</td>
+          </tr>
+          <tr>
+            <td>API 请求</td>
+            <td>内存缓存 + SWR 策略</td>
+            <td>swr, react-query, axios-cache-interceptor</td>
+          </tr>
+          <tr>
+            <td>构建速度</td>
+            <td>复用 .vite + node_modules 缓存</td>
+            <td>CI 缓存策略、pnpm store</td>
+          </tr>
+          <tr>
+            <td>离线体验</td>
+            <td>Service Worker + Cache API</td>
+            <td>Workbox</td>
+          </tr>
+          <tr>
+            <td>大型状态</td>
+            <td>useMemo + useCallback + 持久化插件</td>
+            <td>Zustand/Pinia 持久化插件</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
