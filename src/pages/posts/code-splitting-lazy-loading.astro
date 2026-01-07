@@ -1,0 +1,453 @@
+---
+// JavaScript代码分割和按需加载文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript中代码分割和按需加载的示例和用法详解</title>
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_BEACON_TOKEN"}'></script>
+    
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      
+      /* 代码块样式 */
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      
+      .code-comment {
+        color: #68d391;
+      }
+      
+      .code-good {
+        color: #68d391;
+      }
+      
+      .code-bad {
+        color: #fc8181;
+      }
+      
+      /* 对比表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 0.95em;
+      }
+      
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+        min-width: 120px;
+      }
+      
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      
+      .highlight-box strong {
+        color: #2c3e50;
+      }
+      
+      .section-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #2196f3;
+        margin: 25px 0;
+        font-size: 1.1em;
+      }
+      
+      .warning-box {
+        background: #fff5f5;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #e53e3e;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+      
+      .success-box {
+        background: #f0fff4;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #38a169;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+      
+      .emoji-large {
+        font-size: 1.2em;
+        margin-right: 8px;
+      }
+      
+      .concept-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+      
+      .concept-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #6c757d;
+      }
+      
+      .concept-card.splitting {
+        border-left-color: #007bff;
+        background: #f0f8ff;
+      }
+      
+      .concept-card.loading {
+        border-left-color: #28a745;
+        background: #f8fff8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 JavaScript中代码分割和按需加载详解</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：代码分割, 按需加载, 动态导入, React.lazy, 性能优化, Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、核心概念区分</h2>
+      
+      <div class="concept-grid">
+        <div class="concept-card splitting">
+          <h4>🔹 代码分割（Code Splitting）</h4>
+          <p><strong>含义：</strong>构建时将代码拆分成多个独立 bundle（chunks）</p>
+          <p><strong>目标：</strong>✅ 减小主包体积，避免"all-in-one.js"</p>
+        </div>
+        <div class="concept-card loading">
+          <h4>🔹 按需加载（Lazy Loading）</h4>
+          <p><strong>含义：</strong>运行时根据条件动态导入某段代码（如路由、组件、工具库）</p>
+          <p><strong>目标：</strong>✅ 延迟加载非首屏资源，节省带宽与内存</p>
+        </div>
+      </div>
+
+      <div class="success-box">
+        <strong>✅ 配合使用：</strong>它们常配合使用：先分割 → 再按需加载
+      </div>
+
+      <h2>🛠️ 二、JavaScript 中的实现方式</h2>
+
+      <h3>动态 import() 语法（ECMAScript 标准）</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 静态导入（构建时打包进主 bundle）</span><br>
+<span class="code-comment">// import {`{`} heavyFunc {`}`} from './utils/heavy';</span><br><br>
+
+<span class="code-comment">// 动态导入（运行时按需加载）</span><br>
+button.addEventListener('click', async () => {`{`}<br>
+&nbsp;&nbsp;const {`{`} heavyFunc {`}`} = await import('./utils/heavy.js');<br>
+&nbsp;&nbsp;heavyFunc();<br>
+{`}`});<br><br>
+
+<span class="code-good">// ✅ 推荐：路径部分固定，便于工具分析</span><br>
+const module = await import(`./pages/${`{`}pageName{`}`}.js`);<br><br>
+
+<span class="code-bad">// ❌ 避免：完全动态路径（会导致整个目录被打包！）</span><br>
+<span class="code-bad">// const module = await import(pagePath); // webpack 会把 ./pages/ 下所有文件都打包！</span>
+      </div>
+
+      <h3>框架级集成（React / Vue）</h3>
+
+      <h4>✅ React：React.lazy + Suspense</h4>
+      <div class="code-block">
+<span class="code-comment">// 1. 懒加载组件</span><br>
+const UserProfile = React.lazy(() => import('./UserProfile'));<br><br>
+
+<span class="code-comment">// 2. 在路由或条件渲染中使用</span><br>
+function App() {`{`}<br>
+&nbsp;&nbsp;const [showProfile, setShowProfile] = useState(false);<br><br>
+&nbsp;&nbsp;return (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;button onClick={`{`}() => setShowProfile(true){`}`}&gt;查看资料&lt;/button&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`{`}showProfile && (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 2. 用 Suspense 包裹，提供 loading 状态</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Suspense fallback={`{`}&lt;div&gt;加载中...&lt;/div&gt;{`}`}&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;UserProfile /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Suspense&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;){`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;);<br>
+{`}`}
+      </div>
+
+      <h4>Vue 3（Composition API）</h4>
+      <div class="code-block">
+<span class="code-comment">&lt;!-- 路由级懒加载（推荐） --&gt;</span><br>
+<span class="code-comment">&lt;!-- router/index.ts --&gt;</span><br>
+const routes = [{`{`}<br>
+&nbsp;&nbsp;path: '/profile',<br>
+&nbsp;&nbsp;component: () => import('@/views/UserProfile.vue'), <span class="code-comment">// 自动 code split</span><br>
+{`}`}];<br><br>
+
+<span class="code-comment">&lt;!-- 组件级懒加载 --&gt;</span><br>
+&lt;script setup&gt;<br>
+import {`{`} defineAsyncComponent {`}`} from 'vue';<br><br>
+const UserProfile = defineAsyncComponent(() => import('@/components/UserProfile.vue'));<br>
+&lt;/script&gt;<br><br>
+
+&lt;template&gt;<br>
+&nbsp;&nbsp;&lt;UserProfile v-if="show" /&gt;<br>
+&lt;/template&gt;
+      </div>
+
+      <h3>构建工具支持（Vite / Webpack）</h3>
+      <ul>
+        <li>自动将 import() 拆分为独立 chunk（.js 文件）</li>
+        <li>默认 chunk 命名：[name]-[hash].js</li>
+        <li>可通过 rollupOptions 自定义：</li>
+      </ul>
+
+      <div class="code-block">
+<span class="code-comment">// vite.config.ts</span><br>
+export default defineConfig({`{`}<br>
+&nbsp;&nbsp;build: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rollupOptions: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;output: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 自定义动态 chunk 名</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chunkFileNames: 'chunks/[name]-[hash].js',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`});
+      </div>
+
+      <h2>🧪 三、实战示例：路由级懒加载（React + React Router）</h2>
+
+      <div class="code-block">
+<span class="code-comment">// routes.tsx</span><br>
+import {`{`} createBrowserRouter {`}`} from 'react-router-dom';<br><br>
+
+const router = createBrowserRouter([{`{`}<br>
+&nbsp;&nbsp;path: '/',<br>
+&nbsp;&nbsp;element: &lt;Layout /&gt;,<br>
+&nbsp;&nbsp;children: [{`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;index: true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;element: &lt;Home /&gt;,<br>
+&nbsp;&nbsp;{`}`}, {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// ✅ 关键：动态导入 + Suspense 边界</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;path: 'dashboard',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;element: (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Suspense fallback={`{`}&lt;Spinner /&gt;{`}`}&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Dashboard /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Suspense&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loader: () => import('./pages/Dashboard.loader'), <span class="code-comment">// 数据预加载</span><br>
+&nbsp;&nbsp;{`}`}],<br>
+{`}`}]);<br><br>
+
+<span class="code-comment">// Dashboard.loader.ts（搭配 SWR 实现数据+组件并行加载）</span><br>
+export async function loader() {`{`}<br>
+&nbsp;&nbsp;<span class="code-comment">// 启动数据请求（不 await）</span><br>
+&nbsp;&nbsp;const userPromise = fetch('/api/user');<br>
+&nbsp;&nbsp;const statsPromise = fetch('/api/stats');<br><br>
+&nbsp;&nbsp;<span class="code-comment">// 返回 promises，供组件消费</span><br>
+&nbsp;&nbsp;return {`{`} user: userPromise, stats: statsPromise {`}`};<br>
+{`}`}
+      </div>
+
+      <div class="success-box">
+        <strong>✅ 效果：</strong>进入 /dashboard 前，先加载 Dashboard 组件代码 + 并行请求数据，用户体验丝滑。
+      </div>
+
+      <h2>五、工程化建议（前端组长视角）</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>场景</th>
+            <th>推荐策略</th>
+            <th>工具支持</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>路由</td>
+            <td>✅ 全部动态导入</td>
+            <td>React Router / Vue Router 原生支持</td>
+          </tr>
+          <tr>
+            <td>重型组件<br>（图表、编辑器、PDF 预览）</td>
+            <td>✅ React.lazy / defineAsyncComponent</td>
+            <td>Suspense + fallback 优化体验</td>
+          </tr>
+          <tr>
+            <td>工具函数<br>（仅少数页面用）</td>
+            <td>✅ 封装 getXXX() 单例懒加载</td>
+            <td>避免"import 但未使用"仍打包</td>
+          </tr>
+          <tr>
+            <td>模块联邦 Remote</td>
+            <td>✅ Remote 内部也做 code split</td>
+            <td>Webpack exposes + import()</td>
+          </tr>
+          <tr>
+            <td>预加载</td>
+            <td>🔜 对高概率下一步操作用 prefetch</td>
+            <td>如：首页按钮 hover 时预加载目标页</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>🚫 常见陷阱 & 避坑指南</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>问题</th>
+            <th>原因</th>
+            <th>解决方案</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>动态导入后包反而变大</td>
+            <td>路径太动态 → Webpack 打包整个目录</td>
+            <td>✅ 用模板字符串固定前缀：<br>import(`./pages/${`{`}name{`}`}.js`)</td>
+          </tr>
+          <tr>
+            <td>Suspense 白屏</td>
+            <td>fallback 太简单 or 网络极慢</td>
+            <td>✅ 加骨架屏 + isValidating 状态</td>
+          </tr>
+          <tr>
+            <td>HMR 失效</td>
+            <td>动态模块未被 Vite 监听</td>
+            <td>✅ 确保路径在 src/ 下，避免 ../ 跨目录</td>
+          </tr>
+          <tr>
+            <td>模块联邦共享冲突</td>
+            <td>Remote 的 lazy chunk 与 Host 重复加载依赖</td>
+            <td>✅ 共享依赖设为 eager: true + singleton: true</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <strong>🎯 最佳实践总结：</strong>
+        <br><br>
+        <ul>
+          <li><strong>路由优先</strong>：所有路由组件都应该懒加载</li>
+          <li><strong>组件按需</strong>：重型组件（图表、编辑器）必须懒加载</li>
+          <li><strong>工具函数分离</strong>：避免全量导入工具库</li>
+          <li><strong>预加载策略</strong>：对用户高概率访问的资源进行预加载</li>
+          <li><strong>监控分析</strong>：使用 Bundle Analyzer 分析打包结果</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,537 @@
+---
+// 懒加载和预加载文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>懒加载与预加载：前端性能优化的两大核心策略详解</title>
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_BEACON_TOKEN"}'></script>
+    
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      
+      /* 代码块样式 */
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      
+      .code-comment {
+        color: #68d391;
+      }
+      
+      .code-good {
+        color: #68d391;
+      }
+      
+      .code-bad {
+        color: #fc8181;
+      }
+      
+      /* HTML代码块样式 */
+      .html-code-block {
+        background: #f8f9fa;
+        color: #2d3748;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #28a745;
+      }
+      
+      /* 对比表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 0.95em;
+      }
+      
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+        min-width: 120px;
+      }
+      
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      
+      .highlight-box strong {
+        color: #2c3e50;
+      }
+      
+      .section-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #2196f3;
+        margin: 25px 0;
+        font-size: 1.1em;
+      }
+      
+      .warning-box {
+        background: #fff5f5;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #e53e3e;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+      
+      .success-box {
+        background: #f0fff4;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #38a169;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+      
+      .emoji-large {
+        font-size: 1.2em;
+        margin-right: 8px;
+      }
+      
+      .concept-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+      
+      .concept-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #6c757d;
+      }
+      
+      .concept-card.lazy {
+        border-left-color: #28a745;
+        background: #f8fff8;
+      }
+      
+      .concept-card.preload {
+        border-left-color: #007bff;
+        background: #f0f8ff;
+      }
+      
+      .priority-indicator {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: bold;
+        margin-left: 8px;
+      }
+      
+      .priority-high {
+        background: #dc3545;
+        color: white;
+      }
+      
+      .priority-low {
+        background: #6c757d;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 懒加载与预加载：前端性能优化的两大核心策略</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：懒加载, 预加载, 性能优化, React.lazy, IntersectionObserver, Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <div class="section-header">
+        <h3>📋 核心理念</h3>
+        <p>懒加载（Lazy Loading）和预加载（Preloading）是前端性能优化的两大核心策略，它们像「按需供应」与「提前备货」的关系</p>
+      </div>
+
+      <h2>一、核心概念对比</h2>
+      
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>策略</th>
+            <th>目标</th>
+            <th>时机</th>
+            <th>适用资源</th>
+            <th>风险</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>懒加载<br>（Lazy Loading）</strong></td>
+            <td>✅ 减少首屏负载</td>
+            <td>用户需要时才加载<br>（如滚动、点击、路由切换）</td>
+            <td>非首屏图片、组件、路由、重型库<br>（如图表、PDF）</td>
+            <td>⚠️ 加载延迟导致 UX 卡顿<br>（需优化 loading 状态）</td>
+          </tr>
+          <tr>
+            <td><strong>预加载<br>（Preloading）</strong></td>
+            <td>✅ 提前准备高概率资源</td>
+            <td>页面空闲时 or 关键资源加载后</td>
+            <td>下一页面、hover 后大概率点击的组件、关键字体/JS</td>
+            <td>⚠️ 浪费带宽<br>（预加载了用户没用到的资源）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="success-box">
+        <strong>最佳实践：</strong>懒加载是基线，预加载是增强<br>
+        例如：首页 → 懒加载「个人中心」路由；当用户 hover「个人中心」按钮时 → 预加载该路由代码。
+      </div>
+
+      <h2>二、浏览器原生支持机制</h2>
+      <p>现代浏览器提供了声明式 API，让预/懒加载更可控：</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>技术</th>
+            <th>说明</th>
+            <th>兼容性</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>&lt;link rel="preload"&gt;</td>
+            <td>高优先级预加载当前页面关键资源（如首屏字体、核心 JS）</td>
+            <td>✅ 全面支持</td>
+          </tr>
+          <tr>
+            <td>&lt;link rel="prefetch"&gt;</td>
+            <td>低优先级预加载未来可能用到的资源（如下一页 JS）</td>
+            <td>✅ 全面支持</td>
+          </tr>
+          <tr>
+            <td>IntersectionObserver</td>
+            <td>监听元素进入视口 → 触发懒加载（图片、组件）</td>
+            <td>✅ 现代浏览器</td>
+          </tr>
+          <tr>
+            <td>import() + Webpack/Vite</td>
+            <td>动态导入 → 实现 JS 懒加载</td>
+            <td>✅ 构建工具自动处理</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>三、懒加载（Lazy Loading）实战示例</h2>
+
+      <h3>1. 图片懒加载（推荐用原生 loading="lazy"）</h3>
+      <div class="html-code-block">
+&lt;!-- 浏览器原生支持（无需 JS） --&gt;<br>
+&lt;img src="placeholder.jpg" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-src="real-image.jpg"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loading="lazy" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alt="描述"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width="400" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height="300"/&gt;
+      </div>
+      <div class="success-box">
+        <strong>✅ 优势：</strong>减少首屏请求数，提升 LCP（最大内容绘制）
+      </div>
+
+      <h3>2. 组件懒加载（React + Suspense）</h3>
+      <div class="code-block">
+<span class="code-comment">// 懒加载重型组件（如报表图表）</span><br>
+const ChartComponent = React.lazy(() => <br>
+&nbsp;&nbsp;import(<span class="code-comment">/* webpackChunkName: "chart" */</span> '@/components/Chart')<br>
+);<br><br>
+
+function Dashboard() {`{`}<br>
+&nbsp;&nbsp;const [showChart, setShowChart] = useState(false);<br><br>
+&nbsp;&nbsp;return (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;button onClick={`{`}() => setShowChart(true){`}`}&gt;显示图表&lt;/button&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`{`}showChart && (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Suspense fallback={`{`}&lt;SkeletonChart /&gt;{`}`}&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ChartComponent /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Suspense&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;){`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br>
+&nbsp;&nbsp;);<br>
+{`}`}
+      </div>
+
+      <h3>3. 路由懒加载（React Router / Vue Router）</h3>
+      <div class="code-block">
+<span class="code-comment">// React Router v6</span><br>
+const routes = [{`{`}<br>
+&nbsp;&nbsp;path: '/profile',<br>
+&nbsp;&nbsp;element: (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;Suspense fallback={`{`}&lt;Spinner /&gt;{`}`}&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Profile /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Suspense&gt;<br>
+&nbsp;&nbsp;),<br>
+&nbsp;&nbsp;<span class="code-comment">// ✅ 动态导入</span><br>
+&nbsp;&nbsp;loader: () => import('./routes/profile.loader'),<br>
+{`}`}];<br><br>
+
+<span class="code-comment">// Vue 3</span><br>
+const routes = [{`{`}<br>
+&nbsp;&nbsp;path: '/settings',<br>
+&nbsp;&nbsp;component: () => import('@/views/Settings.vue') <span class="code-comment">// 自动 code split</span><br>
+{`}`}];
+      </div>
+
+      <h2>🚀 四、预加载（Preloading）实战示例</h2>
+
+      <h3>✅ 1. 声明式预加载（HTML &lt;link&gt;）</h3>
+      <div class="html-code-block">
+&lt;head&gt;<br>
+&nbsp;&nbsp;<span class="code-comment">&lt;!-- 高优先级：当前页关键资源 --&gt;</span><br>
+&nbsp;&nbsp;&lt;link rel="preload" href="/fonts/brand.woff2" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as="font" type="font/woff2" crossorigin&gt;<br>
+&nbsp;&nbsp;&lt;link rel="preload" href="/main.js" as="script"&gt;<br><br>
+&nbsp;&nbsp;<span class="code-comment">&lt;!-- 低优先级：未来可能用到的资源 --&gt;</span><br>
+&nbsp;&nbsp;&lt;link rel="prefetch" href="/profile.js" as="script"&gt;<br>
+&nbsp;&nbsp;&lt;link rel="prefetch" href="/api/user-data.json" <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as="fetch" crossorigin&gt;<br>
+&lt;/head&gt;
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>rel</th>
+            <th>优先级</th>
+            <th>用途</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>preload</td>
+            <td><span class="priority-indicator priority-high">⭐⭐⭐⭐ 高</span></td>
+            <td>当前页面必须的资源（阻塞渲染的）</td>
+          </tr>
+          <tr>
+            <td>prefetch</td>
+            <td><span class="priority-indicator priority-low">⭐ 低</span></td>
+            <td>用户可能访问的资源（空闲时加载）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2. JS 动态预加载（用户行为预测）</h3>
+      <div class="code-block">
+<span class="code-comment">// 场景：用户 hover 导航菜单 → 预加载目标页面</span><br>
+const prefetchCache = new Set&lt;string&gt;();<br><br>
+
+function prefetchRoute(path: string) {`{`}<br>
+&nbsp;&nbsp;if (prefetchCache.has(path)) return;<br><br>
+&nbsp;&nbsp;<span class="code-comment">// ✅ 动态插入 &lt;link rel="prefetch"&gt;</span><br>
+&nbsp;&nbsp;const link = document.createElement('link');<br>
+&nbsp;&nbsp;link.rel = 'prefetch';<br>
+&nbsp;&nbsp;link.as = 'script';<br>
+&nbsp;&nbsp;link.href = `/assets/${`{`}path{`}`}.js`; <span class="code-comment">// 根据路由映射 chunk 名</span><br>
+&nbsp;&nbsp;document.head.appendChild(link);<br><br>
+&nbsp;&nbsp;prefetchCache.add(path);<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+navItems.forEach(item => {`{`}<br>
+&nbsp;&nbsp;item.addEventListener('mouseenter', () => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;prefetchRoute(item.dataset.route!);<br>
+&nbsp;&nbsp;{`}`});<br>
+{`}`});
+      </div>
+
+      <h3>🔧 进阶：结合 SWR 实现「数据 + 代码」并行预加载</h3>
+      <div class="code-block">
+<span class="code-comment">// hover 时预加载数据 + 代码</span><br>
+button.onmouseenter = async () => {`{`}<br>
+&nbsp;&nbsp;<span class="code-comment">// 1. 预加载组件代码</span><br>
+&nbsp;&nbsp;import('@/pages/Dashboard').catch(() => {`{`}{`}`});<br><br>
+&nbsp;&nbsp;<span class="code-comment">// 2. 预请求数据（SWR 自动缓存）</span><br>
+&nbsp;&nbsp;await swrCache.revalidate('/api/dashboard-data');<br>
+{`}`};
+      </div>
+
+      <h3>3. 路由级预加载（React Router v6.4+）</h3>
+      <div class="code-block">
+<span class="code-comment">// 使用 useNavigation 或 loader 预加载</span><br>
+function NavItem({`{`} to, children {`}`}: {`{`} to: string; children: ReactNode {`}`}) {`{`}<br>
+&nbsp;&nbsp;const {`{`} isLoading {`}`} = useNavigation();<br><br>
+&nbsp;&nbsp;<span class="code-comment">// 悬停时预加载目标路由</span><br>
+&nbsp;&nbsp;const handleMouseEnter = () => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;startTransition(() => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 触发 loader 预取数据</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;navigate(to, {`{`} preventScrollReset: true {`}`});<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`});<br>
+&nbsp;&nbsp;{`}`};<br><br>
+&nbsp;&nbsp;return (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;Link to={`{`}to{`}`} onMouseEnter={`{`}handleMouseEnter{`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;style={`{`}{`{`} opacity: isLoading ? 0.6 : 1 {`}`}{`}`}&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`{`}children{`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Link&gt;<br>
+&nbsp;&nbsp;);<br>
+{`}`}
+      </div>
+
+      <h2>✅ 六、工程化落地建议</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>场景</th>
+            <th>推荐方案</th>
+            <th>工具</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>首屏图片</td>
+            <td>&lt;img loading="lazy"&gt; + 渐进式 JPEG</td>
+            <td>✅ 原生支持</td>
+          </tr>
+          <tr>
+            <td>路由切换</td>
+            <td>React.lazy + Suspense + SWR 数据预取</td>
+            <td>React Router + SWR</td>
+          </tr>
+          <tr>
+            <td>模块联邦 Remote</td>
+            <td>Remote 内部做懒加载 + Host 预加载关键 Remote</td>
+            <td>Webpack Module Federation</td>
+          </tr>
+          <tr>
+            <td>重型功能<br>（报表/导出）</td>
+            <td>点击时 import() + 骨架屏</td>
+            <td>Vite code split</td>
+          </tr>
+          <tr>
+            <td>高概率下一步操作</td>
+            <td>hover 时动态插入 &lt;link rel="prefetch"&gt;</td>
+            <td>自研预加载器</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <strong>🎯 核心原则：</strong>
+        <br><br>
+        <ul>
+          <li><strong>懒加载优先</strong>：所有非首屏资源都应该懒加载</li>
+          <li><strong>智能预加载</strong>：基于用户行为预测，预加载高概率资源</li>
+          <li><strong>渐进增强</strong>：先保证基础功能，再优化加载体验</li>
+          <li><strong>监控反馈</strong>：通过性能监控验证优化效果</li>
+          <li><strong>用户体验</strong>：loading 状态和骨架屏必不可少</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
