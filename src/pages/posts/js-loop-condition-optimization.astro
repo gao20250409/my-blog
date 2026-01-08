@@ -1,0 +1,379 @@
+---
+// JavaScript循环和条件语句优化文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>如何优化JavaScript中的循环和条件语句以提高性能</title>
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_BEACON_TOKEN"}'></script>
+    
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      
+      /* 代码块样式 */
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      
+      .code-comment {
+        color: #68d391;
+      }
+      
+      .code-good {
+        color: #68d391;
+      }
+      
+      .code-bad {
+        color: #fc8181;
+      }
+      
+      /* 对比表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 0.95em;
+      }
+      
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+        min-width: 120px;
+      }
+      
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      
+      .highlight-box strong {
+        color: #2c3e50;
+      }
+      
+      .section-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #2196f3;
+        margin: 25px 0;
+        font-size: 1.1em;
+      }
+      
+      .warning-box {
+        background: #fff5f5;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #e53e3e;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+      
+      .success-box {
+        background: #f0fff4;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #38a169;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+      
+      .emoji-large {
+        font-size: 1.2em;
+        margin-right: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 如何优化JavaScript中的循环和条件语句</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：JavaScript优化, 循环优化, 条件语句, 性能优化, Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>🔄 一、循环优化策略</h2>
+
+      <h3>1. 避免在循环条件中重复计算</h3>
+      <div class="code-block">
+<span class="code-bad">// ❌ 反例（每次迭代都重新计算 .length）</span><br>
+for (let i = 0; i &lt; arr.length; i++) {`{`} /* ... */ {`}`}<br><br>
+
+<span class="code-good">// ✅ 优化（缓存长度）</span><br>
+for (let i = 0, len = arr.length; i &lt; len; i++) {`{`} /* ... */ {`}`}<br><br>
+
+<span class="code-good">// 或 for...of（更现代、简洁，且对 Array/TypedArray/Map/Set 优化良好）</span><br>
+for (const item of arr) {`{`} /* ... */ {`}`}
+      </div>
+
+      <h3>2. 优先使用 for...of 或 forEach，慎用 for...in</h3>
+      <div class="feature-list">
+        <h4>🌟 推荐循环方式：</h4>
+        <ul>
+          <li><strong>for...of</strong>：遍历数组、Set、Map 等可迭代对象</li>
+          <li><strong>forEach</strong>：函数式编程风格，代码简洁</li>
+          <li><strong>for...in</strong>：仅用于遍历对象属性，避免用于数组</li>
+        </ul>
+      </div>
+
+      <h3>3. 避免在循环内创建函数或对象</h3>
+      <div class="success-box">
+        <strong>✅ 最佳实践：</strong>事件委托 + dataset（避免大量闭包）
+      </div>
+
+      <h3>4. 大数据量：考虑分片（Chunking）或 Web Worker</h3>
+      <p>若需处理 >10k 条数据，同步循环会阻塞主线程 → 页面卡顿。</p>
+
+      <div class="section-header">
+        <h4>📋 分片原理</h4>
+        <p>把 10,000 次循环拆成 10 片，每片 1,000 次。每执行完 1,000 次，就用 setTimeout(..., 0) 把下一片「排队」到任务队列末尾，让出主线程控制权 → 浏览器趁机渲染/响应用户事件。</p>
+      </div>
+
+      <h4>✅ 方案：setTimeout 分片</h4>
+      <div class="code-block">
+function processChunk(items, chunkSize = 1000) {`{`}<br>
+&nbsp;&nbsp;let i = 0;<br><br>
+&nbsp;&nbsp;function doChunk() {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const end = Math.min(i + chunkSize, items.length);<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (; i &lt; end; i++) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 这里是实际处理逻辑（比如生成 DOM、计算等）</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// process items[i]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (i &lt; items.length) setTimeout(doChunk, 0);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 注意：不是立即执行，是「尽快但不阻塞」</span><br>
+&nbsp;&nbsp;{`}`}<br><br>
+&nbsp;&nbsp;doChunk();<br>
+{`}`}
+      </div>
+
+      <div class="highlight-box">
+        <strong>🔧 进阶方案：</strong>
+        <ul>
+          <li><strong>requestIdleCallback</strong>：空闲时执行</li>
+          <li><strong>Web Worker</strong>：彻底移出主线程，适合计算密集型</li>
+        </ul>
+      </div>
+
+      <h2>🧠 二、条件语句优化</h2>
+
+      <h3>1. 条件顺序：高频分支前置</h3>
+      <p>JavaScript 引擎（如 V8）会对条件分支做预测优化，高频路径放前面可减少跳转开销：</p>
+
+      <div class="code-block">
+<span class="code-comment">// 假设 type 为 'A' 的概率 >90%</span><br>
+if (type === 'A') {`{`}<br>
+&nbsp;&nbsp;// ...<br>
+{`}`} else if (type === 'B') {`{`}<br>
+&nbsp;&nbsp;// ...<br>
+{`}`} else {`{`}<br>
+&nbsp;&nbsp;// rare case<br>
+{`}`}
+      </div>
+
+      <h3>2. 多分支 → 用 Map 或 Object 查表代替 if-else/switch</h3>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>方案</th>
+            <th>适用场景</th>
+            <th>特点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>对象字面量</strong></td>
+            <td>key 是固定字符串</td>
+            <td>V8 优化最好，简洁高效</td>
+          </tr>
+          <tr>
+            <td><strong>Map</strong></td>
+            <td>需要动态增删或 key 非字符串</td>
+            <td>支持任意类型 key，不影响原型链</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>方案一：对象查表法（Object Literal）</h4>
+      <div class="code-block">
+<span class="code-good">// ✅ 推荐：当 key 是「固定字符串」时，用纯对象最简洁高效</span><br>
+const operations = {`{`}<br>
+&nbsp;&nbsp;add: (a, b) => a + b,<br>
+&nbsp;&nbsp;sub: (a, b) => a - b,<br>
+&nbsp;&nbsp;mul: (a, b) => a * b,<br>
+&nbsp;&nbsp;div: (a, b) => b !== 0 ? a / b : NaN,<br>
+&nbsp;&nbsp;mod: (a, b) => a % b,<br>
+&nbsp;&nbsp;pow: (a, b) => Math.pow(a, b),<br>
+{`}`};<br><br>
+
+function calculate(op, a, b) {`{`}<br>
+&nbsp;&nbsp;const fn = operations[op];<br>
+&nbsp;&nbsp;if (!fn) throw new Error(`Unknown operator: ${`{`}op{`}`}`);<br>
+&nbsp;&nbsp;return fn(a, b);<br>
+{`}`}
+      </div>
+
+      <h4>方案二：Map 查表法</h4>
+      <div class="code-block">
+<span class="code-good">// ✅ 推荐：当需要「动态增删」或「key 非字符串」时</span><br>
+const operations = new Map([<br>
+&nbsp;&nbsp;['add', (a, b) => a + b],<br>
+&nbsp;&nbsp;['sub', (a, b) => a - b],<br>
+&nbsp;&nbsp;<span class="code-comment">// ... 其他操作</span><br>
+]);<br><br>
+
+<span class="code-comment">// 动态注册新操作（插件系统常用！）</span><br>
+operations.set('sqrt', (a) => Math.sqrt(a));<br>
+operations.set(1001, specialHandler); <span class="code-comment">// key 可以是 number！</span><br><br>
+
+function calculate(op, ...args) {`{`}<br>
+&nbsp;&nbsp;const fn = operations.get(op);<br>
+&nbsp;&nbsp;if (!fn) throw new Error(`Unknown operator: ${`{`}op{`}`}`);<br>
+&nbsp;&nbsp;return fn(...args);<br>
+{`}`}
+      </div>
+
+      <h3>3. 避免深层嵌套 → 提前 return</h3>
+      <div class="code-block">
+<span class="code-bad">// ❌ 深层嵌套</span><br>
+function processUser(user) {`{`}<br>
+&nbsp;&nbsp;if (user) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (user.isActive) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (user.hasPermission) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 处理逻辑<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`}<br><br>
+
+<span class="code-good">// ✅ 提前 return</span><br>
+function processUser(user) {`{`}<br>
+&nbsp;&nbsp;if (!user) return;<br>
+&nbsp;&nbsp;if (!user.isActive) return;<br>
+&nbsp;&nbsp;if (!user.hasPermission) return;<br><br>
+&nbsp;&nbsp;<span class="code-comment">// 处理逻辑</span><br>
+{`}`}
+      </div>
+
+      <div class="highlight-box">
+        <strong>🎯 核心优化原则：</strong>
+        <br><br>
+        <ul>
+          <li><strong>减少重复计算</strong>：缓存循环条件和复杂表达式</li>
+          <li><strong>选择合适的循环</strong>：for...of > forEach > for > for...in</li>
+          <li><strong>大数据分片处理</strong>：避免阻塞主线程</li>
+          <li><strong>高频分支前置</strong>：利用分支预测优化</li>
+          <li><strong>查表替代多分支</strong>：Object/Map 比 if-else 更高效</li>
+          <li><strong>扁平化代码结构</strong>：提前 return 减少嵌套</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
