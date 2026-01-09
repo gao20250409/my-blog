@@ -1,0 +1,310 @@
+---
+// JavaScript内存泄漏文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript中的内存泄漏问题及其解决方法</title>
+
+    <!-- Cloudflare Web Analytics -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "YOUR_BEACON_TOKEN"}'></script>
+
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+
+      /* 代码块样式 */
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+
+      .code-comment {
+        color: #68d391;
+      }
+
+      .code-good {
+        color: #68d391;
+      }
+
+      .code-bad {
+        color: #fc8181;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+
+      .highlight-box strong {
+        color: #2c3e50;
+      }
+
+      .section-header {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #2196f3;
+        margin: 25px 0;
+        font-size: 1.1em;
+      }
+
+      .warning-box {
+        background: #fff5f5;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #e53e3e;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+
+      .success-box {
+        background: #f0fff4;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #38a169;
+        margin: 15px 0;
+        font-size: 0.95em;
+      }
+
+      .leak-type {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #dc3545;
+        margin: 20px 0;
+      }
+
+      .solution-box {
+        background: #f0fff4;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #28a745;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 JavaScript中的内存泄漏问题及其解决方法</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：内存泄漏,
+          JavaScript优化, 性能优化, 垃圾回收, Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、常见的内存泄漏类型</h2>
+
+      <div class="leak-type">
+        <h3>1. 意外的全局变量</h3>
+        <p>
+          <strong>问题：</strong>未声明的变量会自动成为全局变量，无法被垃圾回收
+        </p>
+
+        <div class="solution-box">
+          <strong>解决方法：</strong>始终使用 var/let/const
+          声明变量；启用严格模式 "use strict"
+        </div>
+      </div>
+
+      <div class="leak-type">
+        <h3>2. 未清除的定时器或回调</h3>
+        <p>
+          <strong>问题：</strong>setInterval、setTimeout
+          未清除，持续引用回调函数和其闭包
+        </p>
+
+        <div class="solution-box">
+          <strong>解决方法：</strong>保存定时器 ID，在组件销毁时调用
+          clearInterval/clearTimeout
+        </div>
+      </div>
+
+      <div class="leak-type">
+        <h3>3. 闭包持有外部引用</h3>
+        <p><strong>问题：</strong>闭包意外持有大对象的引用，导致无法回收</p>
+
+        <div class="solution-box">
+          <strong>解决方法：</strong>避免不必要的闭包引用；使用完后将引用设为
+          null
+        </div>
+      </div>
+
+      <div class="leak-type">
+        <h3>4. DOM 引用未解除</h3>
+        <p><strong>问题：</strong>JavaScript 持有已从 DOM 树移除的元素引用</p>
+
+        <div class="solution-box">
+          <strong>解决方法：</strong>移除 DOM 元素后，将 JavaScript 中的引用设为
+          null
+        </div>
+      </div>
+
+      <div class="leak-type">
+        <h3>5. 事件监听器未移除</h3>
+        <p><strong>问题：</strong>添加的事件监听器未在适当时机移除</p>
+
+        <div class="solution-box">
+          <strong>解决方法：</strong>在组件销毁时调用
+          removeEventListener；或使用事件委托
+        </div>
+      </div>
+
+      <div class="leak-type">
+        <h3>6. 缓存无限制增长</h3>
+        <p><strong>问题：</strong>缓存对象不断增长，从不清理过期数据</p>
+
+        <div class="solution-box">
+          <strong>解决方法：</strong>使用 Map + LRU
+          策略，或设置缓存大小上限，定期清理
+        </div>
+      </div>
+
+      <h2>二、检测内存泄漏的方法</h2>
+
+      <h3>浏览器开发者工具（DevTools）</h3>
+      <div class="feature-list">
+        <h4>🔍 Chrome DevTools 使用步骤：</h4>
+        <ol>
+          <li><strong>打开 Memory 面板</strong>：Chrome DevTools → Memory</li>
+          <li><strong>拍摄堆快照</strong>：Take Heap Snapshot</li>
+          <li><strong>执行操作</strong>：触发可能导致内存泄漏的操作</li>
+          <li><strong>再次拍摄快照</strong>：对比多次快照</li>
+          <li><strong>分析差异</strong>：查看对象是否异常增长</li>
+        </ol>
+      </div>
+
+      <h3>框架中的最佳实践</h3>
+      <div class="success-box">
+        <strong>React Hook 清理：</strong>在 useEffect
+        的返回函数中清理定时器和事件监听器<br />
+        <strong>Vue 3 清理：</strong>在 onBeforeUnmount 钩子中进行资源清理
+        <div class="code-block">
+          <span class="code-comment">// React Hook 清理示例</span><br />
+          useEffect(() => {`{`}<br />
+          &nbsp;&nbsp;const timer = setInterval(() => {`{`}<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;// 定时任务<br />
+          &nbsp;&nbsp;{`}`}, 1000);<br /><br />
+          &nbsp;&nbsp;const handleResize = () => {`{`}<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;// 处理窗口大小变化<br />
+          &nbsp;&nbsp;{`}`};<br /><br />
+          &nbsp;&nbsp;window.addEventListener('resize', handleResize);<br /><br
+          />
+          &nbsp;&nbsp;<span class="code-comment">// 清理函数</span><br />
+          &nbsp;&nbsp;return () => {`{`}<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;clearInterval(timer);<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;window.removeEventListener('resize', handleResize);<br
+          />
+          &nbsp;&nbsp;{`}`};<br />
+          }, []);<br /><br />
+
+          <span class="code-comment">// Vue 3 清理示例</span><br />
+          onBeforeUnmount(() => {`{`}<br />
+          &nbsp;&nbsp;<span class="code-comment"
+            >// 清理定时器、事件监听器等</span
+          ><br />
+          &nbsp;&nbsp;clearInterval(timerId);<br />
+          &nbsp;&nbsp;window.removeEventListener('scroll', handleScroll);<br />
+          {`}`});
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <strong>🎯 预防内存泄漏的核心原则：</strong>
+        <br /><br />
+        <ul>
+          <li><strong>及时清理</strong>：定时器、事件监听器、DOM 引用</li>
+          <li><strong>避免意外全局变量</strong>：使用严格模式，正确声明变量</li>
+          <li><strong>合理使用闭包</strong>：避免持有不必要的外部引用</li>
+          <li><strong>限制缓存大小</strong>：实现 LRU 或定期清理策略</li>
+          <li>
+            <strong>善用生命周期</strong>：在 React/Vue 等框架中正确清理资源
+          </li>
+          <li><strong>定期检测</strong>：使用 DevTools 监控内存使用情况</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
