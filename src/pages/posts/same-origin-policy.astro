@@ -1,0 +1,220 @@
+---
+// 同源策略文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>同源策略在JavaScript中的作用是什么？为什么它很重要</title>
+    
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_BEACON_TOKEN"}'></script>
+    
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      
+      .highlight-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      
+      .highlight-box strong {
+        color: #2c3e50;
+      }
+      
+      .example-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #6c757d;
+        margin: 15px 0;
+      }
+      
+      .success-example {
+        background: #f0fff4;
+        border-left-color: #28a745;
+      }
+      
+      .error-example {
+        background: #fff5f5;
+        border-left-color: #dc3545;
+      }
+      
+      /* 对比表格样式 */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        font-size: 1em;
+      }
+      
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 同源策略在JavaScript中的作用是什么？为什么它很重要</h1>
+
+      <div class="meta-info">
+        <p>
+          📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：同源策略, Web安全, CORS, JavaScript, 浏览器安全, Web开发, 前端, 面试
+        </p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <p>同源策略（Same-Origin Policy，简称 SOP）是 Web 浏览器实施的一项核心安全机制，用于限制一个源（origin）的文档或脚本如何与另一个源的资源进行交互。</p>
+
+      <h2>一、什么是"同源"？</h2>
+      <p>两个 URL 被认为是同源，当且仅当它们的以下三部分完全相同：</p>
+      
+      <div class="feature-list">
+        <ul>
+          <li><strong>协议（Protocol）</strong>：如 http / https</li>
+          <li><strong>主机名（Host/Domain）</strong>：如 example.com</li>
+          <li><strong>端口（Port）</strong>：如 80（HTTP 默认）、443（HTTPS 默认）</li>
+        </ul>
+      </div>
+
+      <div class="example-box success-example">
+        <strong>✅ 同源示例：</strong><br>
+        https://api.example.com:443/app 与 https://api.example.com/data → 同源
+      </div>
+
+      <div class="example-box error-example">
+        <strong>❌ 不同源示例：</strong><br>
+        • http://example.com vs https://example.com → 协议不同<br>
+        • https://example.com vs https://api.example.com → 主机不同<br>
+        • https://example.com:8080 vs https://example.com → 端口不同
+      </div>
+
+      <div class="highlight-box">
+        <strong>注意：</strong>路径（path）和查询参数（query）不影响同源判断。
+      </div>
+
+      <h2>总结</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>项目</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>本质</td>
+            <td>浏览器的安全策略，限制跨源读取/操作</td>
+          </tr>
+          <tr>
+            <td>核心目的</td>
+            <td>防止恶意网站窃取用户在其他网站的数据</td>
+          </tr>
+          <tr>
+            <td>关键限制</td>
+            <td>无法读取跨域 AJAX 响应、无法访问跨域 iframe DOM</td>
+          </tr>
+          <tr>
+            <td>绕过方式</td>
+            <td>CORS（服务器授权）、postMessage（安全通信）</td>
+          </tr>
+          <tr>
+            <td>重要性</td>
+            <td>Web 安全的基石之一，保护用户隐私和会话安全</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
