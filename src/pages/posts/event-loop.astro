@@ -1,0 +1,292 @@
+---
+// 事件循环文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>事件循环（Event Loop）在JavaScript中的作用和工作原理</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .success-box {
+        background: #f0fff4;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #38a169;
+        margin: 15px 0;
+      }
+      .warning-box {
+        background: #fff5f5;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 3px solid #e53e3e;
+        margin: 15px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 事件循环在JavaScript中的作用和工作原理</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：事件循环, Event Loop, 异步编程, JavaScript, 宏任务, 微任务, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <p>JavaScript 是单线程语言，但通过 事件循环（Event Loop） 机制实现了高效的异步非阻塞 I/O 操作。这是 JS 能在浏览器和 Node.js 中处理大量并发任务（如网络请求、定时器、用户交互等）的核心原理。</p>
+
+      <h2>一、事件循环的作用</h2>
+
+      <div class="feature-list">
+        <ul>
+          <li>协调同步与异步任务的执行顺序</li>
+          <li>避免主线程被长时间阻塞</li>
+          <li>确保回调函数在合适的时机被调用</li>
+        </ul>
+      </div>
+
+      <div class="highlight-box">
+        <strong>💡 简单说：</strong>事件循环让 JavaScript "看起来"能同时做多件事，尽管它只有一个主线程。
+      </div>
+
+      <h2>二、核心组成部分</h2>
+      <p>要理解事件循环，需先了解以下概念：</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>组件</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>调用栈（Call Stack）</td>
+            <td>存放当前正在执行的函数（同步代码），后进先出（LIFO）</td>
+          </tr>
+          <tr>
+            <td>任务队列（Task Queue / Macro Task Queue）</td>
+            <td>存放宏任务（如 setTimeout、setInterval、I/O、UI 渲染等）的回调</td>
+          </tr>
+          <tr>
+            <td>微任务队列（Microtask Queue）</td>
+            <td>存放微任务（如 Promise.then/catch/finally、queueMicrotask、MutationObserver）的回调</td>
+          </tr>
+          <tr>
+            <td>事件循环（Event Loop）</td>
+            <td>不断检查调用栈是否为空，若空则从队列中取任务执行</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>三、工作原理（简化流程）</h2>
+
+      <div class="feature-list">
+        <ol>
+          <li><strong>执行全局同步代码</strong>，压入调用栈。</li>
+          <li><strong>遇到异步操作</strong>（如 setTimeout、fetch、Promise）：
+            <ul>
+              <li>宏任务（如 setTimeout）的回调放入 宏任务队列</li>
+              <li>微任务（如 Promise.then）的回调放入 微任务队列</li>
+            </ul>
+          </li>
+          <li><strong>同步代码执行完毕</strong>，调用栈清空。</li>
+          <li><strong>事件循环开始工作</strong>：
+            <ul>
+              <li>先清空微任务队列（全部执行完）</li>
+              <li>再取一个宏任务执行（注意：一次只取一个！）</li>
+            </ul>
+          </li>
+          <li><strong>重复上述过程</strong>。</li>
+        </ol>
+      </div>
+
+      <div class="success-box">
+        <strong>✅ 关键规则：</strong>每次宏任务执行后，会立即执行所有可运行的微任务。
+      </div>
+
+      <h2>四、宏任务 vs 微任务</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>常见来源</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>宏任务（Macro Task）</td>
+            <td>setTimeout, setInterval, setImmediate（Node.js）, I/O, UI 渲染（浏览器）</td>
+          </tr>
+          <tr>
+            <td>微任务（Microtask）</td>
+            <td>Promise.then/catch/finally, queueMicrotask, MutationObserver, process.nextTick（Node.js，优先级更高）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warning-box">
+        <strong>⚠️ 注意：</strong>process.nextTick 在 Node.js 中比 Promise 微任务优先级更高，但在浏览器中不存在。
+      </div>
+
+      <h2>五、经典示例分析</h2>
+
+      <div class="code-block">
+console.log('1');<br><br>
+
+setTimeout(() => {`{`}<br>
+&nbsp;&nbsp;console.log('2');<br>
+{`}`}, 0);<br><br>
+
+Promise.resolve().then(() => {`{`}<br>
+&nbsp;&nbsp;console.log('3');<br>
+{`}`});<br><br>
+
+console.log('4');
+      </div>
+
+      <div class="success-box">
+        <strong>输出顺序：1 4 3 2</strong>
+        <br><br>
+        <strong>解释：</strong>
+        <ul>
+          <li>同步代码 1 和 4 先执行。</li>
+          <li>setTimeout 回调进入宏任务队列。</li>
+          <li>Promise.then 进入微任务队列。</li>
+          <li>同步代码结束 → 执行所有微任务（输出 3）→ 执行下一个宏任务（输出 2）。</li>
+        </ul>
+      </div>
+
+      <h2>六、浏览器中的渲染时机</h2>
+
+      <p>在浏览器中，UI 渲染也是一个宏任务。事件循环在执行完一个宏任务 + 所有微任务后，可能进行一次页面重绘（如果需要）。</p>
+
+      <div class="feature-list">
+        <h4>因此：</h4>
+        <ul>
+          <li>频繁 DOM 操作应尽量批量进行，避免触发过多重排重绘。</li>
+          <li>requestAnimationFrame 会在下一次重绘前执行，常用于动画。</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
