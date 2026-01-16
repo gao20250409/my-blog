@@ -1,0 +1,227 @@
+---
+// AI编程模型文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>主流大模型和编程专用模型推荐</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .model-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #3498db;
+        margin: 20px 0;
+      }
+      .model-card h3 {
+        margin-top: 0;
+        color: #2c3e50;
+      }
+      .model-card.programming {
+        border-left-color: #27ae60;
+        background: #f0fff4;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 主流大模型和编程专用模型推荐</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：AI模型, 编程工具, Claude, GPT-4, Gemini, GitHub Copilot, Cursor, Web开发, 前端</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>主流的大模型</h2>
+
+      <div class="model-card">
+        <h3>1. Claude 3.5 Sonnet</h3>
+        <p><strong>优势：</strong>代码能力强、上下文理解好、输出质量高</p>
+        <p><strong>适合：</strong>编程、写作、分析、复杂推理</p>
+        <p><strong>限制：</strong>需要付费使用</p>
+      </div>
+
+      <div class="model-card">
+        <h3>2. GPT-4 / GPT-4 Turbo</h3>
+        <p><strong>优势：</strong>综合能力最强、知识面广</p>
+        <p><strong>适合：</strong>通用任务、创意写作、复杂问题</p>
+        <p><strong>限制：</strong>API 费用较高</p>
+      </div>
+
+      <div class="model-card">
+        <h3>3. Gemini</h3>
+        <p><strong>优势：</strong>谷歌生态集成好</p>
+        <p><strong>适合：</strong>多模态任务、长文档分析</p>
+      </div>
+
+      <h2>编程专用模型</h2>
+
+      <div class="model-card programming">
+        <h3>4. GitHub Copilot（基于 GPT-4）</h3>
+        <p><strong>优势：</strong>IDE 集成好、代码补全强</p>
+        <p><strong>适合：</strong>日常编程、代码生成</p>
+      </div>
+
+      <div class="model-card programming">
+        <h3>5. Cursor（集成多个模型）</h3>
+        <p><strong>优势：</strong>AI 编程体验好、支持多模型切换</p>
+        <p><strong>适合：</strong>全栈开发、项目重构</p>
+      </div>
+
+      <h2>模型对比总结</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>模型</th>
+            <th>类型</th>
+            <th>核心优势</th>
+            <th>最适合场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Claude 3.5 Sonnet</td>
+            <td>通用大模型</td>
+            <td>代码能力强、输出质量高</td>
+            <td>编程、复杂推理</td>
+          </tr>
+          <tr>
+            <td>GPT-4 Turbo</td>
+            <td>通用大模型</td>
+            <td>综合能力最强</td>
+            <td>通用任务、创意写作</td>
+          </tr>
+          <tr>
+            <td>Gemini</td>
+            <td>通用大模型</td>
+            <td>谷歌生态集成</td>
+            <td>多模态、长文档</td>
+          </tr>
+          <tr>
+            <td>GitHub Copilot</td>
+            <td>编程专用</td>
+            <td>IDE 集成好</td>
+            <td>日常编程、代码补全</td>
+          </tr>
+          <tr>
+            <td>Cursor</td>
+            <td>编程专用</td>
+            <td>多模型切换</td>
+            <td>全栈开发、项目重构</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="feature-list">
+        <h4>💡 选择建议</h4>
+        <ul>
+          <li><strong>日常编程：</strong>GitHub Copilot 或 Cursor</li>
+          <li><strong>复杂项目：</strong>Claude 3.5 Sonnet 或 GPT-4</li>
+          <li><strong>多模态任务：</strong>Gemini</li>
+          <li><strong>全栈开发：</strong>Cursor（支持多模型切换）</li>
+          <li><strong>代码补全：</strong>GitHub Copilot（IDE 集成最好）</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
