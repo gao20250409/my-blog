@@ -1,0 +1,301 @@
+---
+// 函数声明与函数表达式文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>函数声明与函数表达式的区别是什么？</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 函数声明与函数表达式的区别是什么？</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：函数声明, 函数表达式, 变量提升, JavaScript, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、语法形式对比</h2>
+
+      <div class="section-box">
+        <h4>✅ 函数声明</h4>
+        <div class="code-block">
+function myFunction() {`{`}<br>
+&nbsp;&nbsp;console.log('这是函数声明');<br>
+{`}`}
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>✅ 函数表达式（Function Expression）</h4>
+        <div class="code-block">
+const myFunc = function() {`{`}<br>
+&nbsp;&nbsp;console.log('这是函数表达式');<br>
+{`}`};<br><br>
+
+<span class="code-comment">// 或带名字（命名函数表达式）</span><br>
+const myFunc2 = function namedFn() {`{`}<br>
+&nbsp;&nbsp;console.log('这是命名函数表达式');<br>
+{`}`};
+        </div>
+      </div>
+
+      <h2>二、核心区别：变量提升（Hoisting）</h2>
+
+      <div class="highlight-box">
+        <strong>这是两者最根本的区别！</strong>
+      </div>
+
+      <div class="feature-list">
+        <h4>🔹 函数声明：整个函数被提升</h4>
+        <div class="code-block">
+myFunction(); <span class="code-comment">// ✅ 正常执行！</span><br><br>
+
+function myFunction() {`{`}<br>
+&nbsp;&nbsp;console.log('Hello');<br>
+{`}`}
+        </div>
+        <p><strong>JS 引擎会将整个函数体提升到作用域顶部。</strong></p>
+        <p>可以在定义之前调用。</p>
+      </div>
+
+      <div class="error-box">
+        <h4>🔹 函数表达式：只有变量声明被提升，赋值不会</h4>
+        <div class="code-block">
+myFunc(); <span class="code-comment">// ❌ TypeError: myFunc is not a function</span><br><br>
+
+const myFunc = function() {`{`}<br>
+&nbsp;&nbsp;console.log('Hello');<br>
+{`}`};
+        </div>
+        <p><strong>const/let 声明的变量存在暂时性死区（TDZ），在赋值前访问会报错。</strong></p>
+      </div>
+
+      <h2>三、对比总结表</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>函数声明</th>
+            <th>函数表达式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>语法</td>
+            <td>function name() {`{`}{`}`}</td>
+            <td>const name = function() {`{`}{`}`}</td>
+          </tr>
+          <tr>
+            <td>变量提升</td>
+            <td>✅ 整个函数提升</td>
+            <td>❌ 只有变量声明提升</td>
+          </tr>
+          <tr>
+            <td>定义前调用</td>
+            <td>✅ 可以</td>
+            <td>❌ 不可以</td>
+          </tr>
+          <tr>
+            <td>必须有名字</td>
+            <td>✅ 是</td>
+            <td>❌ 否（可匿名）</td>
+          </tr>
+          <tr>
+            <td>作为值传递</td>
+            <td>需要引用名字</td>
+            <td>✅ 直接作为值</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>四、典型使用场景</h2>
+
+      <div class="feature-list">
+        <h4>✅ 函数声明：适用于通用工具函数、顶层逻辑</h4>
+        <div class="code-block">
+<span class="code-comment">// 工具函数</span><br>
+function formatDate(date) {`{`}<br>
+&nbsp;&nbsp;return date.toISOString();<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 顶层逻辑</span><br>
+function init() {`{`}<br>
+&nbsp;&nbsp;setupEventListeners();<br>
+&nbsp;&nbsp;loadData();<br>
+{`}`}
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 函数表达式：适用于回调、对象方法、模块化、IIFE</h4>
+        <div class="code-block">
+<span class="code-comment">// 回调函数</span><br>
+setTimeout(function() {`{`}<br>
+&nbsp;&nbsp;console.log('延迟执行');<br>
+{`}`}, 1000);<br><br>
+
+<span class="code-comment">// 对象方法</span><br>
+const obj = {`{`}<br>
+&nbsp;&nbsp;method: function() {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log('对象方法');<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`};<br><br>
+
+<span class="code-comment">// IIFE（立即执行函数表达式）</span><br>
+(function() {`{`}<br>
+&nbsp;&nbsp;console.log('立即执行');<br>
+{`}`})();
+        </div>
+      </div>
+
+      <h2>五、最佳实践建议</h2>
+
+      <div class="highlight-box">
+        <h4>💡 推荐做法</h4>
+        <ul>
+          <li><strong>如果函数是模块的公共 API 或通用工具，用函数声明。</strong></li>
+          <li><strong>如果函数是回调、私有逻辑、或需要动态创建，用函数表达式（推荐 const + 命名函数表达式）。</strong></li>
+          <li><strong>避免在条件语句中使用函数声明。</strong></li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

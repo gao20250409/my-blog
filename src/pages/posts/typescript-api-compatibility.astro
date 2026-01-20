@@ -1,0 +1,342 @@
+---
+// TypeScript与后端API兼容性文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>如何确保TypeScript代码与后端API的兼容性</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      h4 {
+        color: #34495e;
+        margin-top: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .workflow-box {
+        background: #f3e5f5;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #9c27b0;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 如何确保TypeScript代码与后端API的兼容性</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：TypeScript, API兼容性, OpenAPI, Zod, 类型安全, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>✅ 一、核心原则：前后端共享类型定义（Shared Types）</h2>
+
+      <div class="highlight-box">
+        <h4>目标</h4>
+        <p>让前端和后端使用同一套接口类型，避免"口头约定"导致的字段不一致。</p>
+      </div>
+
+      <h3>方案 1：从后端生成 TypeScript 类型（推荐）</h3>
+
+      <div class="section-box">
+        <p>这是最可靠的方式，尤其适合你使用 Node.js、NestJS、Spring Boot 等支持 OpenAPI/Swagger 的后端。</p>
+        
+        <h4>步骤：</h4>
+        <ol>
+          <li>后端提供 OpenAPI (Swagger) 文档（例如 /api-docs.json）</li>
+          <li>前端用工具自动生成 TS 类型和 API 客户端</li>
+        </ol>
+
+        <div class="code-block">
+<span class="code-comment"># 使用 openapi-typescript</span><br>
+npx openapi-typescript https://api.example.com/api-docs.json -o src/types/api.ts
+        </div>
+
+        <h4>生成的类型示例：</h4>
+        <div class="code-block">
+<span class="code-comment">// 自动生成的 api.ts</span><br>
+export interface User {`{`}<br>
+&nbsp;&nbsp;id: number;<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;email: string;<br>
+&nbsp;&nbsp;createdAt: string; <span class="code-comment">// ISO 8601</span><br>
+{`}`}<br><br>
+
+export type GetUsersResponse = User[];
+        </div>
+      </div>
+
+      <h2>✅ 二、运行时校验：防止"类型正确但数据异常"</h2>
+
+      <div class="highlight-box">
+        <p>即使 TS 类型匹配，网络传输或后端 bug 仍可能导致数据不符合预期。因此需运行时校验。</p>
+        <p><strong>使用 Zod（推荐）或 Yup 进行数据验证</strong></p>
+      </div>
+
+      <h2>完整示例项目</h2>
+
+      <h3>1. 安装依赖</h3>
+      <div class="code-block">
+npm install zod<br>
+npm install -D openapi-typescript @types/node
+      </div>
+
+      <h3>2. 配置 package.json 脚本</h3>
+      <div class="code-block">
+{`{`}<br>
+&nbsp;&nbsp;"scripts": {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"gen:types": "node scripts/generate-api-types.ts",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"dev": "vite",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"build": "npm run gen:types && vite build"<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`}
+      </div>
+
+      <h3>3. 编写类型生成脚本（scripts/generate-api-types.ts）</h3>
+      <div class="code-block">
+<span class="code-comment">// scripts/generate-api-types.ts</span><br>
+import {`{`} generate {`}`} from 'openapi-typescript';<br>
+import {`{`} writeFileSync {`}`} from 'fs';<br><br>
+
+const OPENAPI_URL = 'https://your-backend.com/api/openapi.json'; <span class="code-comment">// 或本地路径 './openapi.json'</span><br><br>
+
+async function main() {`{`}<br>
+&nbsp;&nbsp;console.log('正在生成 API 类型...');<br>
+&nbsp;&nbsp;const schema = await generate(OPENAPI_URL, {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 可选：自定义配置</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;exportType: true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pathParamsAsTypes: true,<br>
+&nbsp;&nbsp;{`}`});<br>
+&nbsp;&nbsp;writeFileSync('./src/api/types/index.ts', schema);<br>
+&nbsp;&nbsp;console.log('✅ API 类型已生成到 src/api/types/index.ts');<br>
+{`}`}<br><br>
+
+main().catch(console.error);
+      </div>
+
+      <h3>4. 自动生成的类型示例（src/api/types/index.ts）</h3>
+      <div class="section-box">
+        <p>运行 <code>npm run gen:types</code> 后，会生成类似：</p>
+        <div class="code-block">
+<span class="code-comment">// src/api/types/index.ts (自动生成)</span><br>
+export interface User {`{`}<br>
+&nbsp;&nbsp;id: number;<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;email: string;<br>
+&nbsp;&nbsp;createdAt: string; <span class="code-comment">// ISO 8601</span><br>
+{`}`}<br><br>
+
+export interface GetUserResponse {`{`}<br>
+&nbsp;&nbsp;data: User;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 路径操作类型</span><br>
+export type paths = {`{`}<br>
+&nbsp;&nbsp;'/api/users/{`{`}id{`}`}': {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;get: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters: {`{`} path: {`{`} id: number {`}`} {`}`};<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;responses: {`{`} 200: {`{`} content: {`{`} 'application/json': GetUserResponse {`}`} {`}`} {`}`};<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`};<br>
+&nbsp;&nbsp;{`}`};<br>
+{`}`};
+        </div>
+      </div>
+
+      <h3>5. 编写 Zod Schema（src/api/schemas/user.schema.ts）</h3>
+      <div class="code-block">
+<span class="code-comment">// src/api/schemas/user.schema.ts</span><br>
+import {`{`} z {`}`} from 'zod';<br><br>
+
+export const UserSchema = z.object({`{`}<br>
+&nbsp;&nbsp;id: z.number(),<br>
+&nbsp;&nbsp;name: z.string(),<br>
+&nbsp;&nbsp;email: z.string().email(),<br>
+&nbsp;&nbsp;createdAt: z.string().datetime(),<br>
+{`}`});<br><br>
+
+export type User = z.infer&lt;typeof UserSchema&gt;;
+      </div>
+
+      <h3>6. 封装 API 客户端（src/api/client.ts）</h3>
+      <div class="code-block">
+<span class="code-comment">// src/api/client.ts</span><br>
+import {`{`} UserSchema {`}`} from './schemas/user.schema';<br>
+import type {`{`} User {`}`} from './schemas/user.schema';<br><br>
+
+<span class="code-comment">// 通用请求函数</span><br>
+async function request&lt;T&gt;(url: string): Promise&lt;T&gt; {`{`}<br>
+&nbsp;&nbsp;const res = await fetch(url);<br>
+&nbsp;&nbsp;if (!res.ok) throw new Error('HTTP ' + res.status);<br>
+&nbsp;&nbsp;const json = await res.json();<br>
+&nbsp;&nbsp;return json as T; <span class="code-comment">// 后续用 Zod 校验</span><br>
+{`}`}<br><br>
+
+<span class="code-comment">// 类型安全的用户 API</span><br>
+export async function fetchUser(id: number): Promise&lt;User&gt; {`{`}<br>
+&nbsp;&nbsp;const data = await request('/api/users/' + id);<br>
+&nbsp;&nbsp;return UserSchema.parse(data); <span class="code-comment">// 运行时校验！</span><br>
+{`}`}
+      </div>
+
+      <h3>🧩 7. 业务服务层（src/services/user.service.ts）</h3>
+      <div class="code-block">
+<span class="code-comment">// src/services/user.service.ts</span><br>
+import {`{`} fetchUser {`}`} from '@/api/client';<br><br>
+
+export class UserService {`{`}<br>
+&nbsp;&nbsp;static async getUserProfile(userId: number) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const user = await fetchUser(userId);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return user;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`} catch (error) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 统一错误处理（可上报 Sentry）</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error('获取用户失败:', error);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw error;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`}
+      </div>
+
+      <h3>8. 使用示例（React 组件）</h3>
+      <div class="code-block">
+<span class="code-comment">// UserProfile.tsx</span><br>
+import {`{`} useState, useEffect {`}`} from 'react';<br>
+import {`{`} UserService {`}`} from '@/services/user.service';<br><br>
+
+export default function UserProfile({`{`} userId {`}`}: {`{`} userId: number {`}`}) {`{`}<br>
+&nbsp;&nbsp;const [user, setUser] = useState&lt;User | null&gt;(null);<br><br>
+
+&nbsp;&nbsp;useEffect(() => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;UserService.getUserProfile(userId)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.then(setUser)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.catch(err => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// ZodError 或网络错误都会被捕获</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert('加载用户失败');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`}`});<br>
+&nbsp;&nbsp;{`}`}, [userId]);<br><br>
+
+&nbsp;&nbsp;if (!user) return &lt;div&gt;加载中...&lt;/div&gt;;<br>
+&nbsp;&nbsp;return &lt;div&gt;欢迎, {`{`}user.name{`}`}!&lt;/div&gt;;<br>
+{`}`}
+      </div>
+
+      <h2>npm run gen:types 干啥用的？</h2>
+
+      <div class="workflow-box">
+        <h4>🔄 典型工作流</h4>
+        <ol>
+          <li>后端更新了 API（比如新增了一个 phone 字段）</li>
+          <li>前端开发者运行 <code>npm run gen:types</code></li>
+          <li>自动生成的新类型包含 phone 字段</li>
+          <li>TypeScript 编译器会提示所有需要更新的地方</li>
+          <li>前端开发者根据提示更新代码</li>
+        </ol>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 核心优势</h4>
+        <ul>
+          <li><strong>类型安全：</strong>编译时检查，避免字段拼写错误</li>
+          <li><strong>运行时校验：</strong>Zod 确保数据格式正确</li>
+          <li><strong>自动同步：</strong>后端 API 变更自动反映到前端类型</li>
+          <li><strong>开发体验：</strong>IDE 自动补全和类型提示</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,349 @@
+---
+// TypeScript表单验证文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>在你的项目中，你是如何使用TypeScript进行表单验证的？</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      h4 {
+        color: #34495e;
+        margin-top: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 在你的项目中，你是如何使用TypeScript进行表单验证的？</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：TypeScript, 表单验证, Zod, ProForm, Ant Design, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>✅ 核心方案：Zod + 类型推导 + 表单库集成</h2>
+
+      <h3>1. 用 Zod 定义表单 Schema（同时获得类型和校验逻辑）</h3>
+
+      <div class="code-block">
+<span class="code-comment">// schemas/member.ts</span><br>
+import {`{`} z {`}`} from 'zod';<br><br>
+
+export const MemberSchema = z.object({`{`}<br>
+&nbsp;&nbsp;key: z.string().min(1, '唯一标识不能为空'),<br>
+&nbsp;&nbsp;workId: z.string().regex(/^\d+$/, '工号必须为数字'),<br>
+&nbsp;&nbsp;name: z.string().min(2, '姓名至少两个字符'),<br>
+&nbsp;&nbsp;department: z.string().min(1, '部门不能为空'),<br>
+{`}`});<br><br>
+
+export const FormSchema = z.object({`{`}<br>
+&nbsp;&nbsp;members: z.array(MemberSchema).min(1, '至少添加一名成员'),<br>
+{`}`});<br><br>
+
+<span class="code-comment">// 自动推导出 TypeScript 类型</span><br>
+export type FormValues = z.infer&lt;typeof FormSchema&gt;;
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 优势</h4>
+        <p>避免手动维护 interface，类型与校验规则始终保持一致。</p>
+      </div>
+
+      <h3>2. 在 ProForm 中使用</h3>
+
+      <div class="section-box">
+        <p>ProForm 本身基于 Ant Design Form，支持自定义校验规则。我们将 Zod 规则包装成 AntD 的 Rule：</p>
+      </div>
+
+      <h4>工具函数：将 Zod 转换为 Ant Design 规则</h4>
+
+      <div class="code-block">
+<span class="code-comment">// utils/zodToAntd.ts</span><br>
+import {`{`} Rule {`}`} from 'antd/es/form';<br>
+import {`{`} ZodTypeAny {`}`} from 'zod';<br><br>
+
+export const zodRule = (schema: ZodTypeAny): Rule => ({`{`}<br>
+&nbsp;&nbsp;validator(_, value) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (value === undefined || value === null) return Promise.resolve();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;schema.parse(value);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Promise.resolve();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`} catch (err: any) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Promise.reject(new Error(err.errors[0].message));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;{`}`},<br>
+{`}`});
+      </div>
+
+      <h4>在表单项中使用</h4>
+
+      <div class="code-block">
+<span class="code-comment">// components/MemberForm.tsx</span><br>
+import {`{`} ProFormList, ProFormText {`}`} from '@ant-design/pro-form';<br>
+import {`{`} MemberSchema {`}`} from '@/schemas/member';<br>
+import {`{`} zodRule {`}`} from '@/utils/zodToAntd';<br><br>
+
+&lt;ProFormList name="members"&gt;<br>
+&nbsp;&nbsp;&lt;ProFormText<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name="workId"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;label="工号"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rules={`{`}[zodRule(MemberSchema.shape.workId)]{`}`}<br>
+&nbsp;&nbsp;/&gt;<br>
+&nbsp;&nbsp;&lt;ProFormText<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name="name"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;label="姓名"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rules={`{`}[zodRule(MemberSchema.shape.name)]{`}`}<br>
+&nbsp;&nbsp;/&gt;<br>
+&lt;/ProFormList&gt;
+      </div>
+
+      <h3>3. 提交时二次校验（防御性编程）</h3>
+
+      <div class="highlight-box">
+        <p><strong>即使前端有校验，提交时仍用 Zod 做最终检查（防止绕过 UI 直接调用逻辑）</strong></p>
+      </div>
+
+      <div class="code-block">
+const onFinish = async (values: unknown) => {`{`}<br>
+&nbsp;&nbsp;const result = FormSchema.safeParse(values);<br>
+&nbsp;&nbsp;if (!result.success) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 聚焦第一个错误字段或弹出提示</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;const firstError = result.error.issues[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;message.error(firstError.message);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+&nbsp;&nbsp;{`}`}<br><br>
+
+&nbsp;&nbsp;<span class="code-comment">// ✅ 此时 result.data 是类型安全的 FormValues</span><br>
+&nbsp;&nbsp;await api.submitMembers(result.data.members);<br>
+{`}`};
+      </div>
+
+      <h2>完整示例：成员管理表单</h2>
+
+      <div class="section-box">
+        <h4>1. Schema 定义（schemas/member.ts）</h4>
+        <div class="code-block">
+import {`{`} z {`}`} from 'zod';<br><br>
+
+export const MemberSchema = z.object({`{`}<br>
+&nbsp;&nbsp;key: z.string().min(1, '唯一标识不能为空'),<br>
+&nbsp;&nbsp;workId: z.string().regex(/^\d+$/, '工号必须为数字'),<br>
+&nbsp;&nbsp;name: z.string().min(2, '姓名至少两个字符'),<br>
+&nbsp;&nbsp;department: z.string().min(1, '部门不能为空'),<br>
+{`}`});<br><br>
+
+export const FormSchema = z.object({`{`}<br>
+&nbsp;&nbsp;members: z.array(MemberSchema).min(1, '至少添加一名成员'),<br>
+{`}`});<br><br>
+
+export type Member = z.infer&lt;typeof MemberSchema&gt;;<br>
+export type FormValues = z.infer&lt;typeof FormSchema&gt;;
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>2. 工具函数（utils/zodToAntd.ts）</h4>
+        <div class="code-block">
+import {`{`} Rule {`}`} from 'antd/es/form';<br>
+import {`{`} ZodTypeAny {`}`} from 'zod';<br><br>
+
+export const zodRule = (schema: ZodTypeAny): Rule => ({`{`}<br>
+&nbsp;&nbsp;validator(_, value) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (value === undefined || value === null) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Promise.resolve();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;schema.parse(value);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Promise.resolve();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`} catch (err: any) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return Promise.reject(new Error(err.errors[0].message));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;{`}`},<br>
+{`}`});
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>3. 表单组件（components/MemberForm.tsx）</h4>
+        <div class="code-block">
+import {`{`} ProForm, ProFormList, ProFormText {`}`} from '@ant-design/pro-form';<br>
+import {`{`} message {`}`} from 'antd';<br>
+import {`{`} MemberSchema, FormSchema, FormValues {`}`} from '@/schemas/member';<br>
+import {`{`} zodRule {`}`} from '@/utils/zodToAntd';<br><br>
+
+export default function MemberForm() {`{`}<br>
+&nbsp;&nbsp;const onFinish = async (values: unknown) => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const result = FormSchema.safeParse(values);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (!result.success) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const firstError = result.error.issues[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;message.error(firstError.message);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// ✅ 类型安全的数据</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;const data: FormValues = result.data;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;await api.submitMembers(data.members);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;message.success('提交成功');<br>
+&nbsp;&nbsp;{`}`};<br><br>
+
+&nbsp;&nbsp;return (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProForm onFinish={`{`}onFinish{`}`}&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProFormList name="members"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProFormText<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name="workId"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label="工号"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rules={`{`}[zodRule(MemberSchema.shape.workId)]{`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProFormText<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name="name"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label="姓名"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rules={`{`}[zodRule(MemberSchema.shape.name)]{`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ProFormText<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name="department"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label="部门"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rules={`{`}[zodRule(MemberSchema.shape.department)]{`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ProFormList&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ProForm&gt;<br>
+&nbsp;&nbsp;);<br>
+{`}`}
+        </div>
+      </div>
+
+      <h2>核心优势总结</h2>
+
+      <div class="feature-list">
+        <h4>✅ 类型安全</h4>
+        <ul>
+          <li>Schema 定义即类型定义，避免手动维护 interface</li>
+          <li>自动推导类型，编译时检查</li>
+          <li>提交时的数据是完全类型安全的</li>
+        </ul>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 运行时校验</h4>
+        <ul>
+          <li>Zod 提供强大的运行时校验能力</li>
+          <li>支持正则、自定义规则、异步校验</li>
+          <li>错误信息可自定义，用户体验好</li>
+        </ul>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 防御性编程</h4>
+        <ul>
+          <li>表单项级别校验（用户输入时）</li>
+          <li>提交时二次校验（防止绕过 UI）</li>
+          <li>后端接收前再次校验（完整防护）</li>
+        </ul>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 开发体验</h4>
+        <ul>
+          <li>一处定义，多处使用</li>
+          <li>IDE 自动补全和类型提示</li>
+          <li>重构时编译器会提示所有需要修改的地方</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

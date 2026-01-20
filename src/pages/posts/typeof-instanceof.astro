@@ -142,6 +142,72 @@
 
       <p>typeof 和 instanceof 是 JavaScript 中用于类型检测的两个核心操作符，typeof：检测基本数据类型，instanceof：检测对象的构造函数/原型链</p>
 
+      <h2>一、typeof：检测基本数据类型</h2>
+
+      <div class="section-box">
+        <h4>✅ 作用</h4>
+        <p>返回一个字符串，表示操作数的数据类型。</p>
+      </div>
+
+      <h3>✅ 返回值对照表</h3>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>表达式</th>
+            <th>typeof 结果</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>undefined</td>
+            <td>"undefined"</td>
+            <td>未定义</td>
+          </tr>
+          <tr>
+            <td>null</td>
+            <td>"object"</td>
+            <td>⚠️ 历史 bug（JS 设计错误）</td>
+          </tr>
+          <tr>
+            <td>true / false</td>
+            <td>"boolean"</td>
+            <td>布尔值</td>
+          </tr>
+          <tr>
+            <td>42, 3.14</td>
+            <td>"number"</td>
+            <td>数字</td>
+          </tr>
+          <tr>
+            <td>123n</td>
+            <td>"bigint"</td>
+            <td>ES2020 新增</td>
+          </tr>
+          <tr>
+            <td>"hello"</td>
+            <td>"string"</td>
+            <td>字符串</td>
+          </tr>
+          <tr>
+            <td>Symbol()</td>
+            <td>"symbol"</td>
+            <td>ES6 新增</td>
+          </tr>
+          <tr>
+            <td>function f(){`{`}{`}`}</td>
+            <td>"function"</td>
+            <td>函数（特殊对象）</td>
+          </tr>
+          <tr>
+            <td>{`{}`}, [], new Date()</td>
+            <td>"object"</td>
+            <td>所有对象（包括数组、日期等）</td>
+          </tr>
+        </tbody>
+      </table>
+
       <h2>二、instanceof：检测对象的构造函数/原型链</h2>
 
       <div class="section-box">
