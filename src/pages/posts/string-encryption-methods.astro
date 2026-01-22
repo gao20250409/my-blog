@@ -1,0 +1,279 @@
+---
+// 加密字符串方法文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>写一个加密字符串的方法</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .warning-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 写一个加密字符串的方法</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：字符串加密, Base64, UTF-8, JavaScript, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>方法 1：UTF-8 → Uint8Array → binary string → Base64（推荐）</h2>
+
+      <div class="feature-list">
+        <h4>✅ 推荐理由</h4>
+        <p>与加密代码一致，标准化处理，支持所有Unicode字符。</p>
+      </div>
+
+      <h3>加密函数</h3>
+
+      <div class="code-block">
+function utf8ToB64(str) {`{`}<br>
+&nbsp;&nbsp;const bytes = new TextEncoder().encode(str);<br>
+&nbsp;&nbsp;const binStr = String.fromCharCode(...bytes);<br>
+&nbsp;&nbsp;return btoa(binStr); <span class="code-comment">// binary to ASCII</span><br>
+{`}`}
+      </div>
+
+      <h3>解密函数</h3>
+
+      <div class="code-block">
+function b64ToUtf8(b64) {`{`}<br>
+&nbsp;&nbsp;const binStr = atob(b64);<br>
+&nbsp;&nbsp;const bytes = Uint8Array.from(binStr, c => c.charCodeAt(0));<br>
+&nbsp;&nbsp;return new TextDecoder().decode(bytes);<br>
+{`}`}
+      </div>
+
+      <h3>测试示例</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 测试</span><br>
+utf8ToB64("Hello 世界!"); <span class="code-comment">// "SGVsbG8g5LiW55WMIQ=="</span><br>
+b64ToUtf8("SGVsbG8g5LiW55WMIQ=="); <span class="code-comment">// "Hello 世界!"</span>
+      </div>
+
+      <h2>方法 2：encodeURIComponent + escape（兼容旧环境）</h2>
+
+      <div class="warning-box">
+        <h4>⚠️ 注意</h4>
+        <p>兼容旧环境，但较 hacky（比较"取巧"/"不正规"），不推荐在现代项目中使用。</p>
+      </div>
+
+      <h3>加密函数</h3>
+
+      <div class="code-block">
+function utf8ToB64(str) {`{`}<br>
+&nbsp;&nbsp;return btoa(unescape(encodeURIComponent(str)));<br>
+{`}`}
+      </div>
+
+      <h3>解密函数</h3>
+
+      <div class="code-block">
+function b64ToUtf8(b64) {`{`}<br>
+&nbsp;&nbsp;return decodeURIComponent(escape(atob(b64)));<br>
+{`}`}
+      </div>
+
+      <h2>核心API说明</h2>
+
+      <div class="section-box">
+        <h4>TextEncoder / TextDecoder</h4>
+        <ul>
+          <li><strong>TextEncoder().encode(str)：</strong>将字符串转换为 UTF-8 编码的 Uint8Array</li>
+          <li><strong>TextDecoder().decode(bytes)：</strong>将 Uint8Array 解码为字符串</li>
+          <li><strong>优势：</strong>标准API，支持所有Unicode字符</li>
+        </ul>
+      </div>
+
+      <div class="section-box">
+        <h4>btoa / atob</h4>
+        <ul>
+          <li><strong>btoa(binaryString)：</strong>将二进制字符串转换为 Base64</li>
+          <li><strong>atob(base64)：</strong>将 Base64 解码为二进制字符串</li>
+          <li><strong>限制：</strong>只能处理 Latin1 字符（0-255），不能直接处理 UTF-8</li>
+        </ul>
+      </div>
+
+      <div class="section-box">
+        <h4>String.fromCharCode / charCodeAt</h4>
+        <ul>
+          <li><strong>String.fromCharCode(...bytes)：</strong>将字节数组转换为字符串</li>
+          <li><strong>charCodeAt(0)：</strong>获取字符的 Unicode 编码</li>
+        </ul>
+      </div>
+
+      <h2>完整示例代码</h2>
+
+      <div class="code-block">
+<span class="code-comment">// 方法 1：UTF-8 → Uint8Array → binary string → Base64（推荐）</span><br>
+function utf8ToB64(str) {`{`}<br>
+&nbsp;&nbsp;const bytes = new TextEncoder().encode(str);<br>
+&nbsp;&nbsp;const binStr = String.fromCharCode(...bytes);<br>
+&nbsp;&nbsp;return btoa(binStr);<br>
+{`}`}<br><br>
+
+function b64ToUtf8(b64) {`{`}<br>
+&nbsp;&nbsp;const binStr = atob(b64);<br>
+&nbsp;&nbsp;const bytes = Uint8Array.from(binStr, c => c.charCodeAt(0));<br>
+&nbsp;&nbsp;return new TextDecoder().decode(bytes);<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 测试</span><br>
+const encrypted = utf8ToB64("Hello 世界!");<br>
+console.log(encrypted); <span class="code-comment">// "SGVsbG8g5LiW55WMIQ=="</span><br><br>
+
+const decrypted = b64ToUtf8(encrypted);<br>
+console.log(decrypted); <span class="code-comment">// "Hello 世界!"</span>
+      </div>
+
+      <h2>使用场景</h2>
+
+      <div class="feature-list">
+        <h4>✅ 适用场景</h4>
+        <ul>
+          <li><strong>URL参数传递：</strong>将复杂数据编码后放入URL</li>
+          <li><strong>localStorage存储：</strong>简单混淆敏感信息</li>
+          <li><strong>API传输：</strong>Base64编码二进制数据</li>
+          <li><strong>前端临时加密：</strong>防止明文暴露（非安全加密）</li>
+        </ul>
+      </div>
+
+      <div class="warning-box">
+        <h4>⚠️ 安全提示</h4>
+        <p><strong>Base64 不是加密算法！</strong></p>
+        <ul>
+          <li>Base64 只是编码方式，可以轻易解码</li>
+          <li>不要用于存储密码等敏感信息</li>
+          <li>真正的加密需要使用 AES、RSA 等算法</li>
+          <li>敏感数据应该在后端加密，前端只做传输</li>
+        </ul>
+      </div>
+
+      <h2>方法对比</h2>
+
+      <div class="section-box">
+        <h4>方法 1（推荐）</h4>
+        <ul>
+          <li>✅ 标准API，现代浏览器全支持</li>
+          <li>✅ 代码清晰，易于理解</li>
+          <li>✅ 支持所有Unicode字符</li>
+          <li>❌ 需要较新的浏览器（IE不支持）</li>
+        </ul>
+      </div>
+
+      <div class="section-box">
+        <h4>方法 2（兼容）</h4>
+        <ul>
+          <li>✅ 兼容旧浏览器（包括IE）</li>
+          <li>✅ 代码简洁</li>
+          <li>❌ 使用了已废弃的 escape/unescape</li>
+          <li>❌ 不够标准，较"取巧"</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
