@@ -1,0 +1,370 @@
+---
+// TypeScript泛型与静态类型检查文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript中的泛型如何与静态类型检查的结合使用？</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      h4 {
+        color: #34495e;
+        margin-top: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .warning-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 TypeScript中的泛型如何与静态类型检查的结合使用？</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：TypeScript, 泛型, 静态类型检查, Zod, 类型安全, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <div class="highlight-box">
+        <p>在 TypeScript 中，<strong>泛型（Generics）本身就是静态类型检查的核心机制之一</strong>。它的设计初衷就是在编译期（compile-time）提供类型安全，而无需依赖运行时信息。因此，"泛型与静态类型检查的结合"不是"如何结合"，而是<strong>泛型天然服务于静态类型检查</strong>。</p>
+      </div>
+
+      <h2>一、泛型如何增强静态类型检查？</h2>
+
+      <h3>✅ 1. 保留类型信息，避免 any</h3>
+
+      <div class="error-box">
+        <h4>不使用泛型时，函数可能被迫返回 any，失去类型安全：</h4>
+        <div class="code-block">
+<span class="code-comment">// ❌ 不安全：丢失类型</span><br>
+function identity(arg: any): any {`{`}<br>
+&nbsp;&nbsp;return arg;<br>
+{`}`}<br><br>
+
+const result = identity("hello"); <span class="code-comment">// result: any</span>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>使用泛型后，类型被精确传递：</h4>
+        <div class="code-block">
+<span class="code-comment">// ✅ 安全：类型被保留</span><br>
+function identity&lt;T&gt;(arg: T): T {`{`}<br>
+&nbsp;&nbsp;return arg;<br>
+{`}`}<br><br>
+
+const result = identity("hello"); <span class="code-comment">// result: string ✅</span>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>🔍 静态检查效果</h4>
+        <p>TS 编译器在编译时就知道 result 是 string，若你写 result.toFixed() 会报错。</p>
+      </div>
+
+      <h3>✅ 2. 约束类型关系（使用 extends）</h3>
+
+      <div class="section-box">
+        <p>通过泛型约束，确保传入的类型满足特定结构：</p>
+        <div class="code-block">
+interface HasLength {`{`}<br>
+&nbsp;&nbsp;length: number;<br>
+{`}`}<br><br>
+
+function logLength&lt;T extends HasLength&gt;(arg: T): T {`{`}<br>
+&nbsp;&nbsp;console.log(arg.length); <span class="code-comment">// ✅ 安全，因为 T 必有 length</span><br>
+&nbsp;&nbsp;return arg;<br>
+{`}`}<br><br>
+
+logLength("hello");&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// ✅ string 有 length</span><br>
+logLength([1, 2, 3]);&nbsp;&nbsp;&nbsp;<span class="code-comment">// ✅ array 有 length</span><br>
+logLength(42);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// ❌ 编译错误！number 没有 length</span>
+        </div>
+      </div>
+
+      <h3>✅ 3. 泛型接口/类：保证数据结构一致性</h3>
+
+      <div class="code-block">
+interface ApiResponse&lt;T&gt; {`{`}<br>
+&nbsp;&nbsp;code: number;<br>
+&nbsp;&nbsp;data: T;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// data 的类型由 T 决定</span><br>
+&nbsp;&nbsp;message: string;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+const userResponse: ApiResponse&lt;{`{`} id: number; name: string {`}`}&gt; = {`{`}<br>
+&nbsp;&nbsp;code: 200,<br>
+&nbsp;&nbsp;data: {`{`} id: 1, name: "Alice" {`}`}, <span class="code-comment">// ✅ 类型匹配</span><br>
+&nbsp;&nbsp;message: "OK"<br>
+{`}`};<br><br>
+
+<span class="code-comment">// 若写成 data: {`{`} id: "1" {`}`} → ❌ 编译错误（id 应为 number）</span>
+      </div>
+
+      <h2>三、重要提醒：静态检查 ≠ 运行时安全</h2>
+
+      <div class="warning-box">
+        <p>虽然泛型提供了强大的编译期类型安全，但它不能防止运行时数据不符合预期。例如：</p>
+        <div class="code-block">
+<span class="code-comment">// 声明返回 User</span><br>
+const user = await fetchJson&lt;User&gt;("/api/user");<br><br>
+
+<span class="code-comment">// 但如果 API 实际返回 {`{`} id: "abc", name: 123 {`}`}</span><br>
+<span class="code-comment">// TS 不会报错！因为 fetchJson 的实现是 any -&gt; T</span>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 解决方案</h4>
+        <p>将<strong>泛型（静态检查） + 运行时校验（如 Zod、io-ts）</strong>结合使用。</p>
+      </div>
+
+      <h2>四、最佳实践总结</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>做法</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>✅ 使用泛型代替 any</td>
+            <td>保持类型信息流动</td>
+          </tr>
+          <tr>
+            <td>✅ 用 extends 约束泛型</td>
+            <td>确保类型具备所需属性</td>
+          </tr>
+          <tr>
+            <td>✅ 利用 keyof、infer 等高级类型</td>
+            <td>构建更智能的类型推导</td>
+          </tr>
+          <tr>
+            <td>⚠️ 不要过度泛型化</td>
+            <td>简单场景直接用具体类型更清晰</td>
+          </tr>
+          <tr>
+            <td>🔒 泛型 + 运行时校验</td>
+            <td>对外部输入（如 API、JSON）必须双重保障</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>总结</h2>
+
+      <div class="section-box">
+        <p>TypeScript 的泛型就是为静态类型检查而生的。它通过：</p>
+        <ul>
+          <li><strong>类型参数化（&lt;T&gt;）</strong></li>
+          <li><strong>类型约束（T extends U）</strong></li>
+          <li><strong>类型推导（自动推断 T）</strong></li>
+        </ul>
+        <p>在编译期提供强大的类型安全保障。</p>
+      </div>
+
+      <h2>运行时安全：结合 Zod / io-ts 等运行时校验库（推荐）</h2>
+
+      <div class="highlight-box">
+        <p>这类库能同时提供编译期类型和运行时校验，完美解决泛型与动态检查的结合问题。</p>
+      </div>
+
+      <h3>示例：使用 Zod</h3>
+
+      <div class="code-block">
+import {`{`} z {`}`} from 'zod';<br><br>
+
+<span class="code-comment">// 定义 schema（同时生成类型）</span><br>
+const UserSchema = z.object({`{`}<br>
+&nbsp;&nbsp;id: z.number(),<br>
+&nbsp;&nbsp;name: z.string()<br>
+{`}`});<br><br>
+
+type User = z.infer&lt;typeof UserSchema&gt;; <span class="code-comment">// 自动推导出 interface</span><br><br>
+
+<span class="code-comment">// 泛型函数：接受任意 Zod schema</span><br>
+function safeParse&lt;T extends z.ZodTypeAny&gt;(<br>
+&nbsp;&nbsp;jsonString: string,<br>
+&nbsp;&nbsp;schema: T<br>
+): z.infer&lt;T&gt; {`{`}<br>
+&nbsp;&nbsp;const result = schema.safeParse(JSON.parse(jsonString));<br>
+&nbsp;&nbsp;if (!result.success) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;throw new Error('Validation error: ' + result.error.message);<br>
+&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;return result.data; <span class="code-comment">// 类型为 z.infer&lt;T&gt;</span><br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+const user = safeParse('{`{`}"id": 1, "name": "Charlie"{`}`}', UserSchema);<br>
+<span class="code-comment">// user 类型自动为 {`{`} id: number; name: string {`}`}</span>
+      </div>
+
+      <h2>核心优势</h2>
+
+      <div class="feature-list">
+        <h4>✅ 编译期类型安全</h4>
+        <ul>
+          <li>泛型确保类型在编译时正确</li>
+          <li>IDE 自动补全和类型提示</li>
+          <li>重构时编译器会提示所有需要修改的地方</li>
+        </ul>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 运行时数据校验</h4>
+        <ul>
+          <li>Zod 确保运行时数据符合预期</li>
+          <li>防止 API 返回错误数据</li>
+          <li>提供详细的错误信息</li>
+        </ul>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 类型推导自动化</h4>
+        <ul>
+          <li>从 Schema 自动推导 TypeScript 类型</li>
+          <li>一处定义，多处使用</li>
+          <li>类型与校验规则始终保持一致</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

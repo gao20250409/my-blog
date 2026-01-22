@@ -1,0 +1,347 @@
+---
+// 静态类型与动态类型文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>静态类型跟动态类型区别</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      h4 {
+        color: #34495e;
+        margin-top: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .warning-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 静态类型跟动态类型区别</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：静态类型, 动态类型, TypeScript, JavaScript, 类型系统, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <div class="highlight-box">
+        <p>"静态类型"与"动态类型"是编程语言中两种根本不同的类型检查机制，核心区别在于 <strong>类型检查发生的时机</strong> 和 <strong>类型信息的使用方式</strong>。</p>
+      </div>
+
+      <h2>✅ 一、核心区别总结</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>静态类型（Static Typing）</th>
+            <th>动态类型（Dynamic Typing）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>类型检查时机</td>
+            <td>编译时（代码运行前）</td>
+            <td>运行时（代码执行中）</td>
+          </tr>
+          <tr>
+            <td>变量类型是否可变</td>
+            <td>通常不可变（如 let x: number 只能存数字）</td>
+            <td>可变（如 x = 1; x = "hello" 合法）</td>
+          </tr>
+          <tr>
+            <td>错误暴露时间</td>
+            <td>写代码/编译阶段就报错</td>
+            <td>运行到出错那行才报错</td>
+          </tr>
+          <tr>
+            <td>典型语言</td>
+            <td>TypeScript, Java, C++, Rust</td>
+            <td>JavaScript, Python, Ruby, PHP</td>
+          </tr>
+          <tr>
+            <td>性能影响</td>
+            <td>无运行时开销（类型信息被擦除）</td>
+            <td>需在运行时判断类型，有轻微开销</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>✅ 二、举例说明</h2>
+
+      <h3>1. 静态类型（以 TypeScript 为例）</h3>
+
+      <div class="code-block">
+function add(a: number, b: number): number {`{`}<br>
+&nbsp;&nbsp;return a + b;<br>
+{`}`}<br><br>
+
+add(1, 2);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// ✅ 正确</span><br>
+add("1", 2);&nbsp;&nbsp;&nbsp;<span class="code-comment">// ❌ 编译错误！TS 在你保存文件时就提示：参数类型不匹配</span>
+      </div>
+
+      <div class="feature-list">
+        <h4>🔍 关键</h4>
+        <p>错误在代码运行前就被发现，无需执行程序。</p>
+      </div>
+
+      <h3>2. 动态类型（以 JavaScript 为例）</h3>
+
+      <div class="code-block">
+function add(a, b) {`{`}<br>
+&nbsp;&nbsp;return a + b;<br>
+{`}`}<br><br>
+
+add(1, 2);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// ✅ 返回 3</span><br>
+add("1", 2);&nbsp;&nbsp;&nbsp;<span class="code-comment">// ✅ 不报错！返回 "12"（字符串拼接）</span><br>
+add(null, 2);&nbsp;&nbsp;<span class="code-comment">// ✅ 返回 2（null 被转为 0）</span>
+      </div>
+
+      <div class="warning-box">
+        <h4>⚠️ 问题</h4>
+        <p>看似"灵活"，但可能产生意外结果（如 "1" + 2 = "12"），且只有在实际调用时才能发现问题。</p>
+      </div>
+
+      <h2>🛡️ 三、安全性 vs 灵活性</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>静态类型</th>
+            <th>动态类型</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>安全性</td>
+            <td>高（提前捕获类型错误）</td>
+            <td>低（错误可能潜伏到生产环境）</td>
+          </tr>
+          <tr>
+            <td>开发效率</td>
+            <td>初期稍慢（需写类型），后期快（自动补全、重构安全）</td>
+            <td>初期快（不用写类型），后期易出错</td>
+          </tr>
+          <tr>
+            <td>适合场景</td>
+            <td>大型项目、团队协作、长期维护</td>
+            <td>小脚本、快速原型、数据处理</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>✅ 四、TypeScript 的特殊地位：静态类型 + 动态语言</h2>
+
+      <div class="section-box">
+        <p>TypeScript 是 JavaScript 的超集，它在动态语言（JS）之上叠加了静态类型系统：</p>
+        <ul>
+          <li>✅ <strong>开发时：</strong>享受静态类型检查（编译时报错）</li>
+          <li>✅ <strong>运行时：</strong>生成纯 JavaScript，行为与原生 JS 完全一致</li>
+        </ul>
+      </div>
+
+      <h3>🔁 渐进式采用</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 你可以选择何时使用类型</span><br>
+const data = fetchData(); <span class="code-comment">// unknown 类型（安全）</span><br>
+const user = data as User; <span class="code-comment">// 显式断言（需谨慎）</span><br><br>
+
+<span class="code-comment">// 或者用泛型 + 运行时校验（最佳实践）</span><br>
+const user = parse&lt;User&gt;(data, UserSchema);
+      </div>
+
+      <h2>✅ 五、一句话总结</h2>
+
+      <div class="feature-list">
+        <h4>静态类型："先检查，再运行"</h4>
+        <p>安全第一，适合大型工程。</p>
+      </div>
+
+      <div class="feature-list">
+        <h4>动态类型："边运行，边判断"</h4>
+        <p>灵活优先，适合快速开发。</p>
+      </div>
+
+      <h2>实际应用建议</h2>
+
+      <div class="section-box">
+        <h4>✅ 选择静态类型（TypeScript）的场景</h4>
+        <ul>
+          <li>大型项目（代码量 > 10k 行）</li>
+          <li>团队协作（多人开发）</li>
+          <li>长期维护（项目生命周期 > 1年）</li>
+          <li>需要重构（类型系统保证重构安全）</li>
+          <li>复杂业务逻辑（类型帮助理解代码）</li>
+        </ul>
+      </div>
+
+      <div class="section-box">
+        <h4>✅ 选择动态类型（JavaScript）的场景</h4>
+        <ul>
+          <li>快速原型开发</li>
+          <li>小型脚本（&lt; 1000 行）</li>
+          <li>数据处理脚本</li>
+          <li>学习阶段（降低入门门槛）</li>
+          <li>临时工具（一次性使用）</li>
+        </ul>
+      </div>
+
+      <h2>核心优势对比</h2>
+
+      <div class="feature-list">
+        <h4>静态类型的优势</h4>
+        <ul>
+          <li>✅ 编译时发现错误，减少运行时bug</li>
+          <li>✅ IDE自动补全和类型提示</li>
+          <li>✅ 重构更安全，编译器会提示所有需要修改的地方</li>
+          <li>✅ 代码即文档，类型定义就是最好的文档</li>
+          <li>✅ 团队协作更顺畅，接口契约清晰</li>
+        </ul>
+      </div>
+
+      <div class="feature-list">
+        <h4>动态类型的优势</h4>
+        <ul>
+          <li>✅ 开发速度快，不需要写类型声明</li>
+          <li>✅ 灵活性高，变量可以存储任意类型</li>
+          <li>✅ 学习曲线平缓，入门门槛低</li>
+          <li>✅ 适合快速原型和实验性开发</li>
+          <li>✅ 代码量少，更简洁</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
