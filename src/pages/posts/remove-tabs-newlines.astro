@@ -1,0 +1,382 @@
+---
+// 去除制表符和换行符的方法文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>写一个去除制表符和换行符的方法</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 写一个去除制表符和换行符的方法</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：正则表达式, 字符串处理, JavaScript, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、核心方法：去除制表符和换行符</h2>
+
+      <div class="code-block">
+<span class="code-comment">// 方法：去除制表符和换行符</span><br>
+const removeTabsAndNewlines = str =><br>
+&nbsp;&nbsp;str.replace(/[\t\n]/g, '');<br><br>
+
+<span class="code-comment">// 使用示例</span><br>
+const exampleString = "Hello,\tWorld!\nThis is a test.";<br>
+const result = removeTabsAndNewlines(exampleString);<br>
+console.log(result); <span class="code-comment">// Output: Hello,World!This is a test.</span>
+      </div>
+
+      <div class="highlight-box">
+        <h4>⚠️ 重要提示</h4>
+        <p><strong>[\t\n] 不能改成 \t\n</strong></p>
+        <ul>
+          <li><code>/[\t\n]/g</code> 匹配制表符 <strong>或</strong> 换行符</li>
+          <li><code>/\t\n/g</code> 匹配制表符 <strong>后紧跟</strong> 换行符的连续字符</li>
+        </ul>
+      </div>
+
+      <h2>二、扩展方法：去除所有空白字符</h2>
+
+      <div class="section-box">
+        <h4>方法 1：使用 \s（推荐）</h4>
+        <div class="code-block">
+<span class="code-comment">// \s 匹配所有空白字符（空格、制表符、换行符、回车符等）</span><br>
+const removeAllWhitespace = str =><br>
+&nbsp;&nbsp;str.replace(/\s/g, '');<br><br>
+
+const example = "Hello,\t World!\n This is a test.";<br>
+console.log(removeAllWhitespace(example));<br>
+<span class="code-comment">// Output: Hello,World!Thisisatest.</span>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>方法 2：明确指定字符类</h4>
+        <div class="code-block">
+<span class="code-comment">// 明确指定要移除的空白字符</span><br>
+const removeSpecificWhitespace = str =><br>
+&nbsp;&nbsp;str.replace(/[ \t\n\r]/g, '');<br><br>
+
+const example = "Hello,\t World!\n This is a test.";<br>
+console.log(removeSpecificWhitespace(example));<br>
+<span class="code-comment">// Output: Hello,World!Thisisatest.</span>
+        </div>
+      </div>
+
+      <h2>三、对比：去除非单词字符</h2>
+
+      <div class="section-box">
+        <h4>方法：去除标点符号和空格</h4>
+        <div class="code-block">
+<span class="code-comment">// [^\w] 能改成 \W：匹配非单词字符</span><br>
+const removePunctuationAndSpaces = str =><br>
+&nbsp;&nbsp;str.replace(/[^\w]/g, '');<br><br>
+
+<span class="code-comment">// 等价写法</span><br>
+const removePunctuationAndSpaces2 = str =><br>
+&nbsp;&nbsp;str.replace(/\W/g, '');<br><br>
+
+const example = "Hello, World! This is a test.";<br>
+console.log(removePunctuationAndSpaces(example));<br>
+<span class="code-comment">// Output: HelloWorldThisisatest</span>
+        </div>
+      </div>
+
+      <h2>四、方法对比总结</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>正则表达式</th>
+            <th>移除内容</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>去除制表符和换行符</td>
+            <td>/[\t\n]/g</td>
+            <td>制表符、换行符</td>
+            <td>保留空格，只移除特定空白字符</td>
+          </tr>
+          <tr>
+            <td>去除所有空白字符</td>
+            <td>/\s/g</td>
+            <td>空格、制表符、换行符、回车符等</td>
+            <td>移除所有空白，紧凑显示</td>
+          </tr>
+          <tr>
+            <td>去除非单词字符</td>
+            <td>/\W/g 或 /[^\w]/g</td>
+            <td>标点符号、空格、特殊字符</td>
+            <td>只保留字母、数字、下划线</td>
+          </tr>
+          <tr>
+            <td>去除指定字符</td>
+            <td>/[ \t\n\r]/g</td>
+            <td>明确指定的字符</td>
+            <td>精确控制移除内容</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>五、常见错误示例</h2>
+
+      <div class="error-box">
+        <h4>❌ 错误写法 1：使用 \t\n</h4>
+        <div class="code-block">
+<span class="code-comment">// ❌ 错误：只匹配 \t 后紧跟 \n 的连续字符</span><br>
+const wrong1 = str => str.replace(/\t\n/g, '');<br><br>
+
+const test = "A\tB\nC\t\nD";<br>
+console.log(wrong1(test)); <span class="code-comment">// Output: A\tB\nCD (只移除了 \t\n)</span>
+        </div>
+      </div>
+
+      <div class="error-box">
+        <h4>❌ 错误写法 2：忘记全局标志 g</h4>
+        <div class="code-block">
+<span class="code-comment">// ❌ 错误：没有 g 标志，只替换第一个匹配</span><br>
+const wrong2 = str => str.replace(/[\t\n]/, '');<br><br>
+
+const test = "A\tB\nC";<br>
+console.log(wrong2(test)); <span class="code-comment">// Output: AB\nC (只移除了第一个 \t)</span>
+        </div>
+      </div>
+
+      <h2>六、实战应用场景</h2>
+
+      <div class="feature-list">
+        <h4>✅ 场景 1：处理用户输入</h4>
+        <div class="code-block">
+<span class="code-comment">// 清理用户输入的多余空白字符</span><br>
+const cleanUserInput = input => {`{`}<br>
+&nbsp;&nbsp;return input<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.replace(/[\t\n\r]/g, '') <span class="code-comment">// 移除制表符和换行符</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;.replace(/\s+/g, ' ') <span class="code-comment">// 多个空格替换为单个空格</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;.trim(); <span class="code-comment">// 移除首尾空格</span><br>
+{`}`};<br><br>
+
+const input = "  Hello,\t\n  World!  \n";<br>
+console.log(cleanUserInput(input)); <span class="code-comment">// Output: "Hello, World!"</span>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 场景 2：处理 CSV 数据</h4>
+        <div class="code-block">
+<span class="code-comment">// 清理 CSV 字段中的换行符</span><br>
+const cleanCSVField = field => {`{`}<br>
+&nbsp;&nbsp;return field.replace(/[\n\r]/g, ' ').trim();<br>
+{`}`};<br><br>
+
+const csvField = "Product\nName";<br>
+console.log(cleanCSVField(csvField)); <span class="code-comment">// Output: "Product Name"</span>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 场景 3：生成 URL 友好字符串</h4>
+        <div class="code-block">
+<span class="code-comment">// 生成 URL slug</span><br>
+const generateSlug = text => {`{`}<br>
+&nbsp;&nbsp;return text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.toLowerCase()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.replace(/[\t\n\r]/g, '') <span class="code-comment">// 移除空白字符</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;.replace(/[^\w\s-]/g, '') <span class="code-comment">// 移除特殊字符</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;.replace(/\s+/g, '-') <span class="code-comment">// 空格替换为连字符</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;.replace(/-+/g, '-'); <span class="code-comment">// 多个连字符替换为单个</span><br>
+{`}`};<br><br>
+
+const title = "Hello,\tWorld!\nThis is a Test";<br>
+console.log(generateSlug(title)); <span class="code-comment">// Output: "hello-world-this-is-a-test"</span>
+        </div>
+      </div>
+
+      <h2>七、完整测试代码</h2>
+
+      <div class="code-block">
+<span class="code-comment">// 测试 1：去除制表符和换行符</span><br>
+const removeTabsAndNewlines = str => str.replace(/[\t\n]/g, '');<br>
+const test1 = "Hello,\tWorld!\nThis is a test.";<br>
+console.log(removeTabsAndNewlines(test1));<br>
+<span class="code-comment">// Output: Hello,World!This is a test.</span><br><br>
+
+<span class="code-comment">// 测试 2：去除所有空白字符</span><br>
+const removeAllWhitespace = str => str.replace(/\s/g, '');<br>
+const test2 = "Hello,\t World!\n This is a test.";<br>
+console.log(removeAllWhitespace(test2));<br>
+<span class="code-comment">// Output: Hello,World!Thisisatest.</span><br><br>
+
+<span class="code-comment">// 测试 3：去除非单词字符</span><br>
+const removePunctuation = str => str.replace(/\W/g, '');<br>
+const test3 = "Hello, World! This is a test.";<br>
+console.log(removePunctuation(test3));<br>
+<span class="code-comment">// Output: HelloWorldThisisatest</span><br><br>
+
+<span class="code-comment">// 测试 4：清理用户输入</span><br>
+const cleanInput = input => {`{`}<br>
+&nbsp;&nbsp;return input<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.replace(/[\t\n\r]/g, '')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.replace(/\s+/g, ' ')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.trim();<br>
+{`}`};<br>
+const test4 = "  Hello,\t\n  World!  \n";<br>
+console.log(cleanInput(test4));<br>
+<span class="code-comment">// Output: "Hello, World!"</span>
+      </div>
+
+      <h2>八、核心要点总结</h2>
+
+      <div class="highlight-box">
+        <h4>💡 记住这些要点</h4>
+        <ul>
+          <li><strong>[\t\n]</strong> = 匹配制表符 <strong>或</strong> 换行符（字符类）</li>
+          <li><strong>\t\n</strong> = 匹配制表符 <strong>后紧跟</strong> 换行符（连续匹配）</li>
+          <li><strong>\s</strong> = 匹配所有空白字符（空格、制表符、换行符等）</li>
+          <li><strong>\W</strong> = 匹配非单词字符（等价于 [^\w]）</li>
+          <li>使用 <strong>g 标志</strong> 进行全局替换</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
