@@ -1,0 +1,348 @@
+---
+// TypeScript泛型与readonly结合使用文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript中的泛型如何与readonly的结合使用？</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 TypeScript中的泛型如何与readonly的结合使用？</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：TypeScript, 泛型, readonly, 类型安全, 不可变数据, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <div class="highlight-box">
+        <h4>核心作用</h4>
+        <p>主要用于在保持类型安全的同时，防止意外修改数据（尤其是函数参数或返回值）。这种组合广泛应用于函数式编程、不可变数据处理和 React 等框架中。</p>
+      </div>
+
+      <h2>1. 泛型函数参数使用 readonly 数组</h2>
+
+      <div class="code-block">
+function first&lt;T&gt;(arr: readonly T[]): T | undefined {`{`}<br>
+&nbsp;&nbsp;return arr[0];<br>
+{`}`}<br><br>
+
+const numbers = [1, 2, 3] as const; <span class="code-comment">// 类型：readonly [1, 2, 3]</span><br>
+<span class="code-comment">// 或普通数组：</span><br>
+const list = [10, 20, 30]; <span class="code-comment">// 类型：number[]</span><br><br>
+
+first(numbers); <span class="code-comment">// ✅ 允许：readonly [1,2,3] 满足 readonly T[]</span><br>
+first(list); <span class="code-comment">// ✅ 允许：number[] 是 readonly number[] 的子类型（协变）</span>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 优势</h4>
+        <p>使用 <code>readonly T[]</code> 而非 <code>T[]</code>，表示函数不会修改传入的数组，更安全。</p>
+      </div>
+
+      <h2>2. 泛型接口/类型中使用 readonly 属性</h2>
+
+      <div class="code-block">
+interface ReadonlyBox&lt;T&gt; {`{`}<br>
+&nbsp;&nbsp;readonly value: T;<br>
+{`}`}<br><br>
+
+const box: ReadonlyBox&lt;string&gt; = {`{`} value: "hello" {`}`};<br>
+<span class="code-comment">// box.value = "world"; // ❌ 错误！value 是只读的</span>
+      </div>
+
+      <h2>3. readonly 与泛型约束（extends）结合</h2>
+
+      <div class="code-block">
+function logLength&lt;T extends readonly any[]&gt;(arr: T): number {`{`}<br>
+&nbsp;&nbsp;console.log(arr.length);<br>
+&nbsp;&nbsp;return arr.length;<br>
+{`}`}<br><br>
+
+logLength([1, 2, 3]); <span class="code-comment">// ✅ OK</span><br>
+logLength(["a", "b"] as const); <span class="code-comment">// ✅ OK</span>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 作用</h4>
+        <p>通过 <code>T extends readonly any[]</code> 约束泛型必须是只读数组类型（包括普通数组和 readonly 数组）。</p>
+      </div>
+
+      <h2>4. React 中的典型应用（Props 为只读）</h2>
+
+      <div class="code-block">
+interface Props&lt;T&gt; {`{`}<br>
+&nbsp;&nbsp;readonly items: readonly T[];<br>
+&nbsp;&nbsp;readonly onSelect: (item: T) => void;<br>
+{`}`}<br><br>
+
+function List&lt;T&gt;({`{`} items, onSelect {`}`}: Props&lt;T&gt;) {`{`}<br>
+&nbsp;&nbsp;return (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`{`}items.map((item, i) => (<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li key={`{`}i{`}`} onClick={`{`}() => onSelect(item){`}`}&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`{`}String(item){`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/li&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)){`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br>
+&nbsp;&nbsp;);<br>
+{`}`}
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ React 特性</h4>
+        <p>React 组件的 props 天然是只读的，配合泛型可实现类型安全的通用组件。</p>
+      </div>
+
+      <h2>⚠️ 注意事项</h2>
+
+      <div class="section-box">
+        <ul>
+          <li><code>T[]</code> 是 <code>readonly T[]</code> 的子类型（可以赋值给 <code>readonly T[]</code>），但反过来不行。</li>
+          <li><code>as const</code> 会将字面量推断为最窄的 <code>readonly</code> 类型，常与泛型函数配合使用。</li>
+          <li><code>readonly</code> 是编译时检查，运行时仍可通过类型断言绕过（但不推荐）。</li>
+        </ul>
+      </div>
+
+      <h2>完整示例：不可变数据处理</h2>
+
+      <div class="code-block">
+<span class="code-comment">// 示例 1：只读数组操作</span><br>
+function append&lt;T&gt;(arr: readonly T[], item: T): readonly T[] {`{`}<br>
+&nbsp;&nbsp;return [...arr, item]; <span class="code-comment">// 返回新数组，不修改原数组</span><br>
+{`}`}<br><br>
+
+const original = [1, 2, 3] as const;<br>
+const newArr = append(original, 4);<br>
+console.log(original); <span class="code-comment">// [1, 2, 3] 原数组未改变</span><br>
+console.log(newArr); <span class="code-comment">// [1, 2, 3, 4]</span><br><br>
+
+<span class="code-comment">// 示例 2：只读对象</span><br>
+interface User {`{`}<br>
+&nbsp;&nbsp;readonly id: number;<br>
+&nbsp;&nbsp;readonly name: string;<br>
+{`}`}<br><br>
+
+function updateUser&lt;T extends User&gt;(user: T, updates: Partial&lt;T&gt;): T {`{`}<br>
+&nbsp;&nbsp;return {`{`} ...user, ...updates {`}`}; <span class="code-comment">// 返回新对象</span><br>
+{`}`}<br><br>
+
+const user: User = {`{`} id: 1, name: "Alice" {`}`};<br>
+const updated = updateUser(user, {`{`} name: "Bob" {`}`});<br>
+console.log(user); <span class="code-comment">// {`{`} id: 1, name: "Alice" {`}`} 原对象未改变</span><br>
+console.log(updated); <span class="code-comment">// {`{`} id: 1, name: "Bob" {`}`}</span>
+      </div>
+
+      <h2>实战场景对比</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>场景</th>
+            <th>写法</th>
+            <th>作用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>只读数组参数</td>
+            <td>readonly T[]</td>
+            <td>防止函数内部修改数组</td>
+          </tr>
+          <tr>
+            <td>只读属性</td>
+            <td>readonly value: T</td>
+            <td>创建不可变对象</td>
+          </tr>
+          <tr>
+            <td>返回只读结构</td>
+            <td>Readonly&lt;T&gt; 或 readonly [T, U]</td>
+            <td>保证调用者不修改结果</td>
+          </tr>
+          <tr>
+            <td>泛型约束</td>
+            <td>T extends readonly any[]</td>
+            <td>限制传入类型为只读数组</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>高级用法：深度只读</h2>
+
+      <div class="code-block">
+<span class="code-comment">// 递归实现深度只读</span><br>
+type DeepReadonly&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;readonly [P in keyof T]: T[P] extends object<br>
+&nbsp;&nbsp;&nbsp;&nbsp;? DeepReadonly&lt;T[P]&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;: T[P];<br>
+{`}`};<br><br>
+
+interface Config {`{`}<br>
+&nbsp;&nbsp;database: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;host: string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;port: number;<br>
+&nbsp;&nbsp;{`}`};<br>
+&nbsp;&nbsp;cache: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;enabled: boolean;<br>
+&nbsp;&nbsp;{`}`};<br>
+{`}`}<br><br>
+
+const config: DeepReadonly&lt;Config&gt; = {`{`}<br>
+&nbsp;&nbsp;database: {`{`} host: "localhost", port: 5432 {`}`},<br>
+&nbsp;&nbsp;cache: {`{`} enabled: true {`}`},<br>
+{`}`};<br><br>
+
+<span class="code-comment">// config.database.host = "new"; // ❌ 错误！深度只读</span>
+      </div>
+
+      <h2>总结</h2>
+
+      <div class="highlight-box">
+        <h4>💡 核心要点</h4>
+        <ul>
+          <li><strong>类型安全：</strong>泛型提供灵活性，readonly 提供不可变性保障</li>
+          <li><strong>函数式编程：</strong>配合使用实现纯函数和不可变数据</li>
+          <li><strong>React 开发：</strong>Props 天然只读，泛型实现通用组件</li>
+          <li><strong>编译时检查：</strong>在开发阶段就发现潜在的数据修改问题</li>
+          <li><strong>协变特性：</strong>普通数组可以赋值给只读数组参数</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
