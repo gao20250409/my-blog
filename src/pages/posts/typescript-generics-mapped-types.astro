@@ -282,12 +282,13 @@ type PartialStringProduct = PartialString&lt;Product&gt;;<br>
       <div class="code-block">
 <span class="code-comment">// 为所有属性添加 get 前缀</span><br>
 type Getters&lt;T&gt; = {`{`}<br>
-&nbsp;&nbsp;[P in keyof T as `get${`${`}Capitalize&lt;string & P&gt;${`}`}`]: () => T[P];<br>
+&nbsp;&nbsp;[P in keyof T as `get${'${'}Capitalize&lt;string & P&gt;${'}'}`]: () => T[P];<br>
 {`}`};<br><br>
 
 interface Person {`{`}<br>
 &nbsp;&nbsp;name: string;<br>
 &nbsp;&nbsp;age: number;<br>
+{`}`}
 {`}`}<br><br>
 
 type PersonGetters = Getters&lt;Person&gt;;<br>
@@ -337,7 +338,7 @@ type UserUpdatePayload = Partial&lt;Omit&lt;UserAPI, 'id' | 'createdAt'&gt;&gt;;
 
 <span class="code-comment">// 使用示例</span><br>
 async function updateUser(id: number, data: UserUpdatePayload) {`{`}<br>
-&nbsp;&nbsp;return fetch(`/api/users/${`${`}id${`}`}`, {`{`}<br>
+&nbsp;&nbsp;return fetch('/api/users/' + id, {`{`}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;method: 'PATCH',<br>
 &nbsp;&nbsp;&nbsp;&nbsp;body: JSON.stringify(data),<br>
 &nbsp;&nbsp;{`}`});<br>
