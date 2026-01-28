@@ -1,0 +1,475 @@
+---
+// TypeScript泛型与映射类型结合使用文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript中的泛型如何与映射类型的结合使用</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 TypeScript中的泛型如何与映射类型的结合使用</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：TypeScript, 泛型, 映射类型, 类型转换, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>什么是映射类型？</h2>
+
+      <div class="highlight-box">
+        <p>映射类型基于现有类型创建新类型，通过遍历原类型的属性并应用转换规则。</p>
+      </div>
+
+      <div class="code-block">
+<span class="code-comment">// 基本语法</span><br>
+type MappedType&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in keyof T]: T[P];<br>
+{`}`};
+      </div>
+
+      <h2>泛型与映射类型的基础结合</h2>
+
+      <h3>1. 基础映射类型</h3>
+
+      <div class="section-box">
+        <h4>将所有属性变为可选</h4>
+        <div class="code-block">
+<span class="code-comment">// 将所有属性变为可选</span><br>
+type MyPartial&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in keyof T]?: T[P];<br>
+{`}`};<br><br>
+
+interface User {`{`}<br>
+&nbsp;&nbsp;id: number;<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;email: string;<br>
+{`}`}<br><br>
+
+type PartialUser = MyPartial&lt;User&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} id?: number; name?: string; email?: string {`}`}</span>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>将所有属性变为只读</h4>
+        <div class="code-block">
+<span class="code-comment">// 将所有属性变为只读</span><br>
+type MyReadonly&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;readonly [P in keyof T]: T[P];<br>
+{`}`};<br><br>
+
+type ReadonlyUser = MyReadonly&lt;User&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} readonly id: number; readonly name: string; readonly email: string {`}`}</span>
+        </div>
+      </div>
+
+      <h3>2. 属性修饰符操作</h3>
+
+      <div class="section-box">
+        <h4>移除 readonly 修饰符</h4>
+        <div class="code-block">
+<span class="code-comment">// 移除 readonly 修饰符</span><br>
+type MyMutable&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;-readonly [P in keyof T]: T[P];<br>
+{`}`};<br><br>
+
+type MutableUser = MyMutable&lt;ReadonlyUser&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} id: number; name: string; email: string {`}`}</span>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>移除可选修饰符</h4>
+        <div class="code-block">
+<span class="code-comment">// 移除可选修饰符</span><br>
+type MyRequired&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in keyof T]-?: T[P];<br>
+{`}`};<br><br>
+
+interface Config {`{`}<br>
+&nbsp;&nbsp;host?: string;<br>
+&nbsp;&nbsp;port?: number;<br>
+&nbsp;&nbsp;timeout?: number;<br>
+{`}`}<br><br>
+
+type RequiredConfig = MyRequired&lt;Config&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} host: string; port: number; timeout: number {`}`}</span>
+        </div>
+      </div>
+
+      <h3>3. Pick 和 Omit 映射类型</h3>
+
+      <div class="section-box">
+        <h4>Pick - 选择特定属性</h4>
+        <div class="code-block">
+<span class="code-comment">// Pick - 选择特定属性</span><br>
+type MyPick&lt;T, K extends keyof T&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in K]: T[P];<br>
+{`}`};<br><br>
+
+type UserBasic = MyPick&lt;User, 'id' | 'name'&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} id: number; name: string {`}`}</span>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>Omit - 排除特定属性</h4>
+        <div class="code-block">
+<span class="code-comment">// Omit - 排除特定属性</span><br>
+type MyOmit&lt;T, K extends keyof any&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in keyof T as P extends K ? never : P]: T[P];<br>
+{`}`};<br><br>
+
+type UserWithoutEmail = MyOmit&lt;User, 'email'&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} id: number; name: string {`}`}</span>
+        </div>
+      </div>
+
+      <h2>高级映射类型应用</h2>
+
+      <h3>4. 条件映射类型</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 将字符串类型属性变为可选，其他保持不变</span><br>
+type PartialString&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in keyof T]: T[P] extends string ? T[P] | undefined : T[P];<br>
+{`}`};<br><br>
+
+interface Product {`{`}<br>
+&nbsp;&nbsp;id: number;<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;price: number;<br>
+&nbsp;&nbsp;description: string;<br>
+{`}`}<br><br>
+
+type PartialStringProduct = PartialString&lt;Product&gt;;<br>
+<span class="code-comment">// 等价于: {`{`}</span><br>
+<span class="code-comment">//   id: number;</span><br>
+<span class="code-comment">//   name: string | undefined;</span><br>
+<span class="code-comment">//   price: number;</span><br>
+<span class="code-comment">//   description: string | undefined;</span><br>
+<span class="code-comment">// {`}`}</span>
+      </div>
+
+      <h3>5. 键名重映射（Key Remapping）</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 为所有属性添加 get 前缀</span><br>
+type Getters&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in keyof T as `get${`${`}Capitalize&lt;string & P&gt;${`}`}`]: () => T[P];<br>
+{`}`};<br><br>
+
+interface Person {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;age: number;<br>
+{`}`}<br><br>
+
+type PersonGetters = Getters&lt;Person&gt;;<br>
+<span class="code-comment">// 等价于: {`{`}</span><br>
+<span class="code-comment">//   getName: () => string;</span><br>
+<span class="code-comment">//   getAge: () => number;</span><br>
+<span class="code-comment">// {`}`}</span>
+      </div>
+
+      <h3>6. 过滤属性类型</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 只保留特定类型的属性</span><br>
+type PickByType&lt;T, U&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in keyof T as T[P] extends U ? P : never]: T[P];<br>
+{`}`};<br><br>
+
+interface Mixed {`{`}<br>
+&nbsp;&nbsp;id: number;<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;age: number;<br>
+&nbsp;&nbsp;email: string;<br>
+{`}`}<br><br>
+
+type NumberProps = PickByType&lt;Mixed, number&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} id: number; age: number {`}`}</span><br><br>
+
+type StringProps = PickByType&lt;Mixed, string&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} name: string; email: string {`}`}</span>
+      </div>
+
+      <h2>实战应用场景</h2>
+
+      <h3>7. API 响应类型转换</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 将 API 响应的所有字段变为可选（用于部分更新）</span><br>
+interface UserAPI {`{`}<br>
+&nbsp;&nbsp;id: number;<br>
+&nbsp;&nbsp;username: string;<br>
+&nbsp;&nbsp;email: string;<br>
+&nbsp;&nbsp;createdAt: Date;<br>
+{`}`}<br><br>
+
+type UserUpdatePayload = Partial&lt;Omit&lt;UserAPI, 'id' | 'createdAt'&gt;&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} username?: string; email?: string {`}`}</span><br><br>
+
+<span class="code-comment">// 使用示例</span><br>
+async function updateUser(id: number, data: UserUpdatePayload) {`{`}<br>
+&nbsp;&nbsp;return fetch(`/api/users/${`${`}id${`}`}`, {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;method: 'PATCH',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;body: JSON.stringify(data),<br>
+&nbsp;&nbsp;{`}`});<br>
+{`}`}
+      </div>
+
+      <h3>8. 表单状态管理</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 为表单字段生成错误状态类型</span><br>
+type FormErrors&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;[P in keyof T]?: string;<br>
+{`}`};<br><br>
+
+interface LoginForm {`{`}<br>
+&nbsp;&nbsp;username: string;<br>
+&nbsp;&nbsp;password: string;<br>
+{`}`}<br><br>
+
+type LoginFormErrors = FormErrors&lt;LoginForm&gt;;<br>
+<span class="code-comment">// 等价于: {`{`} username?: string; password?: string {`}`}</span><br><br>
+
+<span class="code-comment">// 使用示例</span><br>
+const errors: LoginFormErrors = {`{`}<br>
+&nbsp;&nbsp;username: '用户名不能为空',<br>
+&nbsp;&nbsp;password: '密码至少8位',<br>
+{`}`};
+      </div>
+
+      <h3>9. 深度只读/可选</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 递归实现深度只读</span><br>
+type DeepReadonly&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;readonly [P in keyof T]: T[P] extends object<br>
+&nbsp;&nbsp;&nbsp;&nbsp;? DeepReadonly&lt;T[P]&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;: T[P];<br>
+{`}`};<br><br>
+
+interface NestedConfig {`{`}<br>
+&nbsp;&nbsp;database: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;host: string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;port: number;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;credentials: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username: string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password: string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`};<br>
+&nbsp;&nbsp;{`}`};<br>
+{`}`}<br><br>
+
+type ReadonlyConfig = DeepReadonly&lt;NestedConfig&gt;;<br>
+<span class="code-comment">// 所有嵌套属性都变为只读</span>
+      </div>
+
+      <h2>常用映射类型对比</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>映射类型</th>
+            <th>语法</th>
+            <th>作用</th>
+            <th>示例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Partial</td>
+            <td>[P in keyof T]?</td>
+            <td>所有属性变为可选</td>
+            <td>Partial&lt;User&gt;</td>
+          </tr>
+          <tr>
+            <td>Required</td>
+            <td>[P in keyof T]-?</td>
+            <td>移除所有可选修饰符</td>
+            <td>Required&lt;Config&gt;</td>
+          </tr>
+          <tr>
+            <td>Readonly</td>
+            <td>readonly [P in keyof T]</td>
+            <td>所有属性变为只读</td>
+            <td>Readonly&lt;User&gt;</td>
+          </tr>
+          <tr>
+            <td>Mutable</td>
+            <td>-readonly [P in keyof T]</td>
+            <td>移除所有只读修饰符</td>
+            <td>Mutable&lt;ReadonlyUser&gt;</td>
+          </tr>
+          <tr>
+            <td>Pick</td>
+            <td>[P in K]</td>
+            <td>选择特定属性</td>
+            <td>Pick&lt;User, 'id' | 'name'&gt;</td>
+          </tr>
+          <tr>
+            <td>Omit</td>
+            <td>[P in keyof T as ...]</td>
+            <td>排除特定属性</td>
+            <td>Omit&lt;User, 'email'&gt;</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>核心要点总结</h2>
+
+      <div class="highlight-box">
+        <h4>💡 关键知识点</h4>
+        <ul>
+          <li><strong>映射类型语法：</strong>[P in keyof T] 遍历类型的所有属性</li>
+          <li><strong>修饰符操作：</strong>使用 ? 添加可选，-? 移除可选；readonly 添加只读，-readonly 移除只读</li>
+          <li><strong>键名重映射：</strong>使用 as 子句重新映射键名</li>
+          <li><strong>条件类型：</strong>结合 extends 实现条件判断</li>
+          <li><strong>泛型约束：</strong>K extends keyof T 确保类型安全</li>
+        </ul>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 实战建议</h4>
+        <ul>
+          <li>使用 Partial 处理可选更新场景</li>
+          <li>使用 Pick/Omit 创建精简的类型</li>
+          <li>使用 Readonly 保护不可变数据</li>
+          <li>使用键名重映射生成 getter/setter</li>
+          <li>结合条件类型实现复杂的类型转换</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,439 @@
+---
+// TypeScript ambient类型文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript中的ambient类型是什么？</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 TypeScript中的ambient类型是什么？</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：TypeScript, ambient类型, 环境声明, 类型定义, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>什么是 Ambient 类型？</h2>
+
+      <div class="highlight-box">
+        <p>在 TypeScript 中，<strong>ambient（环境声明）</strong> 是指仅描述类型信息、不包含实际运行时实现的声明。</p>
+        <p><strong>核心作用：</strong>告诉 TypeScript："这个东西在运行时已经存在（由外部提供），你只需做类型检查，无需生成对应的 JS 代码"。</p>
+      </div>
+
+      <h2>📦 常见使用场景</h2>
+
+      <h3>1. 为第三方 JS 库添加类型</h3>
+
+      <div class="code-block">
+<span class="code-comment">// global.d.ts</span><br>
+declare function $(selector: string): any; <span class="code-comment">// 告诉 TS jQuery 的 $ 存在</span><br><br>
+
+$('#app').show(); <span class="code-comment">// TS 不再报错</span><br><br>
+
+<span class="code-comment">// 实际运行时仍需引入 jQuery.js</span>
+      </div>
+
+      <div class="section-box">
+        <h4>说明</h4>
+        <ul>
+          <li><code>declare</code> 关键字表示这是环境声明</li>
+          <li>TypeScript 只做类型检查，不会生成任何 JavaScript 代码</li>
+          <li>运行时需要确保 jQuery 已经加载</li>
+        </ul>
+      </div>
+
+      <h3>2. 声明全局变量/模块</h3>
+
+      <div class="section-box">
+        <h4>声明环境变量</h4>
+        <div class="code-block">
+<span class="code-comment">// 声明环境变量</span><br>
+declare const __VERSION__: string;<br><br>
+
+console.log(__VERSION__); <span class="code-comment">// 构建工具（如 Webpack）会在编译时注入该值</span>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>声明无类型定义的 npm 包</h4>
+        <div class="code-block">
+<span class="code-comment">// 声明无类型定义的 npm 包</span><br>
+declare module 'some-legacy-lib' {`{`}<br>
+&nbsp;&nbsp;export function doSomething(): void;<br>
+{`}`}
+        </div>
+      </div>
+
+      <h2>📁 声明文件（.d.ts）</h2>
+
+      <div class="highlight-box">
+        <p>Ambient 声明通常放在 <code>.d.ts</code> 文件中，例如：</p>
+      </div>
+
+      <div class="code-block">
+src/<br>
+├── index.ts<br>
+└── types/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── global.d.ts&nbsp;&nbsp;&nbsp;← 存放 declare 声明
+      </div>
+
+      <h2>常见的 Ambient 声明类型</h2>
+
+      <h3>1. 声明全局函数</h3>
+
+      <div class="code-block">
+<span class="code-comment">// global.d.ts</span><br>
+declare function myGlobalFunction(param: string): void;<br><br>
+
+<span class="code-comment">// 使用</span><br>
+myGlobalFunction('hello'); <span class="code-comment">// ✅ 类型检查通过</span>
+      </div>
+
+      <h3>2. 声明全局变量</h3>
+
+      <div class="code-block">
+<span class="code-comment">// global.d.ts</span><br>
+declare const API_URL: string;<br>
+declare let isDebug: boolean;<br>
+declare var globalConfig: {`{`} timeout: number {`}`};<br><br>
+
+<span class="code-comment">// 使用</span><br>
+console.log(API_URL); <span class="code-comment">// ✅ 类型检查通过</span>
+      </div>
+
+      <h3>3. 声明全局命名空间</h3>
+
+      <div class="code-block">
+<span class="code-comment">// global.d.ts</span><br>
+declare namespace MyLib {`{`}<br>
+&nbsp;&nbsp;function init(): void;<br>
+&nbsp;&nbsp;const version: string;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+MyLib.init();<br>
+console.log(MyLib.version);
+      </div>
+
+      <h3>4. 声明全局类</h3>
+
+      <div class="code-block">
+<span class="code-comment">// global.d.ts</span><br>
+declare class MyClass {`{`}<br>
+&nbsp;&nbsp;constructor(name: string);<br>
+&nbsp;&nbsp;getName(): string;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+const instance = new MyClass('test');<br>
+instance.getName();
+      </div>
+
+      <h3>5. 声明模块</h3>
+
+      <div class="code-block">
+<span class="code-comment">// types/modules.d.ts</span><br>
+declare module '*.css' {`{`}<br>
+&nbsp;&nbsp;const content: {`{`} [className: string]: string {`}`};<br>
+&nbsp;&nbsp;export default content;<br>
+{`}`}<br><br>
+
+declare module '*.png' {`{`}<br>
+&nbsp;&nbsp;const value: string;<br>
+&nbsp;&nbsp;export default value;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+import styles from './App.module.css'; <span class="code-comment">// ✅ 不再报错</span><br>
+import logo from './logo.png'; <span class="code-comment">// ✅ 不再报错</span>
+      </div>
+
+      <h2>实战示例</h2>
+
+      <h3>示例 1：为 jQuery 添加类型声明</h3>
+
+      <div class="code-block">
+<span class="code-comment">// types/jquery.d.ts</span><br>
+interface JQuery {`{`}<br>
+&nbsp;&nbsp;show(): JQuery;<br>
+&nbsp;&nbsp;hide(): JQuery;<br>
+&nbsp;&nbsp;text(content?: string): JQuery | string;<br>
+{`}`}<br><br>
+
+declare function $(selector: string): JQuery;<br><br>
+
+<span class="code-comment">// 使用</span><br>
+$('#app').show().text('Hello World');
+      </div>
+
+      <h3>示例 2：声明 Webpack 环境变量</h3>
+
+      <div class="code-block">
+<span class="code-comment">// types/env.d.ts</span><br>
+declare const process: {`{`}<br>
+&nbsp;&nbsp;env: {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;NODE_ENV: 'development' | 'production';<br>
+&nbsp;&nbsp;&nbsp;&nbsp;API_URL: string;<br>
+&nbsp;&nbsp;{`}`};<br>
+{`}`};<br><br>
+
+<span class="code-comment">// 使用</span><br>
+if (process.env.NODE_ENV === 'development') {`{`}<br>
+&nbsp;&nbsp;console.log('开发模式');<br>
+{`}`}
+      </div>
+
+      <h3>示例 3：扩展全局 Window 对象</h3>
+
+      <div class="code-block">
+<span class="code-comment">// types/window.d.ts</span><br>
+interface Window {`{`}<br>
+&nbsp;&nbsp;myCustomProperty: string;<br>
+&nbsp;&nbsp;myCustomMethod(): void;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+window.myCustomProperty = 'test';<br>
+window.myCustomMethod();
+      </div>
+
+      <h3>示例 4：声明第三方库模块</h3>
+
+      <div class="code-block">
+<span class="code-comment">// types/legacy-lib.d.ts</span><br>
+declare module 'legacy-lib' {`{`}<br>
+&nbsp;&nbsp;export interface Config {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;timeout: number;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;retries: number;<br>
+&nbsp;&nbsp;{`}`}<br><br>
+
+&nbsp;&nbsp;export function init(config: Config): void;<br>
+&nbsp;&nbsp;export function request(url: string): Promise&lt;any&gt;;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+import {`{`} init, request {`}`} from 'legacy-lib';<br><br>
+
+init({`{`} timeout: 5000, retries: 3 {`}`});<br>
+request('/api/data');
+      </div>
+
+      <h2>Ambient 声明 vs 普通声明</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>Ambient 声明（declare）</th>
+            <th>普通声明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>关键字</td>
+            <td>declare</td>
+            <td>无 declare</td>
+          </tr>
+          <tr>
+            <td>生成 JS 代码</td>
+            <td>❌ 不生成</td>
+            <td>✅ 生成</td>
+          </tr>
+          <tr>
+            <td>包含实现</td>
+            <td>❌ 仅类型</td>
+            <td>✅ 包含实现</td>
+          </tr>
+          <tr>
+            <td>文件类型</td>
+            <td>通常在 .d.ts 文件</td>
+            <td>.ts 或 .tsx 文件</td>
+          </tr>
+          <tr>
+            <td>用途</td>
+            <td>描述外部已存在的代码</td>
+            <td>定义和实现新代码</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>配置 tsconfig.json</h2>
+
+      <div class="code-block">
+{`{`}<br>
+&nbsp;&nbsp;"compilerOptions": {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"typeRoots": ["./node_modules/@types", "./types"],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"types": ["node", "jest"]<br>
+&nbsp;&nbsp;{`}`},<br>
+&nbsp;&nbsp;"include": ["src/**/*", "types/**/*"]<br>
+{`}`}
+      </div>
+
+      <div class="section-box">
+        <h4>配置说明</h4>
+        <ul>
+          <li><code>typeRoots</code>：指定类型声明文件的查找目录</li>
+          <li><code>types</code>：指定要包含的类型包</li>
+          <li><code>include</code>：包含 types 目录中的 .d.ts 文件</li>
+        </ul>
+      </div>
+
+      <h2>最佳实践</h2>
+
+      <div class="feature-list">
+        <h4>✅ 推荐做法</h4>
+        <ul>
+          <li>将 ambient 声明放在 <code>types/</code> 或 <code>@types/</code> 目录</li>
+          <li>使用 <code>.d.ts</code> 文件扩展名</li>
+          <li>为第三方库优先使用 <code>@types/xxx</code> 包</li>
+          <li>自定义声明文件命名清晰（如 <code>global.d.ts</code>、<code>window.d.ts</code>）</li>
+          <li>避免在 <code>.d.ts</code> 文件中使用 <code>import/export</code>（除非声明模块）</li>
+        </ul>
+      </div>
+
+      <h2>核心要点总结</h2>
+
+      <div class="highlight-box">
+        <h4>💡 关键知识点</h4>
+        <ul>
+          <li><strong>Ambient 声明：</strong>使用 <code>declare</code> 关键字，仅描述类型，不生成 JS 代码</li>
+          <li><strong>主要用途：</strong>为外部 JS 库、全局变量、环境变量添加类型</li>
+          <li><strong>文件位置：</strong>通常放在 <code>.d.ts</code> 文件中</li>
+          <li><strong>声明类型：</strong>函数、变量、类、命名空间、模块</li>
+          <li><strong>配置要求：</strong>在 <code>tsconfig.json</code> 中正确配置 <code>typeRoots</code> 和 <code>include</code></li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,486 @@
+---
+// TypeScript readonly与const区别文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript中的readonly与const的区别是什么</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 TypeScript中的readonly与const的区别是什么</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：TypeScript, readonly, const, as const, 类型安全, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <div class="highlight-box">
+        <p>在 TypeScript 中，<code>const</code>、<code>readonly</code> 和 <code>as const</code>（const 断言） 都表示"只读"，但它们的作用域、使用场景和行为完全不同。</p>
+      </div>
+
+      <h2>📊 三者对比总览</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>const</th>
+            <th>readonly</th>
+            <th>as const（const 断言）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>作用域</td>
+            <td>变量声明</td>
+            <td>属性/参数声明</td>
+            <td>字面量表达式</td>
+          </tr>
+          <tr>
+            <td>影响层面</td>
+            <td>运行时 + 编译时</td>
+            <td>仅编译时</td>
+            <td>仅编译时（类型推断）</td>
+          </tr>
+          <tr>
+            <td>能否重新赋值</td>
+            <td>❌ 变量引用</td>
+            <td>❌ 属性值</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>能否修改内部属性</td>
+            <td>✅ 可修改对象内部</td>
+            <td>✅ 可修改嵌套对象</td>
+            <td>❌ 完全递归只读</td>
+          </tr>
+          <tr>
+            <td>生成 JS 代码</td>
+            <td>✅ 生成 const</td>
+            <td>❌ 不生成</td>
+            <td>❌ 不生成</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>🔍 详细解析</h2>
+
+      <h3>1. const：变量级别的常量</h3>
+
+      <div class="code-block">
+const PI = 3.14;<br>
+PI = 3.14159; <span class="code-comment">// ❌ 编译错误：Cannot assign to 'PI' because it is a constant</span><br><br>
+
+const obj = {`{`} x: 1, y: 2 {`}`};<br>
+obj.x = 10; <span class="code-comment">// ✅ 可以修改对象内部属性</span><br>
+obj = {`{`}{`}`}; <span class="code-comment">// ❌ 不能重新赋值整个引用</span>
+      </div>
+
+      <div class="section-box">
+        <h4>编译后的 JS：</h4>
+        <div class="code-block">
+const PI = 3.14;<br>
+const obj = {`{`} x: 1, y: 2 {`}`};<br>
+obj.x = 10; <span class="code-comment">// 仍然可以修改</span>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 特点</h4>
+        <ul>
+          <li>运行时和编译时都生效</li>
+          <li>阻止变量引用被重新赋值</li>
+          <li>不阻止对象内部属性的修改</li>
+        </ul>
+      </div>
+
+      <h3>2. readonly：属性级别的只读</h3>
+
+      <div class="code-block">
+interface Point {`{`}<br>
+&nbsp;&nbsp;readonly x: number;<br>
+&nbsp;&nbsp;readonly y: number;<br>
+{`}`}<br><br>
+
+const p: Point = {`{`} x: 10, y: 20 {`}`};<br>
+p.x = 5; <span class="code-comment">// ❌ 编译错误：Cannot assign to 'x' because it is a read-only property</span><br>
+p.y = 10; <span class="code-comment">// ❌ 编译错误</span><br><br>
+
+<span class="code-comment">// 但可以重新赋值整个对象</span><br>
+let p2: Point = {`{`} x: 1, y: 2 {`}`};<br>
+p2 = {`{`} x: 3, y: 4 {`}`}; <span class="code-comment">// ✅ 可以</span>
+      </div>
+
+      <div class="error-box">
+        <h4>编译后的 JS：</h4>
+        <div class="code-block">
+<span class="code-comment">// readonly 不生成任何代码，仅类型检查</span><br>
+const p = {`{`} x: 10, y: 20 {`}`};<br>
+p.x = 5; <span class="code-comment">// ✅ 运行时不会报错！</span>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 特点</h4>
+        <ul>
+          <li>仅编译时检查，运行时无保护</li>
+          <li>用于接口、类属性、函数参数</li>
+          <li>不阻止嵌套对象的修改（除非也标记为 readonly）</li>
+        </ul>
+      </div>
+
+      <h3>3. as const：字面量的深度只读</h3>
+
+      <div class="code-block">
+const obj = {`{`}<br>
+&nbsp;&nbsp;x: 1,<br>
+&nbsp;&nbsp;y: 2,<br>
+&nbsp;&nbsp;nested: {`{`} z: 3 {`}`}<br>
+{`}`} as const;<br><br>
+
+obj.x = 5; <span class="code-comment">// ❌ 编译错误</span><br>
+obj.nested.z = 10; <span class="code-comment">// ❌ 编译错误：nested 也是只读的</span><br>
+obj.nested = {`{`}{`}`}; <span class="code-comment">// ❌ 编译错误</span>
+      </div>
+
+      <div class="section-box">
+        <h4>类型推断效果：</h4>
+        <div class="code-block">
+<span class="code-comment">// 没有 as const</span><br>
+const arr1 = [1, 2, 3];<br>
+<span class="code-comment">// type: number[]</span><br><br>
+
+<span class="code-comment">// 使用 as const</span><br>
+const arr2 = [1, 2, 3] as const;<br>
+<span class="code-comment">// type: readonly [1, 2, 3]  ← 元组 + 字面量类型 + 只读</span>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 特点</h4>
+        <ul>
+          <li>递归地将整个字面量标记为只读</li>
+          <li>将数组推断为元组类型（tuple）</li>
+          <li>将字面量值推断为字面量类型（literal type）</li>
+        </ul>
+      </div>
+
+      <h2>🎯 使用场景对比</h2>
+
+      <h3>场景 1：配置常量</h3>
+
+      <div class="error-box">
+        <h4>❌ 不推荐：类型太宽泛</h4>
+        <div class="code-block">
+const CONFIG = {`{`}<br>
+&nbsp;&nbsp;API_URL: 'https://api.example.com',<br>
+&nbsp;&nbsp;TIMEOUT: 5000<br>
+{`}`};<br>
+<span class="code-comment">// type: {`{`} API_URL: string; TIMEOUT: number {`}`}</span>
+        </div>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 推荐：使用 as const</h4>
+        <div class="code-block">
+const CONFIG = {`{`}<br>
+&nbsp;&nbsp;API_URL: 'https://api.example.com',<br>
+&nbsp;&nbsp;TIMEOUT: 5000<br>
+{`}`} as const;<br>
+<span class="code-comment">// type: {`{`} readonly API_URL: 'https://api.example.com'; readonly TIMEOUT: 5000 {`}`}</span>
+        </div>
+      </div>
+
+      <h3>场景 2：函数参数保护</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 使用 readonly 保护参数</span><br>
+function processPoint(point: {`{`} readonly x: number; readonly y: number {`}`}) {`{`}<br>
+&nbsp;&nbsp;<span class="code-comment">// point.x = 10; // ❌ 编译错误</span><br>
+&nbsp;&nbsp;console.log(point.x, point.y);<br>
+{`}`}<br><br>
+
+const p = {`{`} x: 1, y: 2 {`}`};<br>
+processPoint(p);
+      </div>
+
+      <h3>场景 3：数组常量</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 没有 as const：类型太宽泛</span><br>
+const COLORS = ['red', 'green', 'blue'];<br>
+<span class="code-comment">// type: string[]</span><br>
+COLORS.push('yellow'); <span class="code-comment">// ✅ 可以修改</span><br><br>
+
+<span class="code-comment">// 使用 as const：精确类型 + 只读</span><br>
+const COLORS2 = ['red', 'green', 'blue'] as const;<br>
+<span class="code-comment">// type: readonly ['red', 'green', 'blue']</span><br>
+COLORS2.push('yellow'); <span class="code-comment">// ❌ 编译错误</span>
+      </div>
+
+      <h3>场景 4：React Props</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 使用 readonly 保护 props</span><br>
+interface ButtonProps {`{`}<br>
+&nbsp;&nbsp;readonly label: string;<br>
+&nbsp;&nbsp;readonly onClick: () => void;<br>
+{`}`}<br><br>
+
+function Button({`{`} label, onClick {`}`}: ButtonProps) {`{`}<br>
+&nbsp;&nbsp;<span class="code-comment">// label = 'new'; // ❌ 编译错误</span><br>
+&nbsp;&nbsp;return &lt;button onClick={`{`}onClick{`}`}&gt;{`{`}label{`}`}&lt;/button&gt;;<br>
+{`}`}
+      </div>
+
+      <h2>实战对比示例</h2>
+
+      <h3>示例 1：对象修改行为</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 1. const：可以修改内部属性</span><br>
+const obj1 = {`{`} x: 1 {`}`};<br>
+obj1.x = 2; <span class="code-comment">// ✅ 可以</span><br>
+obj1 = {`{`} x: 3 {`}`}; <span class="code-comment">// ❌ 不可以</span><br><br>
+
+<span class="code-comment">// 2. readonly：编译时保护属性</span><br>
+interface ReadonlyObj {`{`} readonly x: number {`}`}<br>
+const obj2: ReadonlyObj = {`{`} x: 1 {`}`};<br>
+obj2.x = 2; <span class="code-comment">// ❌ 编译错误</span><br>
+let obj3: ReadonlyObj = {`{`} x: 1 {`}`};<br>
+obj3 = {`{`} x: 3 {`}`}; <span class="code-comment">// ✅ 可以重新赋值整个对象</span><br><br>
+
+<span class="code-comment">// 3. as const：深度只读</span><br>
+const obj4 = {`{`} x: 1, nested: {`{`} y: 2 {`}`} {`}`} as const;<br>
+obj4.x = 2; <span class="code-comment">// ❌ 编译错误</span><br>
+obj4.nested.y = 3; <span class="code-comment">// ❌ 编译错误（递归只读）</span>
+      </div>
+
+      <h3>示例 2：数组行为</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 1. const：可以修改数组内容</span><br>
+const arr1 = [1, 2, 3];<br>
+arr1.push(4); <span class="code-comment">// ✅ 可以</span><br>
+arr1[0] = 10; <span class="code-comment">// ✅ 可以</span><br>
+arr1 = []; <span class="code-comment">// ❌ 不可以</span><br><br>
+
+<span class="code-comment">// 2. readonly：只读数组类型</span><br>
+const arr2: readonly number[] = [1, 2, 3];<br>
+arr2.push(4); <span class="code-comment">// ❌ 编译错误</span><br>
+arr2[0] = 10; <span class="code-comment">// ❌ 编译错误</span><br><br>
+
+<span class="code-comment">// 3. as const：元组 + 字面量类型 + 只读</span><br>
+const arr3 = [1, 2, 3] as const;<br>
+<span class="code-comment">// type: readonly [1, 2, 3]</span><br>
+arr3.push(4); <span class="code-comment">// ❌ 编译错误</span><br>
+arr3[0] = 10; <span class="code-comment">// ❌ 编译错误</span>
+      </div>
+
+      <h2>选择指南</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>场景</th>
+            <th>推荐使用</th>
+            <th>原因</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>声明变量</td>
+            <td>const</td>
+            <td>防止变量引用被重新赋值</td>
+          </tr>
+          <tr>
+            <td>接口属性</td>
+            <td>readonly</td>
+            <td>保护对象属性不被修改</td>
+          </tr>
+          <tr>
+            <td>函数参数</td>
+            <td>readonly</td>
+            <td>防止函数内部修改参数</td>
+          </tr>
+          <tr>
+            <td>配置常量</td>
+            <td>as const</td>
+            <td>获得精确的字面量类型 + 深度只读</td>
+          </tr>
+          <tr>
+            <td>枚举值数组</td>
+            <td>as const</td>
+            <td>推断为元组类型，类型更精确</td>
+          </tr>
+          <tr>
+            <td>React Props</td>
+            <td>readonly</td>
+            <td>Props 天然只读，明确标记</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>核心要点总结</h2>
+
+      <div class="highlight-box">
+        <h4>💡 关键知识点</h4>
+        <ul>
+          <li><strong>const：</strong>变量级别，运行时 + 编译时生效，阻止引用重新赋值</li>
+          <li><strong>readonly：</strong>属性级别，仅编译时检查，保护对象属性</li>
+          <li><strong>as const：</strong>字面量级别，深度只读 + 精确类型推断</li>
+          <li><strong>运行时保护：</strong>只有 const 在运行时生效</li>
+          <li><strong>嵌套保护：</strong>只有 as const 提供递归只读</li>
+        </ul>
+      </div>
+
+      <div class="feature-list">
+        <h4>✅ 最佳实践</h4>
+        <ul>
+          <li>变量声明优先使用 <code>const</code></li>
+          <li>接口属性和函数参数使用 <code>readonly</code></li>
+          <li>配置常量和枚举值使用 <code>as const</code></li>
+          <li>需要深度只读时使用 <code>as const</code></li>
+          <li>结合使用以获得最佳类型安全</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
