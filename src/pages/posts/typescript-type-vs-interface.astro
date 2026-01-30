@@ -1,0 +1,603 @@
+---
+// TypeScript类型别名与接口区别文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeScript中的类型别名与接口的区别是什么</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 TypeScript中的类型别名与接口的区别是什么</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年1月 | 👤 作者：博主 | 🏷️ 标签：TypeScript, type, interface, 类型别名, 接口, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <div class="highlight-box">
+        <p>TypeScript 中的<strong>类型别名（Type Alias）</strong> 和<strong>接口（Interface）</strong> 都是用来定义对象形状的工具。</p>
+      </div>
+
+      <h2>📊 核心区别对比表</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>类型别名 (type)</th>
+            <th>接口 (interface)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>扩展方式</td>
+            <td>& 交叉类型</td>
+            <td>extends 关键字</td>
+          </tr>
+          <tr>
+            <td>可合并性</td>
+            <td>❌ 不可重新声明</td>
+            <td>✅ 声明合并</td>
+          </tr>
+          <tr>
+            <td>支持类型</td>
+            <td>任意类型（原始类型、联合类型、元组等）</td>
+            <td>仅对象类型</td>
+          </tr>
+          <tr>
+            <td>计算属性</td>
+            <td>✅ 支持</td>
+            <td>✅ 支持</td>
+          </tr>
+          <tr>
+            <td>映射类型</td>
+            <td>✅ 支持</td>
+            <td>❌ 不支持</td>
+          </tr>
+          <tr>
+            <td>泛型支持</td>
+            <td>✅ 支持</td>
+            <td>✅ 支持</td>
+          </tr>
+          <tr>
+            <td>默认导出</td>
+            <td>✅ 支持</td>
+            <td>✅ 支持</td>
+          </tr>
+          <tr>
+            <td>性能</td>
+            <td>相同</td>
+            <td>相同</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>1. 扩展方式的区别</h2>
+
+      <h3>接口使用 extends 关键字</h3>
+
+      <div class="code-block">
+interface Animal {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+{`}`}<br><br>
+
+interface Dog extends Animal {`{`}<br>
+&nbsp;&nbsp;breed: string;<br>
+{`}`}<br><br>
+
+const myDog: Dog = {`{`}<br>
+&nbsp;&nbsp;name: "Buddy",<br>
+&nbsp;&nbsp;breed: "Golden Retriever"<br>
+{`}`};
+      </div>
+
+      <h3>类型别名使用交叉类型 &</h3>
+
+      <div class="code-block">
+type Animal = {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+{`}`};<br><br>
+
+type Dog = Animal & {`{`}<br>
+&nbsp;&nbsp;breed: string;<br>
+{`}`};<br><br>
+
+const myDog: Dog = {`{`}<br>
+&nbsp;&nbsp;name: "Buddy",<br>
+&nbsp;&nbsp;breed: "Golden Retriever"<br>
+{`}`};
+      </div>
+
+      <div class="highlight-box">
+        <p><strong>关键区别：</strong>接口可以多重继承，类型别名使用交叉类型组合。</p>
+      </div>
+
+      <h2>2. 声明合并（Declaration Merging）</h2>
+
+      <h3>接口支持声明合并</h3>
+
+      <div class="code-block">
+interface User {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+{`}`}<br><br>
+
+interface User {`{`}<br>
+&nbsp;&nbsp;age: number;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 合并后等价于：</span><br>
+<span class="code-comment">// interface User {`{`}</span><br>
+<span class="code-comment">//   name: string;</span><br>
+<span class="code-comment">//   age: number;</span><br>
+<span class="code-comment">// {`}`}</span><br><br>
+
+const user: User = {`{`}<br>
+&nbsp;&nbsp;name: "Taro",<br>
+&nbsp;&nbsp;age: 30<br>
+{`}`};
+      </div>
+
+      <h3>类型别名不支持声明合并</h3>
+
+      <div class="error-box">
+        <div class="code-block">
+type User = {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+{`}`};<br><br>
+
+<span class="code-comment">// ❌ 错误：重复标识符 'User'</span><br>
+type User = {`{`}<br>
+&nbsp;&nbsp;age: number;<br>
+{`}`};
+        </div>
+      </div>
+
+      <h2>3. 支持的类型范围</h2>
+
+      <h3>类型别名支持任意类型</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 原始类型</span><br>
+type Name = string;<br>
+type Age = number;<br>
+type ID = string | number;<br><br>
+
+<span class="code-comment">// 联合类型</span><br>
+type Status = "active" | "inactive" | "pending";<br><br>
+
+<span class="code-comment">// 元组类型</span><br>
+type Point = [number, number];<br>
+type RGB = [number, number, number];<br><br>
+
+<span class="code-comment">// 函数类型</span><br>
+type Add = (a: number, b: number) => number;<br><br>
+
+<span class="code-comment">// 映射类型</span><br>
+type PartialUser = Partial&lt;User&gt;;<br>
+type ReadonlyUser = Readonly&lt;User&gt;;
+      </div>
+
+      <h3>接口仅支持对象类型</h3>
+
+      <div class="code-block">
+<span class="code-comment">// ✅ 可以</span><br>
+interface User {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// ❌ 不可以：接口不能定义原始类型</span><br>
+<span class="code-comment">// interface Name = string; // 语法错误</span><br><br>
+
+<span class="code-comment">// ❌ 不可以：接口不能定义联合类型</span><br>
+<span class="code-comment">// interface Status = "active" | "inactive"; // 语法错误</span>
+      </div>
+
+      <h2>4. 映射类型（Mapped Types）</h2>
+
+      <h3>类型别名支持映射类型</h3>
+
+      <div class="code-block">
+type User = {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;age: number;<br>
+&nbsp;&nbsp;email: string;<br>
+{`}`};<br><br>
+
+<span class="code-comment">// 将所有属性变为可选</span><br>
+type PartialUser = {`{`}<br>
+&nbsp;&nbsp;[K in keyof User]?: User[K];<br>
+{`}`};<br><br>
+
+<span class="code-comment">// 将所有属性变为只读</span><br>
+type ReadonlyUser = {`{`}<br>
+&nbsp;&nbsp;readonly [K in keyof User]: User[K];<br>
+{`}`};<br><br>
+
+<span class="code-comment">// 仅选择部分属性</span><br>
+type PickUser = Pick&lt;User, "name" | "email"&gt;;
+      </div>
+
+      <h3>接口不支持映射类型</h3>
+
+      <div class="error-box">
+        <div class="code-block">
+<span class="code-comment">// ❌ 错误：接口不能使用映射类型语法</span><br>
+<span class="code-comment">// interface PartialUser {`{`}</span><br>
+<span class="code-comment">//   [K in keyof User]?: User[K];</span><br>
+<span class="code-comment">// {`}`}</span>
+        </div>
+      </div>
+
+      <h2>5. 实战对比示例</h2>
+
+      <h3>示例 1：定义对象类型</h3>
+
+      <div class="section-box">
+        <h4>使用接口</h4>
+        <div class="code-block">
+interface User {`{`}<br>
+&nbsp;&nbsp;id: number;<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;email: string;<br>
+{`}`}
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>使用类型别名</h4>
+        <div class="code-block">
+type User = {`{`}<br>
+&nbsp;&nbsp;id: number;<br>
+&nbsp;&nbsp;name: string;<br>
+&nbsp;&nbsp;email: string;<br>
+{`}`};
+        </div>
+      </div>
+
+      <h3>示例 2：扩展类型</h3>
+
+      <div class="section-box">
+        <h4>接口扩展</h4>
+        <div class="code-block">
+interface Animal {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+{`}`}<br><br>
+
+interface Dog extends Animal {`{`}<br>
+&nbsp;&nbsp;breed: string;<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 多重继承</span><br>
+interface Pet {`{`}<br>
+&nbsp;&nbsp;owner: string;<br>
+{`}`}<br><br>
+
+interface DomesticDog extends Dog, Pet {`{`}<br>
+&nbsp;&nbsp;vaccinated: boolean;<br>
+{`}`}
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>类型别名扩展</h4>
+        <div class="code-block">
+type Animal = {`{`}<br>
+&nbsp;&nbsp;name: string;<br>
+{`}`};<br><br>
+
+type Dog = Animal & {`{`}<br>
+&nbsp;&nbsp;breed: string;<br>
+{`}`};<br><br>
+
+<span class="code-comment">// 多重交叉</span><br>
+type Pet = {`{`}<br>
+&nbsp;&nbsp;owner: string;<br>
+{`}`};<br><br>
+
+type DomesticDog = Dog & Pet & {`{`}<br>
+&nbsp;&nbsp;vaccinated: boolean;<br>
+{`}`};
+        </div>
+      </div>
+
+      <h3>示例 3：联合类型（只能用 type）</h3>
+
+      <div class="code-block">
+<span class="code-comment">// ✅ 类型别名可以定义联合类型</span><br>
+type Status = "pending" | "approved" | "rejected";<br>
+type ID = string | number;<br>
+type Response = SuccessResponse | ErrorResponse;<br><br>
+
+<span class="code-comment">// ❌ 接口不能定义联合类型</span><br>
+<span class="code-comment">// interface Status = "pending" | "approved"; // 语法错误</span>
+      </div>
+
+      <h3>示例 4：元组类型（只能用 type）</h3>
+
+      <div class="code-block">
+<span class="code-comment">// ✅ 类型别名可以定义元组</span><br>
+type Point = [number, number];<br>
+type RGB = [number, number, number];<br>
+type NamedPoint = [x: number, y: number];<br><br>
+
+<span class="code-comment">// ❌ 接口不能直接定义元组</span>
+      </div>
+
+      <h3>示例 5：函数类型</h3>
+
+      <div class="section-box">
+        <h4>使用类型别名（推荐）</h4>
+        <div class="code-block">
+type Add = (a: number, b: number) => number;<br>
+type Callback = (error: Error | null, data?: any) => void;
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>使用接口</h4>
+        <div class="code-block">
+interface Add {`{`}<br>
+&nbsp;&nbsp;(a: number, b: number): number;<br>
+{`}`}<br><br>
+
+interface Callback {`{`}<br>
+&nbsp;&nbsp;(error: Error | null, data?: any): void;<br>
+{`}`}
+        </div>
+      </div>
+
+      <h2>6. 泛型支持</h2>
+
+      <div class="section-box">
+        <h4>接口泛型</h4>
+        <div class="code-block">
+interface Response&lt;T&gt; {`{`}<br>
+&nbsp;&nbsp;data: T;<br>
+&nbsp;&nbsp;status: number;<br>
+&nbsp;&nbsp;message: string;<br>
+{`}`}<br><br>
+
+const userResponse: Response&lt;User&gt; = {`{`}<br>
+&nbsp;&nbsp;data: {`{`} id: 1, name: "Alice", email: "alice@example.com" {`}`},<br>
+&nbsp;&nbsp;status: 200,<br>
+&nbsp;&nbsp;message: "Success"<br>
+{`}`};
+        </div>
+      </div>
+
+      <div class="section-box">
+        <h4>类型别名泛型</h4>
+        <div class="code-block">
+type Response&lt;T&gt; = {`{`}<br>
+&nbsp;&nbsp;data: T;<br>
+&nbsp;&nbsp;status: number;<br>
+&nbsp;&nbsp;message: string;<br>
+{`}`};<br><br>
+
+const userResponse: Response&lt;User&gt; = {`{`}<br>
+&nbsp;&nbsp;data: {`{`} id: 1, name: "Alice", email: "alice@example.com" {`}`},<br>
+&nbsp;&nbsp;status: 200,<br>
+&nbsp;&nbsp;message: "Success"<br>
+{`}`};
+        </div>
+      </div>
+
+      <h2>🌟 最终建议</h2>
+
+      <div class="feature-list">
+        <h4>✅ 使用场景推荐</h4>
+        <ul>
+          <li><strong>公共 API 和领域模型</strong> → 使用 <code>interface</code></li>
+          <li><strong>工具类型、联合类型、元组</strong> → 使用 <code>type</code></li>
+          <li><strong>不确定时</strong> → 优先选择 <code>interface</code>（更符合社区约定）</li>
+          <li><strong>团队协作</strong> → 统一规范，保持一致性</li>
+        </ul>
+      </div>
+
+      <h2>选择指南表</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>场景</th>
+            <th>推荐使用</th>
+            <th>原因</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>定义对象形状</td>
+            <td>interface 或 type</td>
+            <td>两者都可以，interface 更符合 OOP 思想</td>
+          </tr>
+          <tr>
+            <td>需要声明合并</td>
+            <td>interface</td>
+            <td>扩展第三方库类型定义</td>
+          </tr>
+          <tr>
+            <td>联合类型</td>
+            <td>type</td>
+            <td>interface 不支持</td>
+          </tr>
+          <tr>
+            <td>元组类型</td>
+            <td>type</td>
+            <td>interface 不支持</td>
+          </tr>
+          <tr>
+            <td>映射类型</td>
+            <td>type</td>
+            <td>interface 不支持</td>
+          </tr>
+          <tr>
+            <td>函数类型</td>
+            <td>type</td>
+            <td>语法更简洁</td>
+          </tr>
+          <tr>
+            <td>React Props</td>
+            <td>interface</td>
+            <td>社区约定，支持扩展</td>
+          </tr>
+          <tr>
+            <td>工具类型</td>
+            <td>type</td>
+            <td>更灵活，支持复杂类型操作</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>核心要点总结</h2>
+
+      <div class="highlight-box">
+        <h4>💡 关键知识点</h4>
+        <ul>
+          <li><strong>扩展方式：</strong>interface 用 extends，type 用 &</li>
+          <li><strong>声明合并：</strong>只有 interface 支持</li>
+          <li><strong>类型范围：</strong>type 支持任意类型，interface 仅支持对象</li>
+          <li><strong>映射类型：</strong>只有 type 支持</li>
+          <li><strong>性能：</strong>两者性能相同</li>
+          <li><strong>选择原则：</strong>对象用 interface，其他用 type</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
