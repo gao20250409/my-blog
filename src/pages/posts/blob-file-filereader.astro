@@ -1,0 +1,496 @@
+---
+// Blob、File、FileReader、ArrayBuffer、Base64、URL.createObjectURL()的区别
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blob、File、FileReader、ArrayBuffer、Base64、URL.createObjectURL()的区别</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .comparison-table td:first-child {
+        font-weight: 600;
+        background: #f8f9fa;
+        color: #2c3e50;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+      .diagram-box {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        line-height: 1.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Blob、File、FileReader、ArrayBuffer、Base64、URL.createObjectURL()的区别</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年2月 | 👤 作者：博主 | 🏷️ 标签：Blob, File, FileReader, ArrayBuffer, Base64, URL.createObjectURL, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、核心概念对比</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>概念</th>
+            <th>本质</th>
+            <th>用途</th>
+            <th>特点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Blob</td>
+            <td>二进制大对象</td>
+            <td>存储/传输二进制数据</td>
+            <td>不可变、有type和size、可切片</td>
+          </tr>
+          <tr>
+            <td>File</td>
+            <td>Blob的子类</td>
+            <td>表示用户选择的文件</td>
+            <td>额外有name、lastModified等文件元信息</td>
+          </tr>
+          <tr>
+            <td>ArrayBuffer</td>
+            <td>原始二进制缓冲区</td>
+            <td>底层数据存储</td>
+            <td>不能直接操作，需通过TypedArray或DataView</td>
+          </tr>
+          <tr>
+            <td>Base64</td>
+            <td>编码格式（字符串）</td>
+            <td>数据嵌入、传输</td>
+            <td>体积增大约33%，纯文本便于传输</td>
+          </tr>
+          <tr>
+            <td>FileReader</td>
+            <td>API工具类</td>
+            <td>读取Blob/File内容</td>
+            <td>异步、支持多种读取方式</td>
+          </tr>
+          <tr>
+            <td>URL.createObjectURL()</td>
+            <td>API方法</td>
+            <td>生成临时URL</td>
+            <td>同步、需手动revokeObjectURL()释放</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>二、关系图谱</h2>
+
+      <div class="diagram-box">
+ArrayBuffer (底层数据)<br>
+&nbsp;&nbsp;↑<br>
+&nbsp;&nbsp;| 通过TypedArray/DataView操作<br>
+&nbsp;&nbsp;|<br>
+Blob ───┐<br>
+&nbsp;↑&nbsp;&nbsp;&nbsp;│ 有type/size<br>
+&nbsp;|&nbsp;&nbsp;&nbsp;│ 可切片<br>
+&nbsp;|&nbsp;&nbsp;&nbsp;↓<br>
+File (继承Blob，增加name/lastModified)<br>
+&nbsp;│<br>
+&nbsp;├─→ FileReader (异步读取内容)<br>
+&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ readAsArrayBuffer()<br>
+&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ readAsDataURL() → Base64<br>
+&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ readAsText()<br>
+&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ readAsBinaryString()<br>
+&nbsp;│<br>
+&nbsp;└─→ URL.createObjectURL() (同步生成临时URL)
+      </div>
+
+      <h2>三、代码示例对比</h2>
+
+      <h3>Blob vs File</h3>
+
+      <div class="code-block">
+<span class="code-comment">// Blob：只有type和size</span><br>
+const blob = new Blob(['Hello'], {'{'} type: 'text/plain' {'}'});<br>
+console.log(blob.type);&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// "text/plain"</span><br>
+console.log(blob.size);&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 5</span><br>
+<span class="code-comment">// ❌ blob.name 不存在</span><br><br>
+
+<span class="code-comment">// File：继承Blob + 文件信息</span><br>
+const file = new File(['World'], 'test.txt', {'{'} type: 'text/plain' {'}'});<br>
+console.log(file.type);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// "text/plain"</span><br>
+console.log(file.size);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 5</span><br>
+console.log(file.name);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// "test.txt" ✅</span><br>
+console.log(file.lastModified); <span class="code-comment">// 时间戳 ✅</span>
+      </div>
+
+      <h3>FileReader 读取方式对比</h3>
+
+      <div class="code-block">
+const fileInput = document.querySelector('input[type="file"]');<br>
+fileInput.addEventListener('change', (e) => {'{'}<br>
+&nbsp;&nbsp;const file = e.target.files[0];<br>
+&nbsp;&nbsp;const reader = new FileReader();<br><br>
+
+&nbsp;&nbsp;<span class="code-comment">// 方式1：读为Base64（常用于图片预览）</span><br>
+&nbsp;&nbsp;reader.readAsDataURL(file);<br>
+&nbsp;&nbsp;reader.onload = () => {'{'}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log(reader.result); <span class="code-comment">// "data:image/png;base64,iVBORw0KG..."</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;document.querySelector('img').src = reader.result;<br>
+&nbsp;&nbsp;{'}'};<br><br>
+
+&nbsp;&nbsp;<span class="code-comment">// 方式2：读为ArrayBuffer（用于二进制处理）</span><br>
+&nbsp;&nbsp;reader.readAsArrayBuffer(file);<br>
+&nbsp;&nbsp;reader.onload = () => {'{'}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const buffer = reader.result; <span class="code-comment">// ArrayBuffer</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;const uint8 = new Uint8Array(buffer);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log(uint8); <span class="code-comment">// [137, 80, 78, 71, ...]</span><br>
+&nbsp;&nbsp;{'}'};<br><br>
+
+&nbsp;&nbsp;<span class="code-comment">// 方式3：读为文本</span><br>
+&nbsp;&nbsp;reader.readAsText(file, 'utf-8');<br>
+&nbsp;&nbsp;reader.onload = () => {'{'}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log(reader.result); <span class="code-comment">// "文件内容字符串"</span><br>
+&nbsp;&nbsp;{'}'};<br>
+{'}'});
+      </div>
+
+      <h3>URL.createObjectURL() vs FileReader（图片预览）</h3>
+
+      <div class="code-block">
+const file = e.target.files[0];<br><br>
+
+<span class="code-comment">// ✅ 推荐：URL.createObjectURL() - 同步、性能好</span><br>
+const url1 = URL.createObjectURL(file);<br>
+img.src = url1;<br>
+<span class="code-comment">// 用完记得释放</span><br>
+img.onload = () => URL.revokeObjectURL(url1);<br><br>
+
+<span class="code-comment">// ⚠️ 传统：FileReader - 异步、较慢</span><br>
+const reader = new FileReader();<br>
+reader.readAsDataURL(file);<br>
+reader.onload = () => {'{'}<br>
+&nbsp;&nbsp;img.src = reader.result; <span class="code-comment">// "data:image/png;base64,..."</span><br>
+{'}'};
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>对比项</th>
+            <th>createObjectURL()</th>
+            <th>FileReader.readAsDataURL()</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>速度</td>
+            <td>⚡ 同步，立即返回</td>
+            <td>🐌 异步，需等待</td>
+          </tr>
+          <tr>
+            <td>内存</td>
+            <td>🔗 引用原Blob</td>
+            <td>📦 复制一份Base64</td>
+          </tr>
+          <tr>
+            <td>URL长度</td>
+            <td>短（blob:http://...）</td>
+            <td>长（含完整Base64）</td>
+          </tr>
+          <tr>
+            <td>释放</td>
+            <td>需手动revokeObjectURL()</td>
+            <td>自动</td>
+          </tr>
+          <tr>
+            <td>适用场景</td>
+            <td>图片/视频预览</td>
+            <td>需Base64的场景（如上传到某些API）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>四、实际应用场景</h2>
+
+      <h3>📸 图片上传前预览</h3>
+
+      <div class="code-block">
+&lt;input type="file" accept="image/*" id="fileInput"&gt;<br>
+&lt;img id="preview" style="max-width: 300px;"&gt;<br><br>
+
+&lt;script&gt;<br>
+document.getElementById('fileInput').addEventListener('change', (e) => {'{'}<br>
+&nbsp;&nbsp;const file = e.target.files[0];<br>
+&nbsp;&nbsp;<span class="code-comment">// 方案1：推荐（性能好）</span><br>
+&nbsp;&nbsp;const url = URL.createObjectURL(file);<br>
+&nbsp;&nbsp;preview.src = url;<br>
+&nbsp;&nbsp;preview.onload = () => URL.revokeObjectURL(url);<br><br>
+
+&nbsp;&nbsp;<span class="code-comment">// 方案2：需要Base64时</span><br>
+&nbsp;&nbsp;<span class="code-comment">// const reader = new FileReader();</span><br>
+&nbsp;&nbsp;<span class="code-comment">// reader.readAsDataURL(file);</span><br>
+&nbsp;&nbsp;<span class="code-comment">// reader.onload = () => preview.src = reader.result;</span><br>
+{'}'});<br>
+&lt;/script&gt;
+      </div>
+
+      <h3>📤 文件上传（FormData + Blob）</h3>
+
+      <div class="code-block">
+const file = e.target.files[0];<br><br>
+
+<span class="code-comment">// 直接上传File（继承自Blob）</span><br>
+const formData = new FormData();<br>
+formData.append('file', file, file.name);<br>
+fetch('/upload', {'{'}<br>
+&nbsp;&nbsp;method: 'POST',<br>
+&nbsp;&nbsp;body: formData<br>
+{'}'});<br><br>
+
+<span class="code-comment">// 或者：截取部分上传（Blob切片）</span><br>
+const chunk = file.slice(0, 1024 * 1024); <span class="code-comment">// 前1MB</span><br>
+formData.append('chunk', chunk);
+      </div>
+
+      <h3>🎨 Canvas导出图片</h3>
+
+      <div class="code-block">
+const canvas = document.querySelector('canvas');<br>
+const ctx = canvas.getContext('2d');<br><br>
+
+<span class="code-comment">// Canvas → Blob</span><br>
+canvas.toBlob((blob) => {'{'}<br>
+&nbsp;&nbsp;<span class="code-comment">// 生成预览URL</span><br>
+&nbsp;&nbsp;const url = URL.createObjectURL(blob);<br>
+&nbsp;&nbsp;const img = document.createElement('img');<br>
+&nbsp;&nbsp;img.src = url;<br><br>
+
+&nbsp;&nbsp;<span class="code-comment">// 或转为Base64上传</span><br>
+&nbsp;&nbsp;const reader = new FileReader();<br>
+&nbsp;&nbsp;reader.readAsDataURL(blob);<br>
+&nbsp;&nbsp;reader.onload = () => {'{'}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;console.log(reader.result); <span class="code-comment">// "data:image/png;base64,..."</span><br>
+&nbsp;&nbsp;{'}'};<br>
+{'}'}, 'image/png', 0.9);
+      </div>
+
+      <h2>五、快速决策表</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>需求</th>
+            <th>推荐方案</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>图片/视频预览</td>
+            <td>URL.createObjectURL()</td>
+          </tr>
+          <tr>
+            <td>上传到后端</td>
+            <td>FormData.append(file)</td>
+          </tr>
+          <tr>
+            <td>需要Base64字符串</td>
+            <td>FileReader.readAsDataURL()</td>
+          </tr>
+          <tr>
+            <td>二进制数据处理</td>
+            <td>FileReader.readAsArrayBuffer()</td>
+          </tr>
+          <tr>
+            <td>大文件分片上传</td>
+            <td>Blob.slice()</td>
+          </tr>
+          <tr>
+            <td>文件元信息（名/时间）</td>
+            <td>用File而非Blob</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>六、注意事项</h2>
+
+      <div class="error-box">
+        <h4>⚠️ createObjectURL() 必须释放，否则内存泄漏</h4>
+        <div class="code-block">
+const url = URL.createObjectURL(file);<br>
+img.src = url;<br>
+<span class="code-comment">// ✅ 用完立即释放</span><br>
+img.onload = () => URL.revokeObjectURL(url);
+        </div>
+      </div>
+
+      <div class="error-box">
+        <h4>⚠️ Base64体积更大</h4>
+        <p>1MB文件 → 约1.33MB Base64，慎用于大文件</p>
+      </div>
+
+      <div class="error-box">
+        <h4>⚠️ FileReader是异步的，不能直接return结果</h4>
+        <div class="code-block">
+<span class="code-comment">// ❌ 错误</span><br>
+function read(file) {'{'}<br>
+&nbsp;&nbsp;const reader = new FileReader();<br>
+&nbsp;&nbsp;reader.readAsDataURL(file);<br>
+&nbsp;&nbsp;return reader.result; <span class="code-comment">// undefined</span><br>
+{'}'}<br><br>
+
+<span class="code-comment">// ✅ 正确：用Promise</span><br>
+function read(file) {'{'}<br>
+&nbsp;&nbsp;return new Promise((resolve) => {'{'}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const reader = new FileReader();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;reader.onload = () => resolve(reader.result);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;reader.readAsDataURL(file);<br>
+&nbsp;&nbsp;{'}'});<br>
+{'}'}
+        </div>
+      </div>
+
+      <h2>核心要点总结</h2>
+
+      <div class="highlight-box">
+        <h4>💡 关键知识点</h4>
+        <ul>
+          <li><strong>Blob：</strong>二进制大对象，不可变，有type和size</li>
+          <li><strong>File：</strong>继承Blob，额外有name和lastModified</li>
+          <li><strong>ArrayBuffer：</strong>底层二进制缓冲区，需通过TypedArray操作</li>
+          <li><strong>Base64：</strong>编码格式，体积增大33%，便于传输</li>
+          <li><strong>FileReader：</strong>异步读取Blob/File内容</li>
+          <li><strong>URL.createObjectURL()：</strong>同步生成临时URL，需手动释放</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
