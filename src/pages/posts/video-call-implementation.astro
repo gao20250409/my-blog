@@ -1,0 +1,488 @@
+---
+// 前端如何实现视频通话文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端如何实现视频通话</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎥 前端如何实现视频通话</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年2月 | 👤 作者：博主 | 🏷️ 标签：WebRTC, 视频通话, 实时通信, Agora, 腾讯云, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、核心技术：WebRTC</h2>
+
+      <div class="highlight-box">
+        <p><strong>WebRTC（Web Real-Time Communication）</strong>是实现浏览器端实时音视频通信的核心技术，无需安装插件即可实现点对点通信。</p>
+      </div>
+
+      <h3>WebRTC 核心特性</h3>
+      <ul>
+        <li><strong>点对点通信：</strong>直接在浏览器之间传输音视频数据，减少服务器压力</li>
+        <li><strong>低延迟：</strong>通常延迟在 100-300ms 之间</li>
+        <li><strong>跨平台：</strong>支持 Chrome、Firefox、Safari、Edge 等主流浏览器</li>
+        <li><strong>开源免费：</strong>无需支付授权费用</li>
+      </ul>
+
+      <h2>二、实现方案</h2>
+
+      <h3>方案1：原生 WebRTC 实现</h3>
+
+      <div class="section-box">
+        <h4>基本流程</h4>
+
+        <p><strong>步骤 1：获取媒体设备权限</strong></p>
+        <div class="code-block">
+<span class="code-comment">// 获取本地音视频流</span><br>
+const stream = await navigator.mediaDevices.getUserMedia({`{`}<br>
+&nbsp;&nbsp;video: true,<br>
+&nbsp;&nbsp;audio: true<br>
+{`}`});<br><br>
+
+<span class="code-comment">// 显示本地视频</span><br>
+const localVideo = document.getElementById('localVideo');<br>
+localVideo.srcObject = stream;
+        </div>
+
+        <p><strong>步骤 2：建立对等连接（RTCPeerConnection）</strong></p>
+        <div class="code-block">
+const peerConnection = new RTCPeerConnection({`{`}<br>
+&nbsp;&nbsp;iceServers: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`{`} urls: 'stun:stun.l.google.com:19302' {`}`}<br>
+&nbsp;&nbsp;]<br>
+{`}`});<br><br>
+
+<span class="code-comment">// 添加本地流到连接</span><br>
+stream.getTracks().forEach(track => {`{`}<br>
+&nbsp;&nbsp;peerConnection.addTrack(track, stream);<br>
+{`}`});
+        </div>
+
+        <p><strong>步骤 3：信令服务器交换</strong></p>
+        <div class="code-block">
+<span class="code-comment">// 通过 WebSocket 交换 SDP（会话描述）和 ICE Candidate（网络信息）</span><br>
+const ws = new WebSocket('wss://your-signaling-server.com');<br><br>
+
+<span class="code-comment">// 创建 Offer</span><br>
+const offer = await peerConnection.createOffer();<br>
+await peerConnection.setLocalDescription(offer);<br>
+ws.send(JSON.stringify({`{`} type: 'offer', sdp: offer {`}`}));<br><br>
+
+<span class="code-comment">// 接收 Answer</span><br>
+ws.onmessage = async (event) => {`{`}<br>
+&nbsp;&nbsp;const data = JSON.parse(event.data);<br>
+&nbsp;&nbsp;if (data.type === 'answer') {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;await peerConnection.setRemoteDescription(data.sdp);<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`};
+        </div>
+
+        <div class="warning-box">
+          <p>⚠️ <strong>注意：</strong>需要后端配合实现信令服务器（WebSocket）</p>
+        </div>
+
+        <p><strong>步骤 4：显示远程视频</strong></p>
+        <div class="code-block">
+peerConnection.ontrack = (event) => {`{`}<br>
+&nbsp;&nbsp;const remoteVideo = document.getElementById('remoteVideo');<br>
+&nbsp;&nbsp;remoteVideo.srcObject = event.streams[0];<br>
+{`}`};
+        </div>
+      </div>
+
+      <h3>方案2：使用第三方 SDK（推荐快速开发）</h3>
+
+      <div class="feature-list">
+        <h4>常用方案对比</h4>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>服务商</th>
+              <th>优势</th>
+              <th>适用场景</th>
+              <th>价格</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Agora（声网）</strong></td>
+              <td>全球覆盖好、稳定性高</td>
+              <td>海外业务、大型会议</td>
+              <td>按分钟计费</td>
+            </tr>
+            <tr>
+              <td><strong>腾讯云 TRTC</strong></td>
+              <td>国内网络优化好、生态完善</td>
+              <td>国内业务、社交应用</td>
+              <td>按分钟计费</td>
+            </tr>
+            <tr>
+              <td><strong>阿里云 RTC</strong></td>
+              <td>与阿里云生态集成好</td>
+              <td>已使用阿里云的项目</td>
+              <td>按分钟计费</td>
+            </tr>
+            <tr>
+              <td><strong>Twilio</strong></td>
+              <td>文档完善、API 友好</td>
+              <td>海外市场、快速原型</td>
+              <td>按分钟计费</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>腾讯云 TRTC 快速接入示例</h3>
+
+      <div class="code-block">
+<span class="code-comment">// 1. 安装 SDK</span><br>
+npm install trtc-js-sdk<br><br>
+
+<span class="code-comment">// 2. 初始化客户端</span><br>
+import TRTC from 'trtc-js-sdk';<br><br>
+
+const client = TRTC.createClient({`{`}<br>
+&nbsp;&nbsp;mode: 'rtc',<br>
+&nbsp;&nbsp;sdkAppId: YOUR_SDK_APP_ID,<br>
+&nbsp;&nbsp;userId: 'user_123',<br>
+&nbsp;&nbsp;userSig: YOUR_USER_SIG<br>
+{`}`});<br><br>
+
+<span class="code-comment">// 3. 加入房间</span><br>
+await client.join({`{`} roomId: 8888 {`}`});<br><br>
+
+<span class="code-comment">// 4. 发布本地流</span><br>
+const localStream = TRTC.createStream({`{`}<br>
+&nbsp;&nbsp;userId: 'user_123',<br>
+&nbsp;&nbsp;audio: true,<br>
+&nbsp;&nbsp;video: true<br>
+{`}`});<br>
+await localStream.initialize();<br>
+await client.publish(localStream);<br><br>
+
+<span class="code-comment">// 5. 订阅远程流</span><br>
+client.on('stream-added', async (event) => {`{`}<br>
+&nbsp;&nbsp;await client.subscribe(event.stream);<br>
+{`}`});<br><br>
+
+client.on('stream-subscribed', (event) => {`{`}<br>
+&nbsp;&nbsp;const remoteStream = event.stream;<br>
+&nbsp;&nbsp;remoteStream.play('remote-video-container');<br>
+{`}`});
+      </div>
+
+      <h2>三、选型建议</h2>
+
+      <div class="highlight-box">
+        <h4>💡 建议</h4>
+        <ul>
+          <li><strong>国内用户首选：</strong>腾讯云 TRTC 或 声网</li>
+          <li><strong>海外用户首选：</strong>声网 或 Twilio</li>
+          <li><strong>学习/内部工具：</strong>自建原生 WebRTC（免费）</li>
+          <li><strong>商用场景：</strong>先用第三方 SDK 验证模式，后期用户量大了再考虑自建降本</li>
+        </ul>
+      </div>
+
+      <h3>成本对比</h3>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>方案</th>
+            <th>开发成本</th>
+            <th>运营成本</th>
+            <th>维护成本</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>原生 WebRTC</strong></td>
+            <td>高（需自建信令服务器）</td>
+            <td>低（仅服务器费用）</td>
+            <td>高（需自行维护）</td>
+          </tr>
+          <tr>
+            <td><strong>第三方 SDK</strong></td>
+            <td>低（1周内上线）</td>
+            <td>中（按分钟计费）</td>
+            <td>低（厂商负责）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>四、架构设计建议（为未来留后路）</h2>
+
+      <div class="section-box">
+        <p>为了避免后期被 SDK 厂商绑定，建议采用<strong>适配器模式</strong>：</p>
+
+        <div class="code-block">
+<span class="code-comment">// 1. 定义统一接口 (interface)</span><br>
+class VideoCallAdapter {`{`}<br>
+&nbsp;&nbsp;join(roomId) {`{`}{`}`}<br>
+&nbsp;&nbsp;leave() {`{`}{`}`}<br>
+&nbsp;&nbsp;publish(stream) {`{`}{`}`}<br>
+&nbsp;&nbsp;subscribe(stream) {`{`}{`}`}<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 2. 实现具体 SDK (implementation)</span><br>
+class AgoraAdapter extends VideoCallAdapter {`{`}<br>
+&nbsp;&nbsp;<span class="code-comment">// 实现声网的具体逻辑</span><br>
+&nbsp;&nbsp;async join(roomId) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;await this.agoraClient.join(roomId);<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`}<br><br>
+
+class TencentAdapter extends VideoCallAdapter {`{`}<br>
+&nbsp;&nbsp;<span class="code-comment">// 实现腾讯云的具体逻辑</span><br>
+&nbsp;&nbsp;async join(roomId) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;await this.trtcClient.enterRoom(roomId);<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 3. 业务代码只依赖接口 (usage)</span><br>
+const videoService = new AgoraAdapter(); <span class="code-comment">// 后期可轻松切换</span><br>
+videoService.join('room123');
+        </div>
+
+        <div class="feature-list">
+          <h4>✅ 好处</h4>
+          <p>如果未来某家 SDK 涨价或服务不稳定，你可以低成本切换到另一家，甚至切换到自建 WebRTC。</p>
+        </div>
+      </div>
+
+      <h2>五、完整示例代码</h2>
+
+      <h3>原生 WebRTC 完整示例</h3>
+
+      <div class="code-block">
+class VideoCall {`{`}<br>
+&nbsp;&nbsp;constructor() {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.localStream = null;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.peerConnection = null;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.ws = null;<br>
+&nbsp;&nbsp;{`}`}<br><br>
+
+&nbsp;&nbsp;async init() {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 获取本地流</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.localStream = await navigator.mediaDevices.getUserMedia({`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;video: true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;audio: true<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`});<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 显示本地视频</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('localVideo').srcObject = this.localStream;<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 建立 WebSocket 连接</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.ws = new WebSocket('wss://your-server.com');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.ws.onmessage = this.handleSignaling.bind(this);<br>
+&nbsp;&nbsp;{`}`}<br><br>
+
+&nbsp;&nbsp;async call(roomId) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 创建 RTCPeerConnection</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.peerConnection = new RTCPeerConnection({`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iceServers: [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`{`} urls: 'stun:stun.l.google.com:19302' {`}`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`});<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 添加本地流</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.localStream.getTracks().forEach(track => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.peerConnection.addTrack(track, this.localStream);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`});<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 监听远程流</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.peerConnection.ontrack = (event) => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById('remoteVideo').srcObject = event.streams[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`};<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// 创建 Offer</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;const offer = await this.peerConnection.createOffer();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;await this.peerConnection.setLocalDescription(offer);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;this.ws.send(JSON.stringify({`{`} type: 'offer', roomId, sdp: offer {`}`}));<br>
+&nbsp;&nbsp;{`}`}<br><br>
+
+&nbsp;&nbsp;async handleSignaling(event) {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;const data = JSON.parse(event.data);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (data.type === 'answer') {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;await this.peerConnection.setRemoteDescription(data.sdp);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
+&nbsp;&nbsp;{`}`}<br>
+{`}`}<br><br>
+
+<span class="code-comment">// 使用</span><br>
+const videoCall = new VideoCall();<br>
+await videoCall.init();<br>
+await videoCall.call('room123');
+      </div>
+
+      <h2>六、常见问题</h2>
+
+      <div class="warning-box">
+        <h4>Q1: 为什么需要 STUN/TURN 服务器？</h4>
+        <p><strong>A:</strong> 由于 NAT 和防火墙的存在，浏览器之间无法直接建立连接。STUN 服务器用于获取公网 IP，TURN 服务器用于中继流量（当 P2P 失败时）。</p>
+      </div>
+
+      <div class="warning-box">
+        <h4>Q2: WebRTC 的延迟有多低？</h4>
+        <p><strong>A:</strong> 通常在 100-300ms 之间，取决于网络质量和地理位置。</p>
+      </div>
+
+      <div class="warning-box">
+        <h4>Q3: 如何处理网络抖动？</h4>
+        <p><strong>A:</strong> WebRTC 内置了抗丢包和自适应码率机制，但建议配合 Jitter Buffer 和 FEC（前向纠错）。</p>
+      </div>
+
+      <h2>💡 总结</h2>
+
+      <div class="highlight-box">
+        <h4>"先跑通，再优化。"</h4>
+        <p>在验证模式阶段，<strong>时间比钱更宝贵</strong>。使用第三方 SDK 可以让你在一周内拥有企业级的视频通话能力，成本仅需几十到几百元。</p>
+        <ul>
+          <li><strong>快速验证：</strong>使用腾讯云 TRTC 或声网 SDK</li>
+          <li><strong>长期规划：</strong>采用适配器模式，保留切换灵活性</li>
+          <li><strong>成本优化：</strong>用户量大后考虑自建 WebRTC</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

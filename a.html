@@ -1,0 +1,127 @@
+<style>
+.dashboard-header {
+  background: linear-gradient(180deg, #0a1f1f 0%, #0d2d2d 100%);
+  border-bottom: 2px solid #00ffff;
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.25);
+  padding: 0;
+  position: relative;
+}
+
+/* 顶部装饰线 */
+.header-decoration {
+  height: 3px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    #00ffff 20%, 
+    #00ffff 80%, 
+    transparent 100%);
+  box-shadow: 0 0 12px #00ffff;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-title {
+  color: #00ffff;
+  font-size: 24px;
+  font-weight: 600;
+  text-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+  letter-spacing: 3px;
+  font-family: 'Microsoft YaHei', sans-serif;
+}
+
+.header-subtitle {
+  color: #5fb3b3;
+  font-size: 13px;
+  margin-top: 2px;
+  letter-spacing: 1px;
+}
+
+/* 导航菜单 */
+.nav-menu {
+  display: flex;
+  gap: 2px;
+}
+
+.nav-item {
+  color: #5fb3b3;
+  padding: 10px 20px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+  border-right: 1px solid rgba(95, 179, 179, 0.2);
+}
+
+.nav-item:hover {
+  color: #00ffff;
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.nav-item.active {
+  color: #00ffff;
+  background: rgba(0, 255, 255, 0.15);
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #00ffff;
+  box-shadow: 0 0 10px #00ffff;
+}
+
+/* 右侧信息 */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: #5fb3b3;
+  font-size: 14px;
+}
+
+.header-time {
+  color: #00ffff;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+</style>
+
+<div class="dashboard-header">
+  <!-- <div class="header-decoration"></div> -->
+  <div class="header-content">
+    <div class="header-left">
+      <div>
+        <div class="header-title">总装生产线制造数据综合管理系统</div>
+        <div class="header-subtitle">Manufacturing Data Management System for Final Assembly Production Line</div>
+      </div>
+    </div>
+    
+    <div class="nav-menu">
+      <div class="nav-item active">首页</div>
+      <div class="nav-item">数据分析</div>
+      <div class="nav-item">物流统计分析</div>
+      <div class="nav-item">检测过程</div>
+      <div class="nav-item">验证过程</div>
+      <div class="nav-item">单机组板</div>
+      <div class="nav-item">流程管理</div>
+    </div>
+    
+    <div class="header-right">
+      <span class="header-time">2025-06-16 16:43:24</span>
+      <span>admin</span>
+    </div>
+  </div>
+</div>

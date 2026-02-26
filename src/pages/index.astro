@@ -11,6 +11,14 @@ interface PostData {
 
 const posts: PostData[] = [
   {
+    title: "前端如何实现视频通话",
+    description:
+      "深入解析WebRTC核心技术、原生实现方案、第三方SDK对比（Agora、腾讯云TRTC、Twilio），以及适配器模式架构设计，助你快速实现企业级视频通话功能。",
+    url: "./posts/video-call-implementation",
+    date: "2026-2-4",
+    tags: ["WebRTC", "视频通话", "实时通信", "Agora", "腾讯云", "TRTC", "Web开发", "前端", "面试"],
+  },
+  {
     title: "Blob、File、FileReader、ArrayBuffer、Base64、URL.createObjectURL()的区别",
     description:
       "深入解析Blob、File、FileReader、ArrayBuffer、Base64、URL.createObjectURL()的核心概念、关系图谱、代码示例和实际应用场景。",
@@ -538,24 +546,28 @@ const posts: PostData[] = [
         color: white;
       }
       .container {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(10px);
         padding: 40px;
         border-radius: 20px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
       }
       h1 {
         text-align: center;
         font-size: 2.5em;
         margin-bottom: 20px;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(135deg, #a8b5ff 0%, #e0c3fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
       .success {
-        background: rgba(40, 167, 69, 0.2);
+        background: rgba(40, 167, 69, 0.15);
         padding: 20px;
         border-radius: 10px;
-        border-left: 4px solid #28a745;
+        border-left: 4px solid #4ade80;
         margin: 20px 0;
       }
       .nav-links {
@@ -568,13 +580,15 @@ const posts: PostData[] = [
         color: white;
         text-decoration: none;
         padding: 10px 20px;
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.15);
         border-radius: 25px;
         transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
       .nav-links a:hover {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.25);
         transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
       .feature-grid {
         display: grid;
