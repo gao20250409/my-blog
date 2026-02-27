@@ -1,0 +1,441 @@
+---
+// H5直播原理文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>H5直播原理是什么？</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+      }
+      .code-comment {
+        color: #68d391;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .feature-list {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .warning-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      .flow-diagram {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin: 20px 0;
+        font-family: monospace;
+        font-size: 0.95em;
+        border: 2px solid #dee2e6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📡 H5直播原理是什么？</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年2月 | 👤 作者：博主 | 🏷️ 标签：H5直播, HLS, HTTP-FLV, WebRTC, MSE, CDN, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、核心链路架构（端到端）</h2>
+
+      <div class="highlight-box">
+        <p>H5 直播的数据流向可以概括为四个阶段：</p>
+        <p><strong>采集推流 → 服务端处理 → CDN 分发 → 拉流播放</strong></p>
+      </div>
+
+      <div class="flow-diagram">
+📱 主播端<br>
+&nbsp;&nbsp;&nbsp;↓<br>
+🎥 采集推流 (RTMP/SRT)<br>
+&nbsp;&nbsp;&nbsp;↓<br>
+🖥️ 流媒体服务器 (转码/转协议)<br>
+&nbsp;&nbsp;&nbsp;↓<br>
+🌐 CDN 分发 (边缘节点)<br>
+&nbsp;&nbsp;&nbsp;↓<br>
+📺 观众端 (HLS/FLV/WebRTC)
+      </div>
+
+      <h3>1. 采集与推流（Push）</h3>
+
+      <div class="section-box">
+        <ul>
+          <li><strong>设备：</strong>手机 App、OBS、摄像头</li>
+          <li><strong>动作：</strong>采集音视频原始数据（YUV/PCM） → 编码（H.264/H.265, AAC） → 封装</li>
+          <li><strong>协议：</strong>通常使用 RTMP 或 SRT 协议将数据推送到源站服务器</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p>💡 浏览器端推流较难，通常需借助 <code>getUserMedia + WebRTC</code> 或 <code>MediaRecorder API</code>。</p>
+        </div>
+      </div>
+
+      <h3>2. 服务端处理（Process）</h3>
+
+      <div class="section-box">
+        <p><strong>流媒体服务器（如 SRS, Nginx-rtmp）：</strong></p>
+        <ul>
+          <li><strong>接收推流</strong></li>
+          <li><strong>转码（Transcoding）：</strong>将一路流变成多种清晰度（1080P/720P/480P），适配不同网络</li>
+          <li><strong>协议转换：</strong>将 RTMP 转换为适合浏览器拉流的协议（HLS, HTTP-FLV, DASH）</li>
+          <li><strong>内容审核：</strong>实时截图鉴黄、鉴暴</li>
+        </ul>
+      </div>
+
+      <h3>3. CDN 分发（Distribute）</h3>
+
+      <div class="section-box">
+        <ul>
+          <li>利用 <strong>内容分发网络（CDN）</strong> 将流缓存到离用户最近的边缘节点</li>
+          <li>解决高并发问题（万人同时在线不卡顿）</li>
+        </ul>
+      </div>
+
+      <h3>4. 拉流与播放（Play）</h3>
+
+      <div class="section-box">
+        <ul>
+          <li>浏览器通过 JavaScript 请求视频流</li>
+          <li>解码并渲染到 <code>&lt;video&gt;</code> 标签或 Canvas 上</li>
+        </ul>
+      </div>
+
+      <h2>二、三大主流播放协议原理</h2>
+
+      <div class="highlight-box">
+        <p>这是 H5 直播最核心的技术差异点，决定了<strong>延迟和兼容性</strong>。</p>
+      </div>
+
+      <h3>1. HLS 原理（最通用）</h3>
+
+      <div class="section-box">
+        <p><strong>机制：</strong></p>
+        <ul>
+          <li>服务器每隔 2~5 秒生成一个 <code>.ts</code> 视频片段，并更新 <code>.m3u8</code> 播放列表</li>
+        </ul>
+
+        <p><strong>浏览器行为：</strong></p>
+        <div class="code-block">
+播放器请求 m3u8<br>
+&nbsp;&nbsp;↓<br>
+解析最新片段 URL<br>
+&nbsp;&nbsp;↓<br>
+下载 ts 文件<br>
+&nbsp;&nbsp;↓<br>
+解码播放
+        </div>
+
+        <div class="warning-box">
+          <p><strong>缺点：</strong>必须等一个切片下载完才能播，导致延迟累积（通常 10 秒以上）</p>
+        </div>
+
+        <div class="feature-list">
+          <p><strong>优化：</strong>低延迟 HLS (LL-HLS) 可将延迟降至 3 秒左右</p>
+        </div>
+      </div>
+
+      <h3>2. HTTP-FLV 原理（国内最常用）</h3>
+
+      <div class="section-box">
+        <p><strong>机制：</strong></p>
+        <ul>
+          <li>服务器不切片，而是通过 HTTP 长连接，源源不断地发送 FLV 数据包</li>
+        </ul>
+
+        <p><strong>浏览器行为：</strong></p>
+        <ul>
+          <li>原生 <code>&lt;video&gt;</code> 标签不支持 FLV</li>
+          <li>需使用 <strong>MSE (Media Source Extensions)</strong> 技术</li>
+          <li>JS 库（如 flv.js）通过 XHR/Fetch 接收二进制流 → 解封装 → 喂给 MSE → 浏览器解码</li>
+        </ul>
+
+        <div class="feature-list">
+          <p><strong>优点：</strong>延迟比 HLS 低，实现简单</p>
+        </div>
+
+        <div class="warning-box">
+          <p><strong>缺点：</strong>iOS Safari 不支持 MSE，无法播放（需转 HLS）</p>
+        </div>
+      </div>
+
+      <h3>3. WebRTC 原理（超低延迟）</h3>
+
+      <div class="section-box">
+        <p><strong>机制：</strong></p>
+        <ul>
+          <li>基于 RTP/RTCP 协议，数据分片（Packet）传输，无需等待文件生成</li>
+        </ul>
+
+        <p><strong>架构：</strong></p>
+        <ul>
+          <li><strong>SFU (Selective Forwarding Unit)：</strong>服务器只转发流，不混流。适合多人互动</li>
+          <li><strong>MCU (Multi-Point Control Unit)：</strong>服务器混流后推给观众</li>
+        </ul>
+
+        <div class="feature-list">
+          <p><strong>优点：</strong>毫秒级延迟，支持双向互动</p>
+        </div>
+
+        <div class="warning-box">
+          <p><strong>缺点：</strong>带宽成本高，服务器压力大，穿透复杂</p>
+        </div>
+      </div>
+
+      <h2>三、浏览器播放核心技术（MSE & WebCodecs）</h2>
+
+      <div class="highlight-box">
+        <p>为什么浏览器能播直播？关键在于以下两个 API：</p>
+      </div>
+
+      <h3>1. MSE (Media Source Extensions)</h3>
+
+      <div class="section-box">
+        <p><strong>作用：</strong>允许 JavaScript 动态构建媒体流，并传递给 <code>&lt;video&gt;</code> 标签。</p>
+
+        <p><strong>流程：</strong></p>
+        <ol>
+          <li>JS 通过 fetch/xhr 获取视频二进制数据（FLV/fMP4）</li>
+          <li>创建 MediaSource 对象并绑定到 video 标签</li>
+          <li>创建 SourceBuffer，将数据 appendBuffer 进去</li>
+          <li>浏览器自动解码播放</li>
+        </ol>
+
+        <div class="code-block">
+<span class="code-comment">// MSE 基本使用</span><br>
+const video = document.querySelector('video');<br>
+const mediaSource = new MediaSource();<br>
+video.src = URL.createObjectURL(mediaSource);<br><br>
+
+mediaSource.addEventListener('sourceopen', () => {`{`}<br>
+&nbsp;&nbsp;const sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<span class="code-comment">// 通过 fetch 获取视频数据</span><br>
+&nbsp;&nbsp;fetch('stream.flv')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.then(response => response.arrayBuffer())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.then(data => {`{`}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sourceBuffer.appendBuffer(data);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{`}`});<br>
+{`}`});
+        </div>
+
+        <div class="feature-list">
+          <p><strong>意义：</strong>让浏览器无需插件即可播放 HLS/FLV/DASH</p>
+        </div>
+      </div>
+
+      <h3>2. WebCodecs (新一代)</h3>
+
+      <div class="section-box">
+        <ul>
+          <li><strong>作用：</strong>提供更底层的音视频编解码控制，性能比 MSE 更好</li>
+          <li><strong>现状：</strong>正在逐步普及，配合 WebTransport 可实现更高效的低延迟直播</li>
+        </ul>
+      </div>
+
+      <h2>四、如何选择技术方案？</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>需求场景</th>
+            <th>推荐方案</th>
+            <th>理由</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>大型赛事/春晚</td>
+            <td><strong>HLS</strong></td>
+            <td>兼容性最好，CDN 成本最低，延迟不敏感</td>
+          </tr>
+          <tr>
+            <td>电商带货/秀场</td>
+            <td><strong>HTTP-FLV (Android/PC) + HLS (iOS)</strong></td>
+            <td>平衡延迟与成本，国内主流方案</td>
+          </tr>
+          <tr>
+            <td>在线课堂/连麦</td>
+            <td><strong>WebRTC</strong></td>
+            <td>必须毫秒级延迟，否则无法对话</td>
+          </tr>
+          <tr>
+            <td>监控/安防</td>
+            <td><strong>WebRTC / WebSocket</strong></td>
+            <td>要求实时性极高，且需双向控制</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>五、协议对比总结</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>协议</th>
+            <th>延迟</th>
+            <th>兼容性</th>
+            <th>成本</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>HLS</strong></td>
+            <td>10-30秒</td>
+            <td>✅ 最好（原生支持）</td>
+            <td>✅ 最低</td>
+            <td>大型活动、点播</td>
+          </tr>
+          <tr>
+            <td><strong>HTTP-FLV</strong></td>
+            <td>2-5秒</td>
+            <td>⚠️ 需 MSE（iOS 不支持）</td>
+            <td>✅ 低</td>
+            <td>电商直播、秀场</td>
+          </tr>
+          <tr>
+            <td><strong>WebRTC</strong></td>
+            <td>100-500毫秒</td>
+            <td>✅ 现代浏览器支持</td>
+            <td>❌ 高</td>
+            <td>连麦、视频会议</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>💡 核心结论</h2>
+
+      <div class="highlight-box">
+        <p><strong>H5 直播的本质 = 流媒体协议转换 + CDN 分发 + 浏览器 MSE 解码</strong></p>
+        <ul>
+          <li>如果追求<strong>稳定和覆盖</strong>，选 <strong>HLS</strong></li>
+          <li>如果追求<strong>低延迟和成本平衡</strong>，选 <strong>HTTP-FLV</strong></li>
+          <li>如果追求<strong>实时互动</strong>，选 <strong>WebRTC</strong></li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
