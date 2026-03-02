@@ -1,5 +1,5 @@
 ---
-// 数组去重方法文章页面
+// 写一个数组去重的方法（支持多维数组）文章页面
 ---
 
 <!doctype html>
@@ -36,10 +36,6 @@
         border-bottom: 2px solid #3498db;
         padding-bottom: 10px;
         margin-top: 30px;
-      }
-      h3 {
-        color: #2c3e50;
-        margin-top: 25px;
       }
       .back-link {
         display: inline-block;
@@ -79,39 +75,7 @@
         font-size: 0.9em;
         overflow-x: auto;
         border-left: 4px solid #4299e1;
-      }
-      .code-comment {
-        color: #68d391;
-      }
-      .comparison-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
-      .comparison-table th,
-      .comparison-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #e0e0e0;
-      }
-      .comparison-table th {
-        background: #3498db;
-        color: white;
-        font-weight: 600;
-      }
-      .comparison-table tr:hover {
-        background: #f8f9fa;
-      }
-      .feature-list {
-        background: #e8f5e8;
-        padding: 20px;
-        border-radius: 8px;
-        border-left: 4px solid #27ae60;
-        margin: 20px 0;
+        white-space: pre-wrap;
       }
       .section-box {
         background: #f0f8ff;
@@ -120,18 +84,18 @@
         border-left: 4px solid #2196f3;
         margin: 20px 0;
       }
-      .warning-box {
-        background: #ffe8e8;
+      .feature-list {
+        background: #e8f5e8;
         padding: 20px;
         border-radius: 8px;
-        border-left: 4px solid #e74c3c;
+        border-left: 4px solid #27ae60;
         margin: 20px 0;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>🚀 写一个数组去重的方法（支持多维数组）</h1>
+      <h1>🔄 写一个数组去重的方法（支持多维数组）</h1>
 
       <div class="meta-info">
         <p>📅 发布于 2026年2月 | 👤 作者：博主 | 🏷️ 标签：数组去重, Set, flat, JavaScript, Web开发, 前端, 面试</p>
@@ -139,295 +103,42 @@
 
       <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
 
-      <h2>一、一维数组去重</h2>
-
-      <div class="highlight-box">
-        <p><strong>核心思路：</strong>利用 Set 数据结构的特性——自动去除重复值。</p>
-      </div>
-
-      <h3>方法 1：使用扩展运算符（推荐）</h3>
-
-      <div class="code-block">
-function removeDuplicates(arr) {`{`}<br>
-&nbsp;&nbsp;return [...new Set(arr)];<br>
-{`}`}<br><br>
-
-console.log(removeDuplicates([1, 2, 3, 2, 3, 4, 4, 5]));<br>
-<span class="code-comment">// 输出：[1, 2, 3, 4, 5]</span>
-      </div>
-
-      <h3>方法 2：使用 Array.from()</h3>
-
-      <div class="code-block">
-function removeDuplicates(arr) {`{`}<br>
-&nbsp;&nbsp;return Array.from(new Set(arr));<br>
-{`}`}<br><br>
-
-console.log(removeDuplicates([1, 2, 3, 2, 3, 4, 4, 5]));<br>
-<span class="code-comment">// 输出：[1, 2, 3, 4, 5]</span>
-      </div>
+      <h2>一维数组去重</h2>
 
       <div class="section-box">
-        <h4>💡 原理解析</h4>
-        <ul>
-          <li><code>new Set(arr)</code> 创建一个 Set 对象，自动去除重复值</li>
-          <li><code>[...new Set(arr)]</code> 使用扩展运算符将 Set 转回数组</li>
-          <li><code>Array.from(new Set(arr))</code> 使用 Array.from 将 Set 转回数组</li>
-        </ul>
+        <p>最简洁的方法是使用 <code>Set</code> 数据结构：</p>
+
+        <pre class="code-block">function removeDuplicates(arr) &#123;
+  // return Array.from(new Set(arr));
+  return [...new Set(arr)];
+&#125;
+
+console.log(removeDuplicates([1, 2, 3, 2, 3, 4, 4, 5]));
+// 输出: [1, 2, 3, 4, 5]</pre>
       </div>
 
-      <h2>二、多维数组去重</h2>
-
-      <div class="highlight-box">
-        <p><strong>核心思路：</strong>先用 <code>flat(Infinity)</code> 将多维数组扁平化为一维数组，再使用 Set 去重。</p>
-      </div>
-
-      <h3>方法 1：flat + Set（推荐）</h3>
-
-      <div class="code-block">
-function uniqueArr(arr) {`{`}<br>
-&nbsp;&nbsp;return [...new Set(arr.flat(Infinity))];<br>
-{`}`}<br><br>
-
-console.log(uniqueArr([1, 2, [2, 3, [4, 4, 5]]]));<br>
-<span class="code-comment">// 输出：[1, 2, 3, 4, 5]</span>
-      </div>
+      <h2>多维数组去重</h2>
 
       <div class="section-box">
-        <h4>💡 原理解析</h4>
-        <ul>
-          <li><code>arr.flat(Infinity)</code> 将任意深度的嵌套数组扁平化为一维数组</li>
-          <li><code>Infinity</code> 表示无限深度，可以处理任意层级的嵌套</li>
-          <li><code>new Set(...)</code> 对扁平化后的数组去重</li>
-          <li><code>[...]</code> 将 Set 转回数组</li>
-        </ul>
+        <p>使用 <code>flat(Infinity)</code> 扁平化数组，然后去重：</p>
+
+        <pre class="code-block">function uniqueArr(arr) &#123;
+  return [...new Set(arr.flat(Infinity))];
+&#125;
+
+console.log(uniqueArr([1, 2, [2, 3, [4, 4, 5]]]));
+// 输出: [1, 2, 3, 4, 5]</pre>
       </div>
 
-      <h3>方法 2：递归 + Set</h3>
 
-      <div class="code-block">
-function getNoRepeatArr(arr, set = new Set()) {`{`}<br>
-&nbsp;&nbsp;if (Array.isArray(arr)) {`{`}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;arr.forEach(item => getNoRepeatArr(item, set));<br>
-&nbsp;&nbsp;{`}`} else {`{`}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;set.add(arr);<br>
-&nbsp;&nbsp;{`}`}<br>
-&nbsp;&nbsp;return set;<br>
-{`}`}<br><br>
-
-const uniqueSet = getNoRepeatArr([1, 2, [2, 3, [4, 4, 5]]]);<br>
-console.log(Array.from(uniqueSet));<br>
-<span class="code-comment">// 输出：[1, 2, 3, 4, 5]</span>
-      </div>
-
-      <div class="section-box">
-        <h4>💡 原理解析</h4>
-        <ul>
-          <li>递归遍历数组的每一项</li>
-          <li>如果是数组，继续递归</li>
-          <li>如果不是数组，添加到 Set 中（自动去重）</li>
-          <li>最后将 Set 转回数组</li>
-        </ul>
-      </div>
-
-      <h2>三、方法对比</h2>
-
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th>方法</th>
-            <th>优点</th>
-            <th>缺点</th>
-            <th>适用场景</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>[...new Set(arr)]</code></td>
-            <td>简洁、性能好</td>
-            <td>只能处理一维数组</td>
-            <td>一维数组去重</td>
-          </tr>
-          <tr>
-            <td><code>Array.from(new Set(arr))</code></td>
-            <td>语义清晰</td>
-            <td>只能处理一维数组</td>
-            <td>一维数组去重</td>
-          </tr>
-          <tr>
-            <td><code>flat(Infinity) + Set</code></td>
-            <td>简洁、支持任意深度</td>
-            <td>ES2019+ 才支持</td>
-            <td>多维数组去重（推荐）</td>
-          </tr>
-          <tr>
-            <td>递归 + Set</td>
-            <td>兼容性好、灵活</td>
-            <td>代码较长</td>
-            <td>需要兼容旧浏览器</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2>四、其他去重方法</h2>
-
-      <h3>方法 1：使用 filter + indexOf</h3>
-
-      <div class="code-block">
-function removeDuplicates(arr) {`{`}<br>
-&nbsp;&nbsp;return arr.filter((item, index) => arr.indexOf(item) === index);<br>
-{`}`}<br><br>
-
-console.log(removeDuplicates([1, 2, 3, 2, 3, 4, 4, 5]));<br>
-<span class="code-comment">// 输出：[1, 2, 3, 4, 5]</span>
-      </div>
-
-      <div class="warning-box">
-        <h4>⚠️ 性能问题</h4>
-        <p>时间复杂度为 O(n²)，因为 indexOf 需要遍历数组。不推荐用于大数组。</p>
-      </div>
-
-      <h3>方法 2：使用 reduce</h3>
-
-      <div class="code-block">
-function removeDuplicates(arr) {`{`}<br>
-&nbsp;&nbsp;return arr.reduce((acc, item) => {`{`}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;if (!acc.includes(item)) {`{`}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acc.push(item);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return acc;<br>
-&nbsp;&nbsp;{`}`}, []);<br>
-{`}`}<br><br>
-
-console.log(removeDuplicates([1, 2, 3, 2, 3, 4, 4, 5]));<br>
-<span class="code-comment">// 输出：[1, 2, 3, 4, 5]</span>
-      </div>
-
-      <h3>方法 3：使用 Map</h3>
-
-      <div class="code-block">
-function removeDuplicates(arr) {`{`}<br>
-&nbsp;&nbsp;const map = new Map();<br>
-&nbsp;&nbsp;arr.forEach(item => map.set(item, item));<br>
-&nbsp;&nbsp;return [...map.values()];<br>
-{`}`}<br><br>
-
-console.log(removeDuplicates([1, 2, 3, 2, 3, 4, 4, 5]));<br>
-<span class="code-comment">// 输出：[1, 2, 3, 4, 5]</span>
-      </div>
-
-      <h2>五、对象数组去重</h2>
+      <h2>核心知识点</h2>
 
       <div class="highlight-box">
-        <p><strong>问题：</strong>Set 无法直接去重对象数组，因为对象比较的是引用地址。</p>
-      </div>
-
-      <h3>方法 1：根据某个属性去重</h3>
-
-      <div class="code-block">
-function uniqueByKey(arr, key) {`{`}<br>
-&nbsp;&nbsp;const seen = new Set();<br>
-&nbsp;&nbsp;return arr.filter(item => {`{`}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;const value = item[key];<br>
-&nbsp;&nbsp;&nbsp;&nbsp;if (seen.has(value)) {`{`}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return false;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{`}`}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;seen.add(value);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return true;<br>
-&nbsp;&nbsp;{`}`});<br>
-{`}`}<br><br>
-
-const users = [<br>
-&nbsp;&nbsp;{`{`} id: 1, name: 'Alice' {`}`},<br>
-&nbsp;&nbsp;{`{`} id: 2, name: 'Bob' {`}`},<br>
-&nbsp;&nbsp;{`{`} id: 1, name: 'Alice' {`}`}<br>
-];<br><br>
-
-console.log(uniqueByKey(users, 'id'));<br>
-<span class="code-comment">// 输出：[{`{`} id: 1, name: 'Alice' {`}`}, {`{`} id: 2, name: 'Bob' {`}`}]</span>
-      </div>
-
-      <h3>方法 2：使用 Map（推荐）</h3>
-
-      <div class="code-block">
-function uniqueByKey(arr, key) {`{`}<br>
-&nbsp;&nbsp;const map = new Map();<br>
-&nbsp;&nbsp;arr.forEach(item => map.set(item[key], item));<br>
-&nbsp;&nbsp;return [...map.values()];<br>
-{`}`}<br><br>
-
-const users = [<br>
-&nbsp;&nbsp;{`{`} id: 1, name: 'Alice' {`}`},<br>
-&nbsp;&nbsp;{`{`} id: 2, name: 'Bob' {`}`},<br>
-&nbsp;&nbsp;{`{`} id: 1, name: 'Charlie' {`}`} <span class="code-comment">// 会保留最后一个</span><br>
-];<br><br>
-
-console.log(uniqueByKey(users, 'id'));<br>
-<span class="code-comment">// 输出：[{`{`} id: 1, name: 'Charlie' {`}`}, {`{`} id: 2, name: 'Bob' {`}`}]</span>
-      </div>
-
-      <h2>六、性能对比</h2>
-
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th>方法</th>
-            <th>时间复杂度</th>
-            <th>空间复杂度</th>
-            <th>性能</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Set</td>
-            <td>O(n)</td>
-            <td>O(n)</td>
-            <td>⭐⭐⭐⭐⭐</td>
-          </tr>
-          <tr>
-            <td>filter + indexOf</td>
-            <td>O(n²)</td>
-            <td>O(n)</td>
-            <td>⭐⭐</td>
-          </tr>
-          <tr>
-            <td>reduce + includes</td>
-            <td>O(n²)</td>
-            <td>O(n)</td>
-            <td>⭐⭐</td>
-          </tr>
-          <tr>
-            <td>Map</td>
-            <td>O(n)</td>
-            <td>O(n)</td>
-            <td>⭐⭐⭐⭐⭐</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2>七、最佳实践</h2>
-
-      <div class="feature-list">
-        <h4>✅ 推荐做法</h4>
         <ul>
-          <li><strong>一维数组去重：</strong>使用 <code>[...new Set(arr)]</code>，简洁高效</li>
-          <li><strong>多维数组去重：</strong>使用 <code>[...new Set(arr.flat(Infinity))]</code></li>
-          <li><strong>对象数组去重：</strong>使用 Map 根据指定属性去重</li>
-          <li><strong>大数组去重：</strong>避免使用 indexOf、includes 等 O(n²) 方法</li>
-          <li><strong>兼容性考虑：</strong>flat() 需要 ES2019+，旧浏览器使用递归方案</li>
-        </ul>
-      </div>
-
-      <h2>八、核心要点总结</h2>
-
-      <div class="highlight-box">
-        <h4>💡 关键知识点</h4>
-        <ul>
-          <li><strong>Set 去重：</strong>最简洁高效的方法，时间复杂度 O(n)</li>
-          <li><strong>flat(Infinity)：</strong>扁平化任意深度的嵌套数组</li>
-          <li><strong>递归方案：</strong>兼容性好，适合旧浏览器</li>
-          <li><strong>对象去重：</strong>需要根据属性值去重，使用 Map 或 Set + filter</li>
-          <li><strong>性能优先：</strong>避免使用 indexOf、includes 等嵌套循环</li>
+          <li><strong>Set：</strong>ES6 新增的数据结构，自动去重</li>
+          <li><strong>flat(Infinity)：</strong>将多维数组完全扁平化</li>
+          <li><strong>扩展运算符（...）：</strong>将 Set 转换为数组</li>
+          <li><strong>Array.from()：</strong>另一种将 Set 转换为数组的方法</li>
         </ul>
       </div>
 

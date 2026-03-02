@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>写一个大小写转换的方法</title>
+    <title>写一个把字符串大小写切换的方法</title>
     
     <style>
       body {
@@ -151,15 +151,6 @@ const caseCovert = str =><br>
 console.log(caseCovert("AsA33322A2aa")); <span class="code-comment">// 输出: aSa33322a2AA</span>
       </div>
 
-      <div class="feature-list">
-        <h4>✅ 核心思路</h4>
-        <ul>
-          <li>使用正则表达式 <code>/[a-zA-Z]/g</code> 匹配所有字母</li>
-          <li>判断字符是否小于等于 'Z'（大写字母）</li>
-          <li>大写字母转小写，小写字母转大写</li>
-          <li>数字和特殊字符保持不变</li>
-        </ul>
-      </div>
 
       <h2>方法 2：显式判断版</h2>
 
@@ -176,14 +167,6 @@ const caseCovert1 = (str) => {`{`}<br>
 console.log(caseCovert1("AsA33322A2aa")); <span class="code-comment">// 输出: aSa33322a2AA</span>
       </div>
 
-      <div class="section-box">
-        <h4>说明</h4>
-        <ul>
-          <li>通过 <code>char === char.toLowerCase()</code> 判断是否为小写</li>
-          <li>如果是小写则转大写，否则转小写</li>
-          <li>逻辑更清晰，易于理解</li>
-        </ul>
-      </div>
 
       <h2>方法 3：分组替换版</h2>
 
@@ -197,175 +180,6 @@ const caseCovert2 = (str) => {`{`}<br>
 
 <span class="code-comment">// 使用示例</span><br>
 console.log(caseCovert2("hELLO")); <span class="code-comment">// 输出: Hello</span>
-      </div>
-
-      <div class="section-box">
-        <h4>说明</h4>
-        <ul>
-          <li>使用分组 <code>([a-z]*)([A-Z]*)</code> 分别捕获小写和大写字母</li>
-          <li>小写组转大写，大写组转小写</li>
-          <li>适合处理连续的大小写字母</li>
-        </ul>
-      </div>
-
-      <h2>方法对比</h2>
-
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th>方法</th>
-            <th>优点</th>
-            <th>缺点</th>
-            <th>适用场景</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>方法 1（简洁版）</td>
-            <td>代码简洁，性能好</td>
-            <td>需要理解 ASCII 比较</td>
-            <td>通用场景，推荐使用</td>
-          </tr>
-          <tr>
-            <td>方法 2（显式判断）</td>
-            <td>逻辑清晰，易读</td>
-            <td>代码稍长</td>
-            <td>团队协作，代码可读性优先</td>
-          </tr>
-          <tr>
-            <td>方法 3（分组替换）</td>
-            <td>适合连续字母处理</td>
-            <td>正则复杂，有边界情况</td>
-            <td>特定格式转换</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h2>测试用例</h2>
-
-      <div class="code-block">
-<span class="code-comment">// 测试 1：混合大小写和数字</span><br>
-console.log(caseCovert("AsA33322A2aa"));<br>
-<span class="code-comment">// 输出: aSa33322a2AA</span><br><br>
-
-<span class="code-comment">// 测试 2：纯大写</span><br>
-console.log(caseCovert("HELLO"));<br>
-<span class="code-comment">// 输出: hello</span><br><br>
-
-<span class="code-comment">// 测试 3：纯小写</span><br>
-console.log(caseCovert("world"));<br>
-<span class="code-comment">// 输出: WORLD</span><br><br>
-
-<span class="code-comment">// 测试 4：包含特殊字符</span><br>
-console.log(caseCovert("Hello-World_123!"));<br>
-<span class="code-comment">// 输出: hELLO-wORLD_123!</span><br><br>
-
-<span class="code-comment">// 测试 5：空字符串</span><br>
-console.log(caseCovert(""));<br>
-<span class="code-comment">// 输出: ""</span>
-      </div>
-
-      <h2>核心知识点</h2>
-
-      <h3>1. ASCII 码比较</h3>
-
-      <div class="section-box">
-        <div class="code-block">
-<span class="code-comment">// 大写字母 A-Z 的 ASCII 码：65-90</span><br>
-<span class="code-comment">// 小写字母 a-z 的 ASCII 码：97-122</span><br><br>
-
-'A' &lt;= 'Z' <span class="code-comment">// true（大写字母）</span><br>
-'a' &lt;= 'Z' <span class="code-comment">// false（小写字母）</span>
-        </div>
-      </div>
-
-      <h3>2. 正则表达式</h3>
-
-      <div class="section-box">
-        <div class="code-block">
-/[a-zA-Z]/g <span class="code-comment">// 匹配所有字母（全局）</span><br>
-/[a-z]/g <span class="code-comment">// 仅匹配小写字母</span><br>
-/[A-Z]/g <span class="code-comment">// 仅匹配大写字母</span><br>
-/([a-z]*)([A-Z]*)/g <span class="code-comment">// 分组捕获小写和大写</span>
-        </div>
-      </div>
-
-      <h3>3. String.prototype.replace()</h3>
-
-      <div class="section-box">
-        <div class="code-block">
-str.replace(regexp, replacer)<br><br>
-
-<span class="code-comment">// replacer 可以是函数</span><br>
-str.replace(/[a-z]/g, (match) => {`{`}<br>
-&nbsp;&nbsp;return match.toUpperCase();<br>
-{`}`});
-        </div>
-      </div>
-
-      <h2>扩展：其他大小写转换方法</h2>
-
-      <h3>1. 首字母大写</h3>
-
-      <div class="code-block">
-const capitalize = str =><br>
-&nbsp;&nbsp;str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();<br><br>
-
-console.log(capitalize("hello")); <span class="code-comment">// 输出: Hello</span>
-      </div>
-
-      <h3>2. 驼峰命名转换</h3>
-
-      <div class="code-block">
-<span class="code-comment">// 短横线转驼峰</span><br>
-const toCamelCase = str =><br>
-&nbsp;&nbsp;str.replace(/-([a-z])/g, (m, c) => c.toUpperCase());<br><br>
-
-console.log(toCamelCase("hello-world-test"));<br>
-<span class="code-comment">// 输出: helloWorldTest</span><br><br>
-
-<span class="code-comment">// 驼峰转短横线</span><br>
-const toKebabCase = str =><br>
-&nbsp;&nbsp;str.replace(/[A-Z]/g, m => '-' + m.toLowerCase());<br><br>
-
-console.log(toKebabCase("helloWorldTest"));<br>
-<span class="code-comment">// 输出: hello-world-test</span>
-      </div>
-
-      <h3>3. 蛇形命名转换</h3>
-
-      <div class="code-block">
-<span class="code-comment">// 驼峰转蛇形</span><br>
-const toSnakeCase = str =><br>
-&nbsp;&nbsp;str.replace(/[A-Z]/g, m => '_' + m.toLowerCase());<br><br>
-
-console.log(toSnakeCase("helloWorldTest"));<br>
-<span class="code-comment">// 输出: hello_world_test</span>
-      </div>
-
-      <h2>性能对比</h2>
-
-      <div class="feature-list">
-        <h4>✅ 性能建议</h4>
-        <ul>
-          <li><strong>方法 1（简洁版）：</strong>性能最好，使用 ASCII 比较</li>
-          <li><strong>方法 2（显式判断）：</strong>性能略低，但可读性好</li>
-          <li><strong>方法 3（分组替换）：</strong>正则复杂度高，性能较低</li>
-          <li><strong>推荐：</strong>一般场景使用方法 1，团队协作使用方法 2</li>
-        </ul>
-      </div>
-
-      <h2>核心要点总结</h2>
-
-      <div class="highlight-box">
-        <h4>💡 关键知识点</h4>
-        <ul>
-          <li><strong>正则匹配：</strong>使用 <code>/[a-zA-Z]/g</code> 匹配所有字母</li>
-          <li><strong>ASCII 比较：</strong><code>c &lt;= 'Z'</code> 判断大写字母</li>
-          <li><strong>replace 回调：</strong>可以对每个匹配项进行自定义处理</li>
-          <li><strong>性能优化：</strong>简洁的实现通常性能更好</li>
-          <li><strong>边界情况：</strong>考虑数字、特殊字符、空字符串</li>
-        </ul>
       </div>
 
       <div style="text-align: center;">
