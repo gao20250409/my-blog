@@ -1,0 +1,221 @@
+---
+// 常见的浏览器内核都有哪些？并介绍下你对内核的理解文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>常见的浏览器内核都有哪些？并介绍下你对内核的理解</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🌐 常见的浏览器内核都有哪些？并介绍下你对内核的理解</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年3月 | 👤 作者：博主 | 🏷️ 标签：浏览器内核, Blink, WebKit, Gecko, 渲染引擎, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>定义</h2>
+
+      <div class="highlight-box">
+        <p><strong>浏览器内核(Browser Engine / Rendering Engine)</strong>是浏览器最核心的底层组件，负责解析网页代码(HTML/CSS/JS)并将其渲染为用户可见的页面。它决定了网页的兼容性、性能、安全模型与标准支持程度。</p>
+      </div>
+
+      <h2>内核组成</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>子系统</th>
+            <th>功能</th>
+            <th>代表组件</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>渲染引擎(Rendering Engine)</strong></td>
+            <td>解析 HTML + CSS</td>
+            <td>Blink、WebKit、Gecko、Trident(淘汰)、EdgeHTML(弃用)</td>
+          </tr>
+          <tr>
+            <td><strong>JavaScript 引擎(JS Engine)</strong></td>
+            <td>解析 JavaScript</td>
+            <td>V8、JavaScriptCore、SpiderMonkey</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>🌐 主流浏览器内核一览(含现状)</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>内核名称</th>
+            <th>开发方</th>
+            <th>主要使用浏览器</th>
+            <th>现状与特点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Blink</strong></td>
+            <td>Google(从WebKit分叉)</td>
+            <td>Chrome、Edge(新)、Opera、Brave、国产双核浏览器(极速模式)</td>
+            <td>主流，V8 JS引擎</td>
+          </tr>
+          <tr>
+            <td><strong>WebKit</strong></td>
+            <td>Apple</td>
+            <td>Safari(macOS/iOS)、旧Chrome/Android Browser</td>
+            <td>iOS唯一合法内核，JavaScriptCore(Nitro)</td>
+          </tr>
+          <tr>
+            <td><strong>Gecko</strong> /ˈɡekəʊ/</td>
+            <td>Mozilla</td>
+            <td>Firefox</td>
+            <td>JS 引擎 SpiderMonkey</td>
+          </tr>
+          <tr>
+            <td><strong>Trident</strong> /ˈtraɪdənt/</td>
+            <td>Microsoft</td>
+            <td>旧版IE浏览器(IE 6–11)</td>
+            <td>已淘汰，被EdgeHTML取代，后又迁至Blink</td>
+          </tr>
+          <tr>
+            <td><strong>EdgeHTML</strong></td>
+            <td>Microsoft</td>
+            <td>旧版Edge浏览器</td>
+            <td>已弃用，Trident重构后迁至Blink</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>补充说明</h2>
+
+      <div class="section-box">
+        <h3>国产"双核浏览器"</h3>
+        <p>如360、QQ浏览器 = <strong>Trident(兼容模式) + Blink(极速模式)</strong>，自动切换以兼顾老旧网站与现代网页。</p>
+      </div>
+
+      <div class="warning-box">
+        <h3>⚠️ iOS 限制</h3>
+        <p><strong>iOS 上所有浏览器(包括 Chrome、Firefox)必须使用 WebKit</strong>(苹果政策限制)</p>
+      </div>
+
+      <h2>核心要点</h2>
+
+      <div class="highlight-box">
+        <ul>
+          <li><strong>Blink：</strong>目前市场占有率最高的内核，由Google维护</li>
+          <li><strong>WebKit：</strong>Apple生态专属，iOS平台唯一选择</li>
+          <li><strong>Gecko：</strong>Firefox专用，注重隐私和开放标准</li>
+          <li><strong>Trident/EdgeHTML：</strong>已被微软放弃，Edge转向Blink</li>
+          <li><strong>双核浏览器：</strong>国内特色，兼容老旧网站</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
