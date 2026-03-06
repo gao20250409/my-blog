@@ -1,0 +1,281 @@
+---
+// 怎样提高微信小程序的渲染性能文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>怎样提高微信小程序的渲染性能</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      ul {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>⚡ 怎样提高微信小程序的渲染性能</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年3月 | 👤 作者：博主 | 🏷️ 标签：小程序, 性能优化, setData, 渲染优化, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <div class="highlight-box">
+        <p>核心在于理解其<strong>双线程模型</strong>（逻辑层与视图层分离，通过 Native 桥接通信）。性能瓶颈通常出现在 <strong>setData 通信频率/数据量</strong>、<strong>页面节点数量</strong> 以及 <strong>资源加载</strong> 上。</p>
+      </div>
+
+      <h2>1. 核心优化：setData 使用规范（影响最大）</h2>
+
+      <div class="section-box">
+        <p><strong>setData 是性能杀手</strong>，因为它涉及序列化、跨线程通信、反序列化和 Diff 比对。</p>
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>优化点</th>
+            <th>错误做法 ❌</th>
+            <th>正确做法 ✅</th>
+            <th>原理</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>频率控制</strong></td>
+            <td>在 for 循环或高频事件（scroll/input）中频繁调用</td>
+            <td>合并数据，循环结束后一次性调用；高频事件使用 wx.nextTick 节流</td>
+            <td>减少通信次数，避免阻塞主线程</td>
+          </tr>
+          <tr>
+            <td><strong>数据量</strong></td>
+            <td>一次性 setData 超过 256KB 或总数据超 1MB</td>
+            <td>分页加载，每次只更新增量数据；大图片转 Base64 前压缩</td>
+            <td>避免序列化耗时过长和内存溢出</td>
+          </tr>
+          <tr>
+            <td><strong>数据路径</strong></td>
+            <td>修改数组/对象中某一项时，传入整个对象</td>
+            <td>使用数据路径更新：this.setData(&#123; 'list[0].name': 'new' &#125;)</td>
+            <td>减少 Diff 算法计算量，只更新变化节点</td>
+          </tr>
+          <tr>
+            <td><strong>无关数据</strong></td>
+            <td>将仅用于逻辑计算、不渲染的数据放入 data</td>
+            <td>挂在 this 上：this.tempData = ...</td>
+            <td>减少视图层不必要的数据同步</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>代码示例（高频事件优化）</h3>
+
+      <div class="error-box">
+        <strong>❌ 滚动时频繁 setData</strong>
+        <pre class="code-block">onPageScroll(e) &#123;
+  this.setData(&#123; scrollTop: e.scrollTop &#125;);
+&#125;</pre>
+      </div>
+
+      <div class="success-box">
+        <strong>✅ 使用 nextTick 节流</strong>
+        <pre class="code-block">onPageScroll(e) &#123;
+  wx.nextTick(() =&gt; &#123;
+    this.setData(&#123; scrollTop: e.scrollTop &#125;);
+  &#125;);
+&#125;</pre>
+      </div>
+
+      <h2>2. WXML 渲染优化（减少节点）</h2>
+
+      <div class="section-box">
+        <ul>
+          <li><strong>减少节点层级：</strong>避免过深的嵌套，扁平化结构</li>
+          <li><strong>条件渲染：</strong>使用 wx:if 而非 hidden（wx:if 不渲染 DOM，hidden 只是隐藏）</li>
+          <li><strong>列表渲染：</strong>使用 wx:key 提高列表更新效率</li>
+          <li><strong>虚拟列表：</strong>长列表使用虚拟滚动，只渲染可视区域</li>
+        </ul>
+      </div>
+
+      <h2>3. 图片与资源优化</h2>
+
+      <div class="section-box">
+        <p>图片往往是页面加载慢的元凶。</p>
+
+        <ul>
+          <li><strong>图片压缩：</strong>上传前压缩，小程序内建议使用 WebP 格式（体积比 JPG/PNG 小 30%-50%）</li>
+          <li><strong>懒加载：</strong>给 &lt;image&gt; 标签添加 lazy-load="true"，仅当进入可视区域才加载</li>
+          <li><strong>固定宽高：</strong>给图片设置明确的 width 和 height，防止图片加载时页面抖动（重排）</li>
+          <li><strong>使用 CDN：</strong>静态资源（图片、视频、JS 库）务必托管在 CDN 上，利用缓存加速</li>
+          <li><strong>小包原则：</strong>主包体积限制 2MB，尽量将非首屏资源放入分包</li>
+        </ul>
+      </div>
+
+      <h2>核心总结</h2>
+
+      <div class="highlight-box">
+        <h3>"少通信、少节点、小资源" 是小程序性能优化的九字真言</h3>
+        <ol>
+          <li><strong>优先解决 setData 问题</strong>（收益最高）</li>
+          <li><strong>其次优化 WXML 节点数</strong> 和 <strong>图片</strong></li>
+          <li><strong>最后考虑 分包</strong> 和 <strong>Skyline 引擎</strong></li>
+        </ol>
+      </div>
+
+      <h2>优化清单</h2>
+
+      <div class="section-box">
+        <h3>✅ setData 优化</h3>
+        <ul>
+          <li>合并多次 setData 调用</li>
+          <li>使用数据路径精确更新</li>
+          <li>高频事件使用 wx.nextTick 节流</li>
+          <li>无关数据不放入 data</li>
+          <li>控制单次数据量 &lt; 256KB</li>
+        </ul>
+
+        <h3>✅ 渲染优化</h3>
+        <ul>
+          <li>减少 WXML 节点层级</li>
+          <li>使用 wx:if 替代 hidden</li>
+          <li>长列表使用虚拟滚动</li>
+          <li>合理使用 wx:key</li>
+        </ul>
+
+        <h3>✅ 资源优化</h3>
+        <ul>
+          <li>图片使用 WebP 格式</li>
+          <li>启用图片懒加载</li>
+          <li>静态资源使用 CDN</li>
+          <li>主包控制在 2MB 以内</li>
+          <li>非首屏资源放入分包</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
