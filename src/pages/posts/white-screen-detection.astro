@@ -1,0 +1,402 @@
+---
+// js如何检测白屏？有哪些方法文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>js如何检测白屏？有哪些方法</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔍 js如何检测白屏？有哪些方法</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年3月 | 👤 作者：博主 | 🏷️ 标签：白屏检测, DOM检测, 像素采样, FCP, 性能监控, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <div class="highlight-box">
+        <p><strong>一句话总结：</strong>白屏检测没有"银弹"，生产环境通常采用 <strong>"DOM 节点检查 + 关键像素采样 + 错误监控"组合拳</strong>。</p>
+      </div>
+
+      <h2>方案对比总览</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>方案</th>
+            <th>原理</th>
+            <th>准确率</th>
+            <th>性能消耗</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. DOM 节点检测</strong></td>
+            <td>检查根节点是否有内容</td>
+            <td>⭐⭐⭐⭐</td>
+            <td>低</td>
+            <td>最推荐，SPA 首选</td>
+          </tr>
+          <tr>
+            <td><strong>2. 像素采样检测</strong></td>
+            <td>Canvas 取点判断颜色</td>
+            <td>⭐⭐⭐⭐⭐</td>
+            <td>中</td>
+            <td>对视觉要求高的场景</td>
+          </tr>
+          <tr>
+            <td><strong>3. 性能 API 检测</strong></td>
+            <td>监控 FCP/FP 时间</td>
+            <td>⭐⭐⭐</td>
+            <td>低</td>
+            <td>辅助判断加载慢</td>
+          </tr>
+          <tr>
+            <td><strong>4. 错误监控</strong></td>
+            <td>捕获 JS 报错</td>
+            <td>⭐⭐</td>
+            <td>低</td>
+            <td>定位原因，非直接检测</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>方案一：DOM 节点检测（最实用🔥）</h2>
+
+      <div class="section-box">
+        <p><strong>原理：</strong>在页面加载后（如 3 秒），检查应用根节点（如 #app）是否有子元素或特定内容。</p>
+
+        <pre class="code-block">function detectWhiteScreenByDOM() &#123;
+  const rootElement = document.getElementById('app');
+  
+  // 设定阈值时间，比如 3 秒后检查
+  setTimeout(() =&gt; &#123;
+    if (!rootElement || 
+        rootElement.innerHTML.trim() === '' || 
+        rootElement.children.length === 0) &#123;
+      reportWhiteScreen('DOM_EMPTY');
+    &#125;
+    
+    // 进阶：检查是否有特定关键元素（如导航栏、底部栏）
+    const criticalEl = document.querySelector('.main-content');
+    if (!criticalEl) &#123;
+      reportWhiteScreen('CRITICAL_ELEMENT_MISSING');
+    &#125;
+  &#125;, 3000);
+&#125;
+
+// 排除 Loading 状态（避免误报）
+// 如果页面有 &lt;div id="loading"&gt;，需先确认它已消失</pre>
+
+        <div class="success-box">
+          <p>✅ <strong>优点：</strong>实现简单，性能消耗极低，准确率高。</p>
+        </div>
+
+        <div class="error-box">
+          <p>❌ <strong>缺点：</strong>如果根节点里有"加载中..."文字，可能误判为有内容。</p>
+        </div>
+      </div>
+
+      <h2>方案二：像素采样检测（最直观👁️）</h2>
+
+      <div class="section-box">
+        <p><strong>原理：</strong>利用 Canvas 截取屏幕关键点的像素，判断是否全为白色（或背景色）。</p>
+
+        <pre class="code-block">function detectWhiteScreenByPixel() &#123;
+  setTimeout(() =&gt; &#123;
+    const canvas = document.createElement('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext('2d');
+    
+    // 通用替代方案：采样 9 个点
+    const points = [
+      &#123; x: 0.1, y: 0.1 &#125;, &#123; x: 0.5, y: 0.1 &#125;, &#123; x: 0.9, y: 0.1 &#125;,
+      &#123; x: 0.1, y: 0.5 &#125;, &#123; x: 0.5, y: 0.5 &#125;, &#123; x: 0.9, y: 0.5 &#125;,
+      &#123; x: 0.1, y: 0.9 &#125;, &#123; x: 0.5, y: 0.9 &#125;, &#123; x: 0.9, y: 0.9 &#125;
+    ];
+    
+    let whiteCount = 0;
+    points.forEach(p =&gt; &#123;
+      const x = Math.floor(window.innerWidth * p.x);
+      const y = Math.floor(window.innerHeight * p.y);
+      // 实际需配合 html2canvas 或后端截图服务
+      // if (isWhitePixel(x, y)) whiteCount++;
+    &#125;);
+    
+    if (whiteCount &gt;= 8) &#123; // 9 个点 8 个是白色
+      reportWhiteScreen('PIXEL_ALL_WHITE');
+    &#125;
+  &#125;, 3000);
+&#125;</pre>
+      </div>
+
+      <h2>生产环境最佳实践（组合方案）</h2>
+
+      <div class="highlight-box">
+        <p>在真实项目中，建议采用以下分层检测策略：</p>
+      </div>
+
+      <h3>1. 上报策略（关键！）</h3>
+
+      <div class="section-box">
+        <p>使用 <code>navigator.sendBeacon</code> 发送数据，即使页面白屏卡死，数据也能发出。</p>
+
+        <pre class="code-block">function reportWhiteScreen(type) &#123;
+  const data = JSON.stringify(&#123;
+    type,
+    url: location.href,
+    ua: navigator.userAgent,
+    time: Date.now()
+  &#125;);
+  
+  // 优先 sendBeacon，不支持则 fallback 到 fetch
+  if (navigator.sendBeacon) &#123;
+    navigator.sendBeacon('/api/monitor/white-screen', data);
+  &#125; else &#123;
+    fetch('/api/monitor/white-screen', &#123; 
+      method: 'POST', 
+      body: data, 
+      keepalive: true 
+    &#125;);
+  &#125;
+&#125;</pre>
+      </div>
+
+      <h3>2. 排除误报</h3>
+
+      <div class="section-box">
+        <ul>
+          <li><strong>排除 Loading 页：</strong>检测前先确认 #loading 元素已移除</li>
+          <li><strong>排除空白页设计：</strong>某些页面本身就是留白设计，需加白名单</li>
+          <li><strong>采样上报：</strong>不要 100% 用户都报，采样 10% 即可，避免监控服务被打挂</li>
+        </ul>
+      </div>
+
+      <h3>3. 完整代码示例（可直接用）</h3>
+
+      <pre class="code-block">class WhiteScreenMonitor &#123;
+  constructor(options = &#123;&#125;) &#123;
+    this.delay = options.delay || 3000;
+    this.rootId = options.rootId || 'app';
+  &#125;
+  
+  init() &#123;
+    // 1. DOM 检测
+    setTimeout(() =&gt; this.checkDOM(), this.delay);
+    // 2. FCP 检测
+    this.observeFCP();
+    // 3. 错误监听
+    this.listenErrors();
+  &#125;
+  
+  checkDOM() &#123;
+    const root = document.getElementById(this.rootId);
+    if (!root || root.innerHTML.trim() === '') &#123;
+      this.report('DOM_EMPTY');
+    &#125;
+  &#125;
+  
+  observeFCP() &#123;
+    let fcpTriggered = false;
+    new PerformanceObserver((list) =&gt; &#123;
+      fcpTriggered = true;
+      const fcp = list.getEntries().pop();
+      if (fcp.startTime &gt; 5000) this.report('FCP_SLOW');
+    &#125;).observe(&#123; entryTypes: ['paint'] &#125;);
+    
+    setTimeout(() =&gt; &#123;
+      if (!fcpTriggered) this.report('NO_FCP');
+    &#125;, this.delay + 2000);
+  &#125;
+  
+  listenErrors() &#123;
+    window.onerror = (msg) =&gt; this.report('JS_ERROR', &#123; msg &#125;);
+  &#125;
+  
+  report(type, extra = &#123;&#125;) &#123;
+    console.warn(`⚠️ 白屏预警：$&#123;type&#125;`, extra);
+    // 调用 sendBeacon 上报
+  &#125;
+&#125;
+
+// 使用
+new WhiteScreenMonitor().init();</pre>
+
+      <h2>面试回答模板</h2>
+
+      <div class="highlight-box">
+        <p>"白屏检测我通常采用组合策略，因为单一方法有局限：</p>
+        <ol>
+          <li><strong>首选 DOM 检测：</strong>在页面加载 3 秒后，检查根节点是否有内容，这是成本最低且最有效的方法。</li>
+          <li><strong>辅以 FCP 监控：</strong>通过 Performance API 监听首屏绘制时间，如果超过 5 秒未绘制，视为异常。</li>
+          <li><strong>错误兜底：</strong>监听 window.onerror 和资源加载失败，因为白屏往往是由 JS 报错引起的。</li>
+          <li><strong>上报优化：</strong>使用 sendBeacon 发送监控数据，确保即使页面卡死也能上报。</li>
+        </ol>
+        <p>在之前的项目中，我还加了<strong>Loading 状态排除</strong>，避免用户正常等待时被误报。"</p>
+      </div>
+
+      <h2>⚠️ 常见坑点</h2>
+
+      <div class="warning-box">
+        <ul>
+          <li><strong>SPA 路由切换：</strong>单页应用切换路由时不会刷新，需在路由 afterEach 钩子里重置检测计时器。</li>
+          <li><strong>SSR hydration：</strong>服务端渲染页面，HTML 已有内容，但 JS 未挂载，此时 DOM 检测可能通过，但页面不可交互。需额外检测事件绑定或Hydration 完成标记。</li>
+          <li><strong>隐私合规：</strong>像素检测可能涉及用户屏幕内容，需注意隐私政策（通常只采样颜色值，不传截图）。</li>
+        </ul>
+      </div>
+
+      <h2>核心总结</h2>
+
+      <div class="highlight-box">
+        <ul>
+          <li><strong>最推荐：</strong>DOM 节点检测 + FCP 监控 + 错误监听</li>
+          <li><strong>上报方式：</strong>navigator.sendBeacon</li>
+          <li><strong>检测时机：</strong>页面加载 3 秒后</li>
+          <li><strong>避免误报：</strong>排除 Loading 状态、采样上报</li>
+          <li><strong>性能优先：</strong>DOM 检测性能消耗最低</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

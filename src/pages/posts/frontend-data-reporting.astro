@@ -1,0 +1,370 @@
+---
+// 前端有哪些上报的方法，现在主流用啥？文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>前端有哪些上报的方法，现在主流用啥？</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        margin: 20px 0;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #27ae60;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 前端有哪些上报的方法，现在主流用啥？</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年3月 | 👤 作者：博主 | 🏷️ 标签：数据上报, React Query, SWR, sendBeacon, axios, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>一、主流上报方法（API 层面）</h2>
+
+      <h3>1. Image 对象上报（最经典）</h3>
+      <div class="section-box">
+        <p>通过创建一个新的 Image 对象，将数据拼接到 URL 查询参数中。</p>
+        <pre class="code-block">const img = new Image();
+img.src = '/api/report?event=click&page=home';</pre>
+      </div>
+
+      <h3>2. XMLHttpRequest (XHR)</h3>
+      <div class="section-box">
+        <p>传统的 AJAX 请求。</p>
+      </div>
+
+      <h3>3. Fetch API</h3>
+      <div class="section-box">
+        <p>现代的 HTTP 请求接口。</p>
+      </div>
+
+      <h3>4. Navigator.sendBeacon（推荐用于关键数据）</h3>
+      <div class="section-box">
+        <p>专为分析数据设计的 API，旨在解决页面卸载时数据丢失的问题。</p>
+        <pre class="code-block">navigator.sendBeacon('/api/report', JSON.stringify(&#123; event: 'pageUnload' &#125;));</pre>
+      </div>
+
+      <h3>5. WebSocket</h3>
+      <div class="section-box">
+        <p>建立长连接进行实时通信。</p>
+      </div>
+
+      <h2>目前的行业主流方案</h2>
+
+      <div class="highlight-box">
+        <p><strong>TanStack Query (React Query) + axios / fetch</strong>，或者在使用 Next.js 时直接使用 <strong>Server Components</strong>。这是现代 React 开发的核心变化。</p>
+        <p>以前我们用 useEffect + useState 手动管理 loading/error/data，现在用专用库。</p>
+      </div>
+
+      <h2>为什么不再推荐 useEffect + axios？</h2>
+
+      <div class="error-box">
+        <p>在 2024 年，如果在组件里这样写，会被认为是不太专业的做法：</p>
+        <pre class="code-block">// ❌ 旧模式 (存在竞态条件、无缓存、重复代码)
+useEffect(() =&gt; &#123;
+  setLoading(true);
+  axios.get('/api/data').then(res =&gt; &#123;
+    setData(res.data);
+    setLoading(false);
+  &#125;);
+&#125;, []);</pre>
+
+        <p><strong>问题：</strong></p>
+        <ul>
+          <li><strong>无缓存：</strong>切换页面再回来，重新请求</li>
+          <li><strong>无去重：</strong>两个组件用同一个数据，发两次请求</li>
+          <li><strong>手动管理状态：</strong>每个组件都要写 loading, error, data</li>
+          <li><strong>无背景更新：</strong>数据过时了不会自动刷新</li>
+        </ul>
+      </div>
+
+      <h2>三、2024 年推荐的最佳实践</h2>
+
+      <h3>方案 A：TanStack Query + axios</h3>
+
+      <div class="success-box">
+        <p>这是目前最稳健、企业级最常用的方案。</p>
+
+        <pre class="code-block">// 1. 定义请求函数 (使用 axios)
+const fetchUser = async (id) =&gt; &#123;
+  const &#123; data &#125; = await axios.get(`/api/users/$&#123;id&#125;`);
+  return data;
+&#125;;
+
+// 2. 组件中使用 (使用 React Query)
+import &#123; useQuery &#125; from '@tanstack/react-query';
+
+function UserProfile(&#123; id &#125;) &#123;
+  const &#123; data, isLoading, error &#125; = useQuery(&#123;
+    queryKey: ['user', id], // 缓存键
+    queryFn: () =&gt; fetchUser(id),
+    staleTime: 1000 * 60 * 5, // 5 分钟内数据视为新鲜，不重新请求
+  &#125;);
+
+  if (isLoading) return &lt;span&gt;加载中...&lt;/span&gt;;
+  if (error) return &lt;span&gt;出错了&lt;/span&gt;;
+  return &lt;div&gt;&#123;data.name&#125;&lt;/div&gt;;
+&#125;</pre>
+
+        <p><strong>优势：</strong>自动缓存、窗口聚焦自动刷新、请求去重、加载状态自动管理。</p>
+      </div>
+
+      <h3>方案 B：Next.js 项目（App Router）</h3>
+      <div class="section-box">
+        <p><strong>组合：</strong>Server Components + Server Actions</p>
+      </div>
+
+      <h3>方案 C：轻量级项目 / 后台管理</h3>
+      <div class="section-box">
+        <p><strong>组合：</strong>SWR + fetch / axios</p>
+        <p>Vercel 出品，比 React Query 更轻量，API 更简单。</p>
+
+        <pre class="code-block">import useSWR from 'swr';
+
+// 1. 定义 fetcher (可以复用)
+const fetcher = (url) =&gt; fetch(url).then((res) =&gt; res.json());
+
+function Profile() &#123;
+  // 2. 使用 useSWR
+  const &#123; data, error, isLoading, isValidating, mutate &#125; = useSWR(
+    '/api/user/profile', // Key: 请求的唯一标识
+    fetcher              // Fetcher: 请求方法
+  );
+
+  // 3. 处理状态
+  if (error) return &lt;div&gt;加载失败&lt;/div&gt;;
+  if (isLoading) return &lt;div&gt;加载中...&lt;/div&gt;;
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;&#123;data.name&#125;&lt;/h1&gt;
+      &lt;p&gt;&#123;data.email&#125;&lt;/p&gt;
+      &lt;button onClick=&#123;() =&gt; mutate()&#125;&gt;刷新数据&lt;/button&gt;
+    &lt;/div&gt;
+  );
+&#125;</pre>
+      </div>
+
+      <h2>二、代码对比（直观感受）</h2>
+
+      <h3>❌ 传统 useEffect 写法（每个组件都要写一遍）</h3>
+
+      <div class="error-box">
+        <pre class="code-block">function UserProfile(&#123; userId &#125;) &#123;
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; &#123;
+    const controller = new AbortController(); // 1. 手动处理取消
+
+    async function fetchData() &#123;
+      try &#123;
+        const res = await fetch(`/api/user/$&#123;userId&#125;`, &#123; 
+          signal: controller.signal 
+        &#125;);
+        const json = await res.json();
+        setData(json);
+      &#125; catch (err) &#123;
+        if (err.name !== 'AbortError') setError(err); // 2. 手动过滤取消错误
+      &#125; finally &#123;
+        setLoading(false);
+      &#125;
+    &#125;
+
+    fetchData();
+    return () =&gt; controller.abort(); // 3. 手动清理
+  &#125;, [userId]);
+
+  if (loading) return &lt;div&gt;加载中...&lt;/div&gt;;
+  if (error) return &lt;div&gt;出错了&lt;/div&gt;;
+  return &lt;div&gt;&#123;data.name&#125;&lt;/div&gt;;
+&#125;</pre>
+      </div>
+
+      <h3>✅ 现代 React Query 写法</h3>
+
+      <div class="success-box">
+        <pre class="code-block">function UserProfile(&#123; userId &#125;) &#123;
+  // 1. 自动缓存、去重、错误处理、加载状态、取消请求
+  const &#123; data, isLoading, error &#125; = useQuery(&#123;
+    queryKey: ['user', userId],
+    queryFn: () =&gt; fetch(`/api/user/$&#123;userId&#125;`).then(res =&gt; res.json()),
+  &#125;);
+
+  if (isLoading) return &lt;div&gt;加载中...&lt;/div&gt;;
+  if (error) return &lt;div&gt;出错了&lt;/div&gt;;
+  return &lt;div&gt;&#123;data.name&#125;&lt;/div&gt;;
+&#125;</pre>
+      </div>
+
+      <h2>三、数据修改（Mutations）</h2>
+
+      <div class="section-box">
+        <p>对于 POST/PUT/DELETE 请求，SWR 提供了 <strong>useSWRMutation</strong>（新版推荐）或 mutate 函数。</p>
+
+        <h3>1. 使用 useSWRMutation (推荐用于表单提交)</h3>
+
+        <pre class="code-block">import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
+
+function CreateUser() &#123;
+  const &#123; trigger, isMutating &#125; = useSWRMutation(
+    '/api/users', // Key
+    (url, &#123; arg &#125;) =&gt; // arg 是 trigger 传入的参数
+      fetch(url, &#123;
+        method: 'POST',
+        body: JSON.stringify(arg),
+        headers: &#123; 'Content-Type': 'application/json' &#125;
+      &#125;).then(res =&gt; res.json())
+  );
+
+  const handleSubmit = async () =&gt; &#123;
+    try &#123;
+      const newUser = await trigger(&#123; name: 'Alice', age: 25 &#125;);
+      console.log('创建成功', newUser);
+    &#125; catch (error) &#123;
+      console.error('创建失败', error);
+    &#125;
+  &#125;;
+
+  return (
+    &lt;button onClick=&#123;handleSubmit&#125; disabled=&#123;isMutating&#125;&gt;
+      &#123;isMutating ? '提交中...' : '创建用户'&#125;
+    &lt;/button&gt;
+  );
+&#125;</pre>
+
+        <h3>2. 更新本地缓存</h3>
+
+        <p>提交成功后，通常需要同步更新列表页的缓存。</p>
+
+        <pre class="code-block">const &#123; mutate &#125; = useSWR('/api/users');
+
+const handleSubmit = async () =&gt; &#123;
+  await trigger(&#123; name: 'Alice' &#125;);
+  // 手动更新列表缓存，避免重新请求
+  mutate();
+&#125;;</pre>
+      </div>
+
+      <h2>核心总结</h2>
+
+      <div class="highlight-box">
+        <ul>
+          <li><strong>2024 年主流：</strong>TanStack Query (React Query) + axios</li>
+          <li><strong>轻量级方案：</strong>SWR + fetch</li>
+          <li><strong>Next.js：</strong>Server Components + Server Actions</li>
+          <li><strong>关键数据上报：</strong>Navigator.sendBeacon</li>
+          <li><strong>不再推荐：</strong>useEffect + axios 手动管理状态</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
