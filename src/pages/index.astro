@@ -11,11 +11,27 @@ interface PostData {
 
 const posts: PostData[] = [
   {
+    title: "浏览器内多个标签页之间的通信方式有哪些",
+    description:
+      "深入解析标签页通信的六大方案：Broadcast Channel API、localStorage+storage事件、SharedWorker、Service Worker、URL Hash、IndexedDB，以及各方案的兼容性和适用场景。",
+    url: "./posts/browser-tab-communication",
+    date: "2026-3-10",
+    tags: ["标签页通信", "Broadcast Channel", "localStorage", "SharedWorker", "Service Worker", "Web开发", "前端", "面试"],
+  },
+  {
+    title: "WebSocket如何判断在线离线",
+    description:
+      "深入解析WebSocket在线离线判断的三层架构：readyState连接状态、navigator.onLine网络状态、心跳机制业务状态，以及Redis存储和状态防抖最佳实践。",
+    url: "./posts/websocket-online-offline",
+    date: "2026-3-9",
+    tags: ["WebSocket", "在线状态", "心跳机制", "readyState", "实时通信", "Web开发", "前端", "面试"],
+  },
+  {
     title: "js如何检测白屏？有哪些方法",
     description:
       "深入解析白屏检测的四大方案：DOM节点检测、像素采样检测、性能API检测、错误监控，以及生产环境最佳实践组合策略和常见坑点规避。",
     url: "./posts/white-screen-detection",
-    date: "2026-3-7",
+    date: "2026-3-9",
     tags: ["白屏检测", "DOM检测", "像素采样", "FCP", "性能监控", "Web开发", "前端", "面试"],
   },
   {
