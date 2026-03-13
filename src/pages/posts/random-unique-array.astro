@@ -1,0 +1,288 @@
+---
+// 用递归算法实现，数组长度为5且元素的随机数在2-32间不重复的值文章页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>用递归算法实现，数组长度为5且元素的随机数在2-32间不重复的值</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎲 用递归算法实现，数组长度为5且元素的随机数在2-32间不重复的值</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026年3月 | 👤 作者：博主 | 🏷️ 标签：递归算法, 随机数, 数组去重, Set, JavaScript, Web开发, 前端, 面试</p>
+      </div>
+
+      <p>欢迎来到我的博客文章！所有文章都是满满的前端干货，文章简明扼要。</p>
+
+      <h2>❌ 错误方案（不能保证不重复）</h2>
+
+      <pre class="code-block">&lt;script&gt;
+// ❌ 不能保证不重复
+let arr = Array.from(&#123;length:5&#125;, () =&gt; Math.floor(Math.random()*31) + 2)
+&lt;/script&gt;</pre>
+
+      <div class="error-box">
+        <p><strong>问题：</strong>这种方法生成5个随机数，但无法保证它们不重复。</p>
+      </div>
+
+      <h2>✅ 正确、简洁、现代方案（推荐）</h2>
+
+      <div class="section-box">
+        <p><strong>使用 Set 数据结构</strong>自动去重，简洁高效。</p>
+      </div>
+
+      <pre class="code-block">&lt;script&gt;
+function getRandomUniqueArray(count, min = 2, max = 32) &#123;
+  const set = new Set();
+  while (set.size &lt; count) &#123;
+    const num = Math.floor(Math.random() * (max - min + 1)) + min;
+    set.add(num);
+  &#125;
+  return Array.from(set); // 或 [...set]
+&#125;
+
+const arr = getRandomUniqueArray(5);
+console.log(arr);
+&lt;/script&gt;</pre>
+
+      <div class="success-box">
+        <p>✅ <strong>优点：</strong></p>
+        <ul>
+          <li>使用 Set 自动去重</li>
+          <li>代码简洁易读</li>
+          <li>性能优秀</li>
+          <li>参数可配置（count, min, max）</li>
+        </ul>
+      </div>
+
+      <h2>✅ 递归实现方案</h2>
+
+      <div class="section-box">
+        <p><strong>使用递归算法</strong>实现不重复的随机数数组。</p>
+      </div>
+
+      <pre class="code-block">&lt;script&gt;
+let arr = [];
+let random;
+
+function getRandom() &#123;
+  random = Math.floor(Math.random() * 31) + 2; // ✅ [2, 32]
+  
+  if (arr.indexOf(random) === -1) &#123;
+    arr.push(random);
+  &#125;
+  
+  if (arr.length &lt; 5) &#123;
+    getRandom();
+  &#125;
+&#125;
+
+getRandom();
+console.log(arr);
+&lt;/script&gt;</pre>
+
+      <div class="success-box">
+        <p>✅ <strong>递归方案特点：</strong></p>
+        <ul>
+          <li>使用递归调用实现循环</li>
+          <li>通过 indexOf 检查重复</li>
+          <li>满足条件后自动停止</li>
+          <li>符合递归算法要求</li>
+        </ul>
+      </div>
+
+      <h2>方案对比</h2>
+
+      <div class="highlight-box">
+        <h3>Set 方案 vs 递归方案</h3>
+        
+        <p><strong>Set 方案优势：</strong></p>
+        <ul>
+          <li>代码更简洁</li>
+          <li>性能更好（Set 查找 O(1)）</li>
+          <li>更符合现代 JavaScript 风格</li>
+          <li>易于扩展和维护</li>
+        </ul>
+
+        <p><strong>递归方案优势：</strong></p>
+        <ul>
+          <li>符合递归算法要求</li>
+          <li>适合面试场景</li>
+          <li>展示递归思维</li>
+        </ul>
+      </div>
+
+      <h2>核心知识点</h2>
+
+      <div class="section-box">
+        <h3>1. 随机数生成</h3>
+        <pre class="code-block">// 生成 [min, max] 范围的随机整数
+Math.floor(Math.random() * (max - min + 1)) + min
+
+// 示例：[2, 32]
+Math.floor(Math.random() * 31) + 2</pre>
+
+        <h3>2. Set 去重</h3>
+        <pre class="code-block">const set = new Set();
+set.add(1);
+set.add(2);
+set.add(1); // 重复值不会被添加
+console.log(set.size); // 2
+
+// 转换为数组
+const arr = Array.from(set); // 或 [...set]</pre>
+
+        <h3>3. 递归终止条件</h3>
+        <pre class="code-block">function getRandom() &#123;
+  // ... 处理逻辑
+  
+  if (arr.length &lt; 5) &#123;
+    getRandom(); // 递归调用
+  &#125;
+  // arr.length === 5 时自动停止
+&#125;</pre>
+      </div>
+
+      <h2>面试要点</h2>
+
+      <div class="warning-box">
+        <p><strong>注意事项：</strong></p>
+        <ul>
+          <li>确保随机数范围正确：[2, 32] 共31个数</li>
+          <li>递归需要明确的终止条件</li>
+          <li>避免无限递归（栈溢出）</li>
+          <li>Set 方案在实际项目中更推荐</li>
+          <li>递归方案适合展示算法思维</li>
+        </ul>
+      </div>
+
+      <h2>核心总结</h2>
+
+      <div class="highlight-box">
+        <ul>
+          <li><strong>现代推荐：</strong>使用 Set 数据结构，简洁高效</li>
+          <li><strong>递归实现：</strong>符合算法要求，适合面试</li>
+          <li><strong>随机数公式：</strong>Math.floor(Math.random() * (max - min + 1)) + min</li>
+          <li><strong>去重方法：</strong>Set.add() 或 indexOf() 检查</li>
+          <li><strong>终止条件：</strong>arr.length === 5</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
