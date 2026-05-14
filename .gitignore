@@ -2,7 +2,7 @@
 dist/
 .output/
 .vercel/
-
+.history/
 # generated types
 .astro/
 
