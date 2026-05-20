@@ -9,4 +9,7 @@ export default defineConfig({
   integrations: [
     mdx(),
   ],
+  server: {
+    open: true,
+  },
 });
