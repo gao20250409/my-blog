@@ -1,0 +1,568 @@
+---
+// 实战 Streamlit 聊天机器人 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>实战 Streamlit 聊天机器人：从文件操作到流式输出</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      code.inline {
+        background: #f1f3f5;
+        color: #c7254e;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>💬 实战 Streamlit 聊天机器人</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-5-21 | 👤 作者：博主 | 🏷️ 标签：Streamlit, Python, AI, DeepSeek, 聊天机器人</p>
+      </div>
+
+      <div class="section-box">
+        <strong>📌 本文导览</strong>
+        <ul>
+          <li>Streamlit 入门：安装、运行、基础布局</li>
+          <li>Python 文件操作三步走 + with 上下文管理器</li>
+          <li>JSON 序列化 / 反序列化（保存会话）</li>
+          <li>完整聊天机器人代码：会话管理 + 角色定制 + 流式输出</li>
+        </ul>
+      </div>
+
+      <h2>一、Streamlit 入门</h2>
+
+      <ol>
+        <li>安装 Streamlit：<code class="inline">pip install streamlit</code></li>
+        <li>在 Python 文件中引入 streamlit 模块</li>
+        <li>基于 Streamlit 提供的 API 构建 Web 应用</li>
+        <li>运行程序：<code class="inline">streamlit run xxxx.py</code></li>
+      </ol>
+
+      <h2>二、界面基础布局</h2>
+
+      <p>开发期间推荐安装 <strong>Lingma（通义灵码）</strong> 提升效率：</p>
+      <p><code class="inline">Settings → Plugins → Lingma</code></p>
+
+      <h2>三、文件操作入门</h2>
+
+      <p>日常文件操作基本分三步：<strong>打开 → 读 / 写 → 关闭</strong>。</p>
+
+      <h3>3.1 操作模式</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr><th>模式</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>r</td><td>只读模式打开文件，指针放在文件开头（默认模式）</td></tr>
+          <tr><td>w</td><td>只写入模式，从头编辑，原有内容会被删除；文件不存在则创建</td></tr>
+          <tr><td>a</td><td>追加模式，新内容追加到原有内容之后；文件不存在则创建</td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.2 读文件</h3>
+      <pre class="code-block"># 1. 打开文件
+f = open("resources/望庐山瀑布.txt", "r", encoding="utf-8")
+
+# 2. 读取文件内容
+# content = f.read()  # 读取所有内容
+# print(content)
+
+content_list = f.readlines()
+for line in content_list:
+    print(line.strip())
+
+# 3. 关闭文件
+f.close()</pre>
+
+      <h3>3.3 写文件</h3>
+      <pre class="code-block"># 1. 打开文件
+f = open("resources/静夜思.txt", "w", encoding="utf-8")
+
+# 2. 写入文件
+f.write("窗前明月光，\n")
+f.write("疑是地上霜。\n")
+f.write("举头望明月，\n")
+f.write("低头思故乡。\n")
+
+# 3. 关闭文件
+f.close()</pre>
+
+      <h3>3.4 文件操作中异常的解决方案</h3>
+      <p>如果操作过程出现异常，文件就无法关闭了，怎么解决？</p>
+
+      <h4>方法 1：使用 try-finally</h4>
+      <pre class="code-block"># 1. 打开文件
+f = open("resources/静夜思.txt", "w", encoding="utf-8")
+try:
+    # 2. 写入文件
+    f.write("静夜思(李白)\n")
+    f.write("窗前明月光，\n")
+    f.write("疑是地上霜。\n")
+    f.write("举头望明月，\n")
+    f.write("低头思故乡。\n")
+finally:
+    # 3. 关闭文件
+    f.close()</pre>
+
+      <h4>方法 2：使用 with 语句（最推荐 ⭐）</h4>
+      <pre class="code-block">with open("resources/静夜思.txt", "w", encoding="utf-8") as f:
+    f.write("静夜思(李白)\n")
+    f.write("窗前明月光，\n")
+    f.write("疑是地上霜。\n")
+    f.write("举头望明月，\n")
+    f.write("低头思故乡。\n")</pre>
+
+      <div class="highlight-box">
+        <strong>💡 提示</strong>：with 语句（上下文管理器）的核心作用是确保资源总是被正确获取和释放（即使发生异常也会被正确释放），是项目开发中的推荐方式。
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr><th>with 语句优势</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>自动关闭</td><td>离开 with 代码块时自动关闭文件</td></tr>
+          <tr><td>异常安全</td><td>即使发生异常，文件也会被正确关闭</td></tr>
+          <tr><td>代码简洁</td><td>不需要手动调用 close()</td></tr>
+          <tr><td>资源管理</td><td>避免资源泄漏</td></tr>
+        </tbody>
+      </table>
+
+      <h2>四、读写 JSON 格式文件</h2>
+
+      <p>JSON 是软件开发中最常用的数据交换格式。Python 标准库提供了 <code class="inline">json</code> 模块来处理 JSON 数据。</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr><th>操作</th><th>API</th><th>方向</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>序列化（Serialization）</td><td><code class="inline">json.dump(...)</code></td><td>Python 字典 → JSON 文件</td></tr>
+          <tr><td>反序列化（Deserialization）</td><td><code class="inline">json.load(...)</code></td><td>JSON 文件 → Python 字典</td></tr>
+        </tbody>
+      </table>
+
+      <h3>4.1 写入 JSON 数据（序列化）</h3>
+      <pre class="code-block">import json
+
+obj = &#123;
+    "name": "张三",
+    "age": 18,
+    "gender": "男",
+    "hobbies": ["reading", "swimming"]
+&#125;
+
+with open("resources/session.json", "w", encoding="utf-8") as f:
+    # 序列化：将 Python 对象写入 JSON 文件
+    # ensure_ascii=False: 允许写入中文
+    # indent=2: 格式化缩进，使文件易读
+    json.dump(obj, f, ensure_ascii=False, indent=2)</pre>
+
+      <h3>4.2 读取 JSON 数据（反序列化）</h3>
+      <pre class="code-block">import json
+
+with open("resources/session.json", "r", encoding="utf-8") as f:
+    # 反序列化：从 JSON 文件读取为 Python 对象
+    obj = json.load(f)
+    print(obj)</pre>
+
+      <h2>五、完整代码：聊天机器人</h2>
+
+      <div class="section-box">
+        <strong>🎯 功能</strong>：会话历史侧边栏 + 新建 / 加载 / 删除会话 + 昵称与性格定制 + DeepSeek 流式输出。
+      </div>
+
+      <pre class="code-block">import os
+from logging import exception
+
+from openai import OpenAI
+import streamlit as st
+import json
+from datetime import datetime
+
+from streamlit import session_state
+from tornado.escape import utf8
+
+# 设置页面配置
+st.set_page_config(
+    page_title="AI 聊天机器人",
+    page_icon="🤖",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items=&#123;&#125;
+)
+
+
+# 保存会话
+def save_session():
+    print(st.session_state.current_session)
+    if st.session_state.current_session:
+        # 构建会话对象
+        session_data = &#123;
+            "nickname": st.session_state.nickname,
+            "character": st.session_state.character,
+            "messages": st.session_state.messages,
+            "current_session": st.session_state.current_session
+        &#125;
+        # 如果 sessions 目录不存在，则创建
+        if not os.path.exists("sessions"):
+            os.mkdir("sessions")
+
+        with open(f"sessions/&#123;st.session_state.current_session&#125;.json", "w", encoding="utf-8") as f:
+            json.dump(session_data, f, indent=2, ensure_ascii=False)
+
+
+# 会话命名
+def session_namned():
+    return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+
+# 加载所有会话列表信息
+def load_sessions():
+    session_list = []
+    if os.path.exists('sessions'):
+        file_list = os.listdir("sessions")
+        for file in file_list:
+            if file.endswith('.json'):
+                session_list.append(file[:-5])
+    session_list.sort(reverse=True)
+    return session_list
+
+
+# 加载指定对话信息
+def load_session(session):
+    try:
+        if os.path.exists(f"sessions/&#123;session&#125;.json"):
+            with open(f"sessions/&#123;session&#125;.json", "r", encoding="utf-8") as f:
+                session_data = json.load(f)
+                st.session_state.messages = session_data['messages']
+                st.session_state.nickname = session_data['nickname']
+                st.session_state.character = session_data['character']
+                st.session_state.current_session = session
+    except Exception:
+        st.error('加载会话失败')
+
+
+# 删除会话
+def del_session(session):
+    try:
+        if os.path.exists(f"sessions/&#123;session&#125;.json"):
+            os.remove(f"sessions/&#123;session&#125;.json")
+            # 如果删除的是当前会话，则重置当前会话
+            if st.session_state.current_session == session:
+                st.session_state.messages = []
+                st.session_state.current_session = session_namned()
+    except Exception:
+        st.error('删除会话失败')
+
+
+# 大标题
+st.title("AI 聊天机器人")
+
+# logo
+st.logo("./resources/logo.png")
+
+# 系统提示词
+system_prompt = '''
+你是%s，现在是用户的质量专业顾问。请完全代入助理角色。
+规则：
+1. 每次只回 1 条消息。
+2. 禁止任何场景或状态描述性文字。
+3. 匹配用户的语言（中文）。
+4. 回复简短，像微信聊天一样简洁直接。
+5. 有需要的话可以使用 ❤️、✅、📌 等 emoji 辅助表达。
+6. 用专业、严谨、务实的质量专业口吻对话。
+7. 回复内容必须充分体现质量专业特征，如：
+性格：
+   %s
+你必须严格遵守上述规则来回复用户。
+'''
+
+# 消息输入框
+prompt = st.chat_input("请输入您要问的问题")
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+# 昵称
+if "nickname" not in st.session_state:
+    st.session_state.nickname = '质量专家风'
+
+if "character" not in st.session_state:
+    st.session_state.character = '专业、严谨、务实'
+
+if "current_session" not in st.session_state:
+    st.session_state.current_session = session_namned()
+
+st.text(f"当前会话：&#123;session_state.current_session&#125;")
+
+# 展示聊天信息
+for message in st.session_state.messages:
+    st.chat_message(message["role"]).write(message["content"])
+
+# 创建一个侧边栏 with: streamlit 上下文管理器
+with st.sidebar:
+    st.subheader('AI 控制面板')
+    if st.button("新建会话", icon="✏️", width="stretch"):
+        # 1. 保存当前会话
+        save_session()
+
+        # 2. 创建新建会话
+        if st.session_state.messages:  # 如果聊天信息非空 True，否则 False
+            st.session_state.current_session = session_namned()
+            st.session_state.messages = []
+            save_session()
+            st.rerun()  # 重新运行当前页面
+
+    # 会话历史
+    st.text('历史会话')
+    session_list = load_sessions()
+
+    for session in session_list:
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            # 加载会话信息
+            # 三元运算符：如果条件为真，则返回第一个值，否则返回第二个值
+            # 语法：值 1 if 条件 else 值 2
+            if st.button(session, icon="📄", width="stretch", key=f"load_&#123;session&#125;",
+                         type="primary" if session == st.session_state.current_session else "secondary"):
+                load_session(session)
+                st.rerun()
+        with col2:
+            # 删除会话信息
+            if st.button('', icon="❌️", width="stretch", key=f"delete_&#123;session&#125;"):
+                del_session(session)
+                st.rerun()
+
+    # 分割线
+    st.divider()
+
+    # 信息定制功能
+    st.subheader('机器人信息')
+    # 昵称
+    nick_name = st.text_input("昵称", placeholder="请输入昵称", value=st.session_state.nickname)
+    if nick_name:
+        st.session_state.nickname = nick_name
+    # 性格
+    character = st.text_area("性格", placeholder="请输入性格", value=st.session_state.character)
+    if character:
+        st.session_state.character = character
+
+
+# 创建与 AI 大模型交互的客户端对象
+# DEEPSEEK_API_KEY 环境变量名，值是 DeepSeek 的 API Key（设置后需要重启 PyCharm）
+client = OpenAI(api_key=os.environ.get('DEEPSEEK_API_KEY'), base_url="https://api.deepseek.com")
+
+# 聊天框
+if prompt:  # 字符串转布尔值只看「是否为空」：非空即 True，空则 False
+    st.chat_message("user").write(prompt)
+
+    # 保存用户输入的提示词
+    st.session_state.messages.append(&#123;"role": "user", "content": prompt&#125;)
+
+    # 调用 AI 大模型
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[
+            &#123;"role": "system", "content": system_prompt % (st.session_state.nickname, st.session_state.character)&#125;,
+            * st.session_state.messages
+        ],
+        stream=True
+    )
+
+    # 输出大模型返回的结果（非流式输出的解析方式）
+    # st.chat_message("assistant").write(response.choices[0].message.content)
+
+    # 输出大模型返回的结果（流式输出的解析方式）
+    response_message = st.empty()  # 创建一个空的组件，用于显示大模型返回的提示词
+
+    message = ""
+    for chunk in response:
+        message += chunk.choices[0].delta.content
+        response_message.chat_message("assistant").write(message)
+
+    # 保存大模型返回的提示词（非流式输出的解析方式）
+    # st.session_state.messages.append(&#123;"role": "assistant", "content": response.choices[0].message.content&#125;)
+
+    # 保存大模型返回的提示词（流式输出的解析方式）
+    st.session_state.messages.append(&#123;"role": "assistant", "content": message&#125;)
+
+    # 保存会话信息
+    save_session()</pre>
+
+      <h2>六、关键设计点</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr><th>能力</th><th>实现要点</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>会话持久化</td>
+            <td>每次发完消息把 messages / 昵称 / 性格 序列化到 <code class="inline">sessions/yyyy-MM-dd_HH-mm-ss.json</code></td>
+          </tr>
+          <tr>
+            <td>历史侧边栏</td>
+            <td><code class="inline">os.listdir</code> 读目录 + 倒序排序，按文件名展示按钮</td>
+          </tr>
+          <tr>
+            <td>新建会话</td>
+            <td>先 save 当前 → 重置 messages → 用时间戳生成新 session 名 → <code class="inline">st.rerun()</code></td>
+          </tr>
+          <tr>
+            <td>角色定制</td>
+            <td>system 提示词模板用 <code class="inline">%s</code> 占位昵称和性格，每次请求动态拼接</td>
+          </tr>
+          <tr>
+            <td>流式输出</td>
+            <td><code class="inline">stream=True</code> + <code class="inline">st.empty()</code> 占位，逐 chunk 累加 content 实时刷新</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <strong>📖 一句话总结</strong>
+        <p>Streamlit 的核心心智模型是「<strong>每次交互重跑整个脚本</strong>」，所以会话状态全靠 <code class="inline">st.session_state</code>，跨页面持久化全靠文件 / 数据库。掌握这点 + 流式输出，就能用不到 200 行 Python 写出一个完整的 AI 聊天机器人。</p>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
