@@ -1,0 +1,631 @@
+---
+// 网络机器人（爬虫）入门 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python网络爬虫入门：requests、lxml、XPath、正则表达式与CSV数据存储</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      .flow-chart {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin: 20px 0;
+        font-size: 1.1em;
+        border: 2px dashed #3498db;
+      }
+      .flow-chart span {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 6px;
+        margin: 4px;
+      }
+      .flow-chart .arrow {
+        background: none;
+        color: #3498db;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🕷️ Python网络爬虫入门实战</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-5-22 | 👤 作者：博主 | 🏷️ 标签：Python, 爬虫, requests, lxml, XPath, 正则表达式</p>
+      </div>
+
+      <h2>1. 概述</h2>
+
+      <div class="section-box">
+        <p><strong>网络机器人</strong>（也称为网络爬虫）：是一种按照一定的预设规则，自动浏览并抓取网络数据的程序或脚本。</p>
+      </div>
+
+      <h3>爬虫工作流程</h3>
+
+      <div class="flow-chart">
+        <span>开始</span>
+        <span class="arrow">→</span>
+        <span>发送HTTP请求</span>
+        <span class="arrow">→</span>
+        <span>解析结果提取数据</span>
+        <span class="arrow">→</span>
+        <span>数据处理(清洗)</span>
+        <span class="arrow">→</span>
+        <span>数据存储</span>
+        <span class="arrow">→</span>
+        <span>循环/结束</span>
+      </div>
+
+      <h2>2. robots协议</h2>
+
+      <div class="highlight-box">
+        <p><strong>robots.txt</strong> 是网站根目录下的一个文本文件，用于告知爬虫哪些页面可以抓取、哪些不可以。遵守 robots 协议是爬虫开发的基本道德规范。</p>
+      </div>
+
+      <h3>示例：robots.txt</h3>
+
+      <pre class="code-block"># 通用规则 (针对所有爬虫)
+User-agent: *
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+Sitemap: https://www.tiobe.com/sitemap_index.xml
+Crawl-delay: 5
+
+# 特定规则 (针对豌豆荚爬虫)
+User-agent: Wandoujia Spider
+Disallow: /
+
+# 特定规则 (针对谷歌广告爬虫)
+User-agent: Mediapartners-Google
+Disallow: /subject_search
+Disallow: /amazon_search
+Disallow: /search
+Disallow: /group/search</pre>
+
+      <h3>关键字段说明</h3>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>字段</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>User-Agent</td><td>用户代理，通过该请求头确认爬虫的类型</td></tr>
+          <tr><td>Disallow</td><td>禁止访问的资源路径</td></tr>
+          <tr><td>Allow</td><td>允许访问的资源路径（通常用于覆盖 Disallow）</td></tr>
+          <tr><td>Sitemap</td><td>网站地图，帮助爬虫更高效地获取网站内容</td></tr>
+          <tr><td>Crawl-delay</td><td>爬取间隔时间（秒），避免频繁访问造成网站压力过大</td></tr>
+        </tbody>
+      </table>
+
+      <h2>3. 入门实战</h2>
+
+      <h3>3.1 发送HTTP请求</h3>
+
+      <div class="section-box">
+        <p><strong>步骤：</strong>获取 TIOBE 编程语言排行榜单</p>
+        <ol>
+          <li>查看 TIOBE 网站的 robots.txt 文件，明确资源获取的规则</li>
+          <li>安装 requests 库，用于发送网络请求</li>
+          <li>编写 Python 代码，访问 TIOBE 网站，获取数据</li>
+        </ol>
+      </div>
+
+      <p><strong>安装 requests：</strong></p>
+      <pre class="code-block">pip install requests</pre>
+
+      <div class="highlight-box">
+        <p><strong>Requests 库的作用：</strong>Requests 是 Python 中最流行、最优雅的 HTTP 客户端库，让 Python 代码发送 HTTP 请求变得极其简单。</p>
+      </div>
+
+      <p><strong>基础代码示例：</strong></p>
+      <pre class="code-block">import requests
+
+#1.定义url
+target_url = "https://www.tiobe.com/tiobe-index/"
+
+#2.发送请求，获取数据
+res = requests.get(target_url)
+
+#3.打印数据
+print(res.text)</pre>
+
+      <h3>3.2 解析结果提取数据</h3>
+
+      <div class="section-box">
+        <p><strong>lxml 库：</strong>是一个高性能的 HTML/XML 文档解析库，支持基于 XPath 语法来解析和获取网页数据。</p>
+        <p>安装：<code>pip install lxml</code></p>
+      </div>
+
+      <p><strong>解析HTML示例：</strong></p>
+      <pre class="code-block">from lxml import html
+
+# 加载html文件
+with open("resources/仙逆人物志.html", "r", encoding="utf-8") as f:
+    html_content = f.read()
+
+# 解析网页内容
+doc = html.fromstring(html_content)
+th_list = doc.xpath("//table/thead/tr[1]/th/text()")
+print(th_list)
+
+td_list = doc.xpath("//table/tbody/tr[1]/td/text()")
+print(td_list)</pre>
+
+      <p><strong>遍历表格所有行：</strong></p>
+      <pre class="code-block">from lxml import html
+
+with open("resources/仙逆人物志.html", "r", encoding="utf-8") as f:
+    html_txt = f.read()
+
+    # 解析 html，将其转换成一个文档对象
+    document = html.fromstring(html_txt)
+
+    # 解析表头-xpath语法
+    th_list = document.xpath("//table/thead/tr/th/text()")
+    print(th_list)
+
+    # 解析表格中的所有行-xpath语法
+    tr_list = document.xpath("//table/tbody/tr")
+    for tr in tr_list:
+        td_list = tr.xpath("./td/text()")
+        print(td_list)</pre>
+
+      <h3>3.3 XPath语法速查</h3>
+
+      <div class="highlight-box">
+        <p><strong>XPath：</strong>一种在 HTML/XML 文档中导航或定位元素的查询语言，让你能够准确地定位文档中的特定元素、属性或文本。</p>
+      </div>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>表达式</th>
+            <th>描述</th>
+            <th>样例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>/</td><td>从根节点的直接子元素</td><td>/html/body/div/h1</td></tr>
+          <tr><td>//</td><td>从任意位置选择节点</td><td>//h1</td></tr>
+          <tr><td>.</td><td>当前节点下查找</td><td>./a 与 .//a</td></tr>
+          <tr><td>[n]</td><td>选择第n个元素</td><td>//p[2]</td></tr>
+          <tr><td>[last()]</td><td>选择最后一个元素</td><td>//p[last()]</td></tr>
+          <tr><td>[@attr]</td><td>选择有该属性的元素</td><td>//p[@color]</td></tr>
+          <tr><td>[@attr='value']</td><td>选择属性值等于指定值的元素</td><td>//p[@color='red']</td></tr>
+          <tr><td>*</td><td>匹配任何元素节点</td><td>//body/div/*</td></tr>
+          <tr><td>@*</td><td>匹配元素的任何属性</td><td>//body/div/a/@*</td></tr>
+          <tr><td>text()</td><td>获取文本内容</td><td>//div/p/text()</td></tr>
+        </tbody>
+      </table>
+
+      <h3>XPath 实战解读</h3>
+
+      <div class="section-box">
+        <ul>
+          <li><code>/html/head/title[1]</code> — 从根节点开始，选取 html &gt; head &gt; 第1个 title 元素</li>
+          <li><code>//div/a/text()</code> — 从任意位置选取 div 的直接子元素 a，获取文本内容</li>
+          <li><code>//div/a/@href</code> — 获取 a 标签的 href 属性值（链接地址）</li>
+          <li><code>//div/a[@target='_blank']</code> — 仅选取 target='_blank' 的 a 标签</li>
+          <li><code>//div[2]/p[last()]/text()</code> — 第2个 div 下最后一个 p 的文本内容</li>
+        </ul>
+      </div>
+
+      <p><strong>综合实战：抓取 TIOBE 排行榜数据</strong></p>
+      <pre class="code-block">import os
+import requests
+from lxml import html
+import json
+
+#1.定义url
+target_url = "https://www.tiobe.com/tiobe-index/"
+
+#2.发送请求，获取数据
+res = requests.get(target_url)
+
+#3.解析数据
+html_txt = html.fromstring(res.text)
+
+#获取表头
+table_data = &#123;&#125;
+table_txt = html_txt.xpath("//table[@class='table table-striped table-top20']/thead/tr/th/text()")
+table_data["table_tit"] = table_txt
+
+#获取表内容
+tr_list = html_txt.xpath("//table[@class='table table-striped table-top20']/tbody/tr")
+table_data["table_data"] = [tr.xpath("./td/text()") for tr in tr_list]
+
+if not os.path.exists("robots"):
+    os.mkdir("robots")
+    with open("robots/tiobe.json", "w", encoding="utf-8") as f:
+        json.dump(table_data, f, indent=2, ensure_ascii=False)</pre>
+
+      <h2>4. 数据处理（清洗）— 正则表达式</h2>
+
+      <div class="highlight-box">
+        <p><strong>正则表达式：</strong>定义的是字符串的组成规则，根据规则匹配或者替换文本中符合这个规则的字符串。</p>
+      </div>
+
+      <h3>re 模块三大函数</h3>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>函数</th>
+            <th>作用</th>
+            <th>返回值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>re.match()</td><td>从字符串的<strong>开头</strong>开始匹配</td><td>Match 对象</td></tr>
+          <tr><td>re.search()</td><td>从任意位置开始，搜索<strong>第一个</strong>匹配项</td><td>Match 对象</td></tr>
+          <tr><td>re.findall()</td><td>从任意位置开始，搜索<strong>所有</strong>匹配项</td><td>list</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warning-box">
+        <p><strong>注意：</strong>字符串前的 <code>r</code> 标识表示当前字符串中的转义字符无效，作为普通字符使用。如 <code>r"\d"</code> 表示匹配数字，而非转义。</p>
+      </div>
+
+      <p><strong>基础示例：</strong></p>
+      <pre class="code-block">import re
+
+s = "我的手机号是18809091231你记住了吗？我的另一个手机号是18800001266，QQ号是1779989922你记住了吗？"
+
+result = re.match(r"1[3-9]\d&#123;9&#125;", s)  # match - 从开头匹配 (返回Match对象)
+print(result.group())
+
+result = re.search(r"1[3-9]\d&#123;9&#125;", s)  # search - 搜索第一个匹配项
+print(result.group())
+
+result = re.findall(r"1[3-9]\d&#123;9&#125;", s)  # findall - 搜索所有匹配项 (返回list)
+print(result)</pre>
+
+      <h3>正则表达式语法速查</h3>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>表达式</th>
+            <th>描述</th>
+            <th>表达式</th>
+            <th>描述</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>普通字符</td><td>直接匹配自身</td><td>*</td><td>出现任意次（0次或无数次）</td></tr>
+          <tr><td>.</td><td>匹配任意一个字符（除\n）</td><td>+</td><td>至少出现1次</td></tr>
+          <tr><td>\d</td><td>匹配数字 0-9</td><td>?</td><td>至多出现一次（0次或1次）</td></tr>
+          <tr><td>\D</td><td>匹配非数字</td><td>&#123;m&#125;</td><td>出现m次</td></tr>
+          <tr><td>\w</td><td>匹配单词字符 a-z、A-Z、0-9、_</td><td>&#123;m,&#125;</td><td>至少出现m次</td></tr>
+          <tr><td>\W</td><td>匹配非单词字符</td><td>&#123;m,n&#125;</td><td>出现m到n次</td></tr>
+          <tr><td>[aeiou]</td><td>匹配其中任何单个字符</td><td>|</td><td>或，匹配左右任意一个</td></tr>
+          <tr><td>[^aeiou]</td><td>求反，匹配不在列表中的字符</td><td>()</td><td>分组</td></tr>
+          <tr><td>[0-5]</td><td>表示范围</td><td>^</td><td>匹配字符串开头</td></tr>
+          <tr><td></td><td></td><td>$</td><td>匹配字符串结尾</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>进阶示例：</strong></p>
+      <pre class="code-block">import re
+
+s1 = "18809090000是我的手机号，我的另一个手机号是15500008888，QQ号是1259989092，邮箱为python666@163.com"
+
+# 量词示例
+print(re.findall(r"188.*", s1))       # .* 匹配任意多个字符（贪婪）
+print(re.findall(r"188.?", s1))       # .? 匹配0或1个字符
+print(re.findall(r"188.+", s1))       # .+ 匹配1个或多个字符
+
+# 精确次数
+print(re.findall(r"155\d&#123;6,10&#125;", s1))  # &#123;6,10&#125; 匹配6到10个数字
+print(re.findall(r"155\d&#123;6,&#125;", s1))    # &#123;6,&#125; 匹配6个或更多
+
+# 字符集
+print(re.findall(r"1[38]\d&#123;8&#125;", s1))   # [38] 匹配3或8
+print(re.findall(r"1[^38]\d&#123;8&#125;", s1))  # [^38] 匹配非3非8
+print(re.findall(r"1[3-9]\d&#123;8&#125;", s1))  # [3-9] 匹配3到9
+
+# 锚点
+print(re.findall(r"^1[3-9]\d&#123;9&#125;", s1)) # ^ 匹配开头
+print(re.findall(r"1[3-9]\d&#123;9&#125;$", s1)) # $ 匹配结尾
+
+# 邮箱匹配
+print(re.findall(r"\w+@\w+\.\w+", s1, re.ASCII))  # 匹配邮箱
+
+# 日期提取与分组
+s2 = "现在的时间是2026-02-06 10:05:25"
+print(re.findall(r"\d&#123;4&#125;-\d&#123;2&#125;-\d&#123;2&#125;", s2))          # ['2026-02-06']
+print(re.findall(r"(\d&#123;4&#125;)-(\d&#123;2&#125;)-(\d&#123;2&#125;)", s2))    # [('2026', '02', '06')]</pre>
+
+      <h2>5. 数据存储 — CSV文件</h2>
+
+      <div class="section-box">
+        <p><strong>CSV</strong>（Comma-Separated Values，逗号分隔值）：一种简单、通用的文本文件格式，用于存储表格数据，可以直接使用 Excel 打开。</p>
+      </div>
+
+      <h3>方式一：直接写入（基础方法）</h3>
+      <pre class="code-block">with open("resources/01.csv", "w", encoding="utf-8") as f:
+    f.write("姓名,年龄,性别,爱好\n")
+    f.write("王林,29,男,Python,Java\n")
+    f.write("红蝶,18,女,Java\n")</pre>
+
+      <h3>方式二：使用 csv 模块（推荐 ⭐）</h3>
+      <pre class="code-block">import csv
+
+with open("resources/02.csv", "w", encoding="utf-8", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=["姓名", "年龄", "性别", "爱好"])
+    writer.writeheader()
+    writer.writerow(&#123;"姓名": "王林", "年龄": 29, "性别": "男", "爱好": "Python,Java"&#125;)
+    writer.writerows([&#123;"姓名": "红蝶", "年龄": 18, "性别": "女", "爱好": "Java"&#125;])</pre>
+
+      <div class="success-box">
+        <p>✅ <strong>推荐使用 csv.DictWriter</strong>：自动处理逗号转义、支持字典写入、代码可读性更好。</p>
+      </div>
+
+      <h2>6. 综合案例：爬取高分电影榜单 Top100</h2>
+
+      <div class="highlight-box">
+        <p><strong>目标：</strong>获取 TMDB 高分电影榜单数据，包括电影名、年份、上映时间、类型、时长、评分、语言、作者、主演、Slogan、简介，并保存为 CSV 文件。</p>
+      </div>
+
+      <h3>开发步骤</h3>
+      <ol>
+        <li>明确网站 robots.txt 中的抓取规则</li>
+        <li>获取高分电影列表数据</li>
+        <li>遍历电影列表，获取每部电影的详情信息</li>
+        <li>将电影详情信息保存到 CSV 文件</li>
+      </ol>
+
+      <pre class="code-block">import requests
+import csv
+from lxml import html
+import re
+
+# 常量
+TMDB_BASE_URL = "https://www.themoviedb.org"
+TMDB_TOP_URL1 = "https://www.themoviedb.org/movie/top-rated"
+TMDB_TOP_URL2 = "https://www.themoviedb.org/discover/movie/items"
+
+# 获取电影上映年份
+def get_movie_year(years):
+    year = years[0].strip() if years else ''
+    return year.replace('(', '').replace(')', '')
+
+# 获取电影上映时间
+def get_movie_date(dates):
+    date = dates[0].strip() if dates else ''
+    return re.search(r"(\d&#123;4&#125;-\d&#123;2&#125;-\d&#123;2&#125;)", date).group()
+
+# 获取电影时长（统一转换为分钟：如 2h 20m --&gt; 140）
+def get_movie_minutes(times):
+    time = times[0].strip() if times else 0
+    hours = re.search(r"(\d+)h", time)
+    minutes = re.search(r"(\d+)m", time)
+    h = int(hours.group(1)) if hours else 0
+    m = int(minutes.group(1)) if minutes else 0
+    return h * 60 + m</pre>
+
+      <pre class="code-block"># 获取电影信息
+def get_movie_info(detail_url):
+    detail_res = requests.get(detail_url, timeout=60)
+    detail_txt = html.fromstring(detail_res.text)
+
+    names = detail_txt.xpath('//*[@id="original_header"]/div[2]/section/div[1]/h2/a/text()')
+    years = detail_txt.xpath('//*[@id="original_header"]/div[2]/section/div[1]/h2/span/text()')
+    dates = detail_txt.xpath('//*[@id="original_header"]/div[2]/section/div[1]/div/span[@class="release"]/text()')
+    types = detail_txt.xpath('//*[@id="original_header"]/div[2]/section/div[1]/div/span[@class="genres"]/a/text()')
+    times = detail_txt.xpath('//*[@id="original_header"]/div[2]/section/div[1]/div/span[@class="runtime"]/text()')
+    score = detail_txt.xpath('//*[@id="consensus_pill"]/div/div[1]/div/div/@data-percent')
+    language = detail_txt.xpath('//*[@id="media_v4"]/div/div/div[2]/div/section/div[1]/div/section[1]/p[3]/text()')
+    author = detail_txt.xpath('//*[@id="original_header"]/div[2]/section/div[3]/ol/li[1]/p[1]/a/text()')
+    actors = detail_txt.xpath('//*[@id="cast_scroller"]/ol/li/p[1]/a/text()')
+    slogan = detail_txt.xpath('//*[@id="original_header"]/div[2]/section/div[3]/h3[1]/text()')
+    des = detail_txt.xpath('//*[@id="original_header"]/div[2]/section/div[3]/div/p/text()')
+
+    detail_info = &#123;
+        "电影名": names[0].strip() if names else '',
+        "年份": get_movie_year(years),
+        "上映时间": get_movie_date(dates),
+        "类型": ','.join(types) if types else '',
+        "时长": get_movie_minutes(times),
+        "评分": score[0].strip() if score else '',
+        "语言": language[0].strip() if language else '',
+        "作者": author[0].strip() if author else '',
+        "主演": ','.join(actors) if actors else '',
+        "slogan": slogan[0].strip() if slogan else '',
+        "简介": des[0].strip() if des else ''
+    &#125;
+    print(detail_info)
+    return detail_info</pre>
+
+      <pre class="code-block"># 保存数据
+def save_data(detail_data_list):
+    with open("csv_data/top_movies.csv", "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=[
+            "电影名","年份","类型","上映时间","时长","评分","语言","作者","主演","slogan","简介"
+        ])
+        writer.writeheader()
+        writer.writerows(detail_data_list)
+
+# 主函数
+def main():
+    detail_data_list = []
+
+    for page_num in range(1, 6):
+        # 1.发送请求，获取高分列表
+        if page_num == 1:
+            top_res = requests.get(TMDB_TOP_URL1, timeout=60)
+        else:
+            # 获取更多数据（POST翻页）
+            top_res = requests.post(TMDB_TOP_URL2, f"page=&#123;page_num&#125;&amp;sort_by=vote_average.desc&amp;vote_count.gte=300", timeout=60)
+
+        # 2.解析数据，获取高分列表
+        top_list = html.fromstring(top_res.text).xpath(
+            f'//div[@id="page_&#123;page_num&#125;"]//div[@class="relative w-full"]/a/@href'
+        )
+
+        # 3.遍历高分列表，获取每部电影的详细信息
+        for url in top_list:
+            detail_url = TMDB_BASE_URL + url
+            detail_data_list.append(get_movie_info(detail_url))
+
+    # 4.存储数据到CSV
+    save_data(detail_data_list)
+
+if __name__ == '__main__':
+    main()</pre>
+
+      <div class="warning-box">
+        <p>⚠️ <strong>注意事项：</strong></p>
+        <ul>
+          <li>爬虫开发务必遵守目标网站的 robots.txt 协议</li>
+          <li>设置合理的请求间隔（Crawl-delay），避免对服务器造成压力</li>
+          <li>添加 timeout 参数防止请求无限等待</li>
+          <li>仅用于学习目的，商业使用需获得网站授权</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
