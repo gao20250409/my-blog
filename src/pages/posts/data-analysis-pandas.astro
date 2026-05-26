@@ -1,0 +1,500 @@
+---
+// 数据分析与Pandas入门 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数据分析入门：Pandas DataFrame、数据清洗、排序与分组统计</title>
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📊 数据分析入门：Pandas实战指南</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-5-23 | 👤 作者：博主 | 🏷️ 标签：Python, Pandas, 数据分析, Jupyter Notebook, DataFrame</p>
+      </div>
+
+      <!-- 1. 数据分析介绍 -->
+      <h2>一、什么是数据分析</h2>
+
+      <div class="section-box">
+        <p>从一堆看似杂乱的数据中，通过<strong>数据清洗、分析、可视化</strong>等手段，找出有价值的信息和结论，从而帮我们解决实际问题。</p>
+        <p>典型场景：用户订单数据分析、电影榜单数据分析、学校学生成绩分析等。</p>
+      </div>
+
+      <h3>数据分析流程</h3>
+      <ol>
+        <li>数据收集</li>
+        <li>数据清洗处理</li>
+        <li>数据分析</li>
+        <li>数据可视化</li>
+      </ol>
+
+      <h3>核心工具</h3>
+      <table class="comparison-table">
+        <tr><th>阶段</th><th>工具</th></tr>
+        <tr><td>数据清洗处理 → 数据分析</td><td>Pandas</td></tr>
+        <tr><td>数据可视化</td><td>Matplotlib</td></tr>
+      </table>
+
+      <h3>数据清洗处理内容</h3>
+      <table class="comparison-table">
+        <tr><th>处理项</th><th>说明</th></tr>
+        <tr><td>去除重复数据</td><td>删除重复的记录</td></tr>
+        <tr><td>处理缺失值</td><td>填充或删除空值</td></tr>
+        <tr><td>处理异常值</td><td>识别并处理异常数据</td></tr>
+        <tr><td>一致性检查</td><td>确保数据格式统一</td></tr>
+      </table>
+
+      <!-- 2. Jupyter Notebook -->
+      <h2>二、Jupyter Notebook</h2>
+
+      <div class="section-box">
+        <p>Jupyter Notebook 是一个基于 Web 的交互式编程笔记本，可以把代码、运行结果、图表和笔记全部放在一个文件里，广泛用于数据分析、机器学习、教学和科研等领域。</p>
+      </div>
+
+      <div class="highlight-box">
+        <p><strong>常用快捷键：</strong></p>
+        <ul>
+          <li><code>Ctrl + Enter</code> — 运行当前代码块</li>
+          <li><code>Shift + Enter</code> — 运行并新建代码块</li>
+        </ul>
+      </div>
+
+      <!-- 3. Pandas -->
+      <h2>三、Pandas 核心概念</h2>
+
+      <p>Pandas 是一个功能强大的结构化数据分析工具集，底层基于 NumPy 构建，在数据分析和大数据开发场景中都有显著优势。</p>
+      <p>🔗 官网：<a href="https://pandas.pydata.org" target="_blank">https://pandas.pydata.org</a></p>
+
+      <div class="highlight-box">
+        <p><strong>核心数据结构：</strong></p>
+        <ul>
+          <li><strong>DataFrame</strong> — 类似表格（Excel），有行有列</li>
+          <li><strong>Series</strong> — 类似表格中的一列</li>
+        </ul>
+      </div>
+
+      <h3>1）Pandas 初体验</h3>
+
+      <p>安装命令：</p>
+      <pre class="code-block">pip install pandas==2.3.3  # 不装3，跟streamlit冲突</pre>
+
+      <pre class="code-block">import pandas as pd
+
+df1 = pd.DataFrame([
+    &#123;'姓名': '张三', '语文': 85, '数学': 92, '英语': 78&#125;,
+    &#123;'姓名': '李四', '语文': 78, '数学': 88, '英语': 95&#125;,
+    &#123;'姓名': '王五', '语文': 92, '数学': 96, '英语': 89&#125;,
+    &#123;'姓名': '赵六', '语文': 85, '数学': 90, '英语': 90&#125;,
+    &#123;'姓名': '孙七', '语文': 72, '数学': 59, '英语': 66&#125;,
+    &#123;'姓名': '周八', '语文': 80, '数学': 76, '英语': 68&#125;,
+    &#123;'姓名': '吴九', '语文': 85, '数学': 85, '英语': 85&#125;,
+    &#123;'姓名': '郑十', '语文': 57, '数学': 68, '英语': 49&#125;
+])
+
+print(f"最高分：&#123;df1['语文'].max()&#125;, 最低分：&#123;df1['语文'].min()&#125;, 平均分：&#123;df1['语文'].mean()&#125;")
+print(f"最高分：&#123;df1['数学'].max()&#125;, 最低分：&#123;df1['数学'].min()&#125;, 平均分：&#123;df1['数学'].mean()&#125;")
+print(f"最高分：&#123;df1['英语'].max()&#125;, 最低分：&#123;df1['英语'].min()&#125;, 平均分：&#123;df1['英语'].mean()&#125;")</pre>
+
+      <h3>DataFrame 构建方式</h3>
+
+      <pre class="code-block"># 方式一：字典列表（List of Dictionaries）
+df1 = pd.DataFrame([
+    &#123;'姓名': '张三', '语文': 85, '数学': 92, '英语': 78&#125;,
+    &#123;'姓名': '李四', '语文': 78, '数学': 88, '英语': 95&#125;,
+    &#123;'姓名': '王五', '语文': 92, '数学': 96, '英语': 89&#125;
+])
+
+# 方式二：字典，值为列表（Dictionary of Lists）
+df2 = pd.DataFrame(&#123;
+    '姓名': ['张三', '李四', '王五'],
+    '语文': [85, 78, 92],
+    '数学': [92, 88, 96],
+    '英语': [78, 95, 89]
+&#125;)
+
+# 方式三：元组列表 + 指定列名
+df3 = pd.DataFrame([
+    ('张三', 85, 92, 78),
+    ('李四', 78, 88, 95),
+    ('王五', 92, 96, 89)
+], columns=['姓名', '语文', '数学', '英语'])
+
+# 方式四：列表的列表 + 指定列名和索引
+df4 = pd.DataFrame([
+    ['张三', 85, 92, 78],
+    ['李四', 78, 88, 95],
+    ['王五', 92, 96, 89]
+], columns=['姓名', '语文', '数学', '英语'], index=['a', 'b', 'c'])</pre>
+
+      <h3>DataFrame 基本属性</h3>
+
+      <table class="comparison-table">
+        <tr><th>属性</th><th>说明</th></tr>
+        <tr><td>df.index</td><td>行索引</td></tr>
+        <tr><td>df.columns</td><td>列索引</td></tr>
+        <tr><td>df.values</td><td>数据值</td></tr>
+        <tr><td>df.dtypes</td><td>获取每一列类型</td></tr>
+        <tr><td>df.size</td><td>获取单元格数量</td></tr>
+        <tr><td>df.shape</td><td>获取数据维度 (行数, 列数)</td></tr>
+      </table>
+
+      <pre class="code-block"># DataFrame 常见属性
+df4.index.tolist()      # 索引
+df4.columns.tolist()    # 列名
+df4.values.tolist()     # 值
+df4.size                # 元素个数
+df4.dtypes              # 数据类型
+df4.shape               # 维度(行, 列)</pre>
+
+      <h3>Series 构建方式</h3>
+
+      <pre class="code-block"># 1. 从列表创建
+s = pd.Series([10, 20, 30, 40, 50])
+
+# 2. 从元组创建，并指定索引
+s = pd.Series((10, 20, 30, 40, 50), index=['a', 'b', 'c', 'd', 'e'])
+
+# 3. 从字典创建
+s = pd.Series(&#123;'a': 10, 'b': 20, 'c': 30, 'd': 40, 'e': 50&#125;)
+
+# 4. 从 DataFrame 中提取单列
+s = df1['语文']</pre>
+
+      <h3>Series 属性</h3>
+
+      <table class="comparison-table">
+        <tr><th>属性</th><th>说明</th></tr>
+        <tr><td>s.index</td><td>获取索引</td></tr>
+        <tr><td>s.values</td><td>获取值</td></tr>
+        <tr><td>s.dtype</td><td>获取数据类型</td></tr>
+        <tr><td>s.size</td><td>获取数据个数</td></tr>
+        <tr><td>s.shape</td><td>获取数据维度</td></tr>
+      </table>
+
+      <!-- 数据读取与写入 -->
+      <h3>2）数据读取与写入</h3>
+
+      <pre class="code-block">import pandas as pd
+
+# 读取CSV文件
+df = pd.read_csv('data/sales.csv', usecols=['订单号', '产品类别', '产品名称', '销售数量', '单价'])
+
+# 添加新列
+df['销售金额'] = df['销售数量'] * df['单价']
+
+# 写入数据（index=False: 不写入索引列）
+df.to_csv('data/sales_01.csv', index=False)</pre>
+
+      <div class="highlight-box">
+        <p><strong>读写方法总结：</strong></p>
+        <ul>
+          <li>读取：<code>read_csv</code>、<code>read_excel</code></li>
+          <li>写入：<code>to_csv</code>、<code>to_excel</code></li>
+        </ul>
+        <p>⚠️ 读取 Excel 文件第一次可能报错，根据提示安装对应包即可。</p>
+      </div>
+
+      <!-- 数据查看、选择、过滤 -->
+      <h3>3）数据查看、选择、过滤</h3>
+
+      <h4>数据查看方法</h4>
+      <table class="comparison-table">
+        <tr><th>方法/属性</th><th>说明</th></tr>
+        <tr><td>df.head(n)</td><td>查看前 n 行数据</td></tr>
+        <tr><td>df.tail(n)</td><td>查看结尾 n 行数据</td></tr>
+        <tr><td>df.describe()</td><td>数值列的统计描述</td></tr>
+        <tr><td>df.info()</td><td>查看数据信息（列名、非空计数、数据类型）</td></tr>
+        <tr><td>df.shape</td><td>查看数据维度（行数，列数）</td></tr>
+        <tr><td>df.columns</td><td>查看列名</td></tr>
+      </table>
+
+      <h4>数据过滤（条件筛选）</h4>
+      <table class="comparison-table">
+        <tr><th>类型</th><th>说明</th><th>代码示例</th></tr>
+        <tr><td>单条件比较</td><td>比较运算</td><td>df[df['销售数量'] &gt;= 10]</td></tr>
+        <tr><td>单条件包含</td><td>isin</td><td>df[df['产品类别'].isin(['服装', '食品'])]</td></tr>
+        <tr><td>单条件区间</td><td>between</td><td>df[df['单价'].between(50, 200)]</td></tr>
+        <tr><td>多条件</td><td>&amp; (并且)、| (或)</td><td>df[(条件1) &amp; (条件2)]</td></tr>
+      </table>
+
+      <h4>数据选择（列操作与切片）</h4>
+      <table class="comparison-table">
+        <tr><th>方法</th><th>说明</th></tr>
+        <tr><td>df['列名'] / df.列名</td><td>操作单列</td></tr>
+        <tr><td>df[['列1', '列2']]</td><td>操作多列</td></tr>
+        <tr><td>df.iloc[start:stop:step]</td><td>基于行号切片（不含stop）</td></tr>
+        <tr><td>df.loc[start:stop:step]</td><td>基于索引标签切片（含stop）</td></tr>
+      </table>
+
+      <pre class="code-block"># 数据选择示例
+df2 = pd.read_csv('data/sales.csv', usecols=['订单号', '产品类别', '产品名称', '销售数量', '单价'], index_col='订单号')
+
+# 选择单列
+df2['产品名称']
+
+# 选择多列
+df2[['产品名称', '单价']]
+
+# iloc: 基于行号（不包含结束位置）
+df2.iloc[0:5]
+
+# loc: 基于行索引（包含结束位置）
+df2.loc[6805677496:5888085066:2]
+
+# 数据过滤
+df3[df3['销售数量'] &gt;= 10]
+df3[df3['产品类别'].isin(['食品', '图书'])]
+df3[df3['单价'].between(79, 199)]
+df3[(df3['销售数量'] &gt;= 8) &amp; (df3['单价'] &gt;= 100)]</pre>
+
+      <!-- 数据清洗 -->
+      <h3>4）数据清洗</h3>
+
+      <div class="section-box">
+        <p>数据清洗是指发现并纠正数据中可识别的错误的过程，包括处理缺失值、重复值、异常值，统一数据格式，保证数据的一致性。</p>
+      </div>
+
+      <table class="comparison-table">
+        <tr><th>问题类型</th><th>说明</th><th>示例</th></tr>
+        <tr><td>重复值</td><td>订单号重复</td><td>5888085059</td></tr>
+        <tr><td>缺失值</td><td>客户所在城市为空值</td><td>NaN</td></tr>
+        <tr><td>异常值</td><td>单价为负数（不合理）</td><td>-29</td></tr>
+        <tr><td>异常格式</td><td>日期格式不统一</td><td>2025/06/02 vs 2025-06-02</td></tr>
+      </table>
+
+      <pre class="code-block">import pandas as pd
+
+pd.set_option('display.max_rows', None)
+pd.set_option('display.min_rows', 30)
+
+df = pd.read_csv('data/sales.csv')
+
+# ===== 缺失值处理 =====
+df.isnull()              # 查看缺失值
+df.dropna()              # 删除缺失值所在行
+df.dropna(axis=1)        # 删除缺失值所在列
+df.fillna('---')         # 填充缺失值
+df.ffill()               # 用上一行数据填充
+df.bfill()               # 用下一行数据填充
+
+# ===== 重复值处理 =====
+df.duplicated()                        # 查看重复值（所有列）
+df.duplicated(subset=['订单号'])        # 查看重复值（指定列）
+df.drop_duplicates(subset=['订单号'])   # 删除重复值
+# keep='last' 保留最后一行; keep='first' 保留第一行; keep=False 全删
+
+# ===== 异常值处理 =====
+df[df['单价'] &lt; 0]                     # 查看异常值
+df.drop(df[df['单价'] &lt; 0].index)      # 删除异常值
+df['单价'] = df['单价'].abs()           # 修复异常值（取绝对值）
+
+# ===== 数据格式处理 =====
+df['订单日期'] = df['订单日期'].str.replace('/', '-')</pre>
+
+      <h4>数据清洗总结</h4>
+      <table class="comparison-table">
+        <tr><th>数据问题</th><th>解决方法</th></tr>
+        <tr><td>缺失值</td><td>isnull() 检测 → dropna() 删除 或 fillna()/ffill()/bfill() 填充</td></tr>
+        <tr><td>重复值</td><td>duplicated() 检测 → drop_duplicates() 删除</td></tr>
+        <tr><td>异常值</td><td>条件筛选 → abs() 修复 或 drop() 删除</td></tr>
+        <tr><td>格式不统一</td><td>str.replace() 替换统一格式</td></tr>
+      </table>
+
+      <!-- 数据排序与分组 -->
+      <h3>5）数据排序与分组</h3>
+
+      <h4>排序</h4>
+
+      <pre class="code-block">import pandas as pd
+
+df = pd.read_csv('data/sales.csv', nrows=10)
+
+# 降序排列
+df.sort_values('销售数量', ascending=False)
+
+# 升序排列
+df.sort_values('销售数量', ascending=True)
+
+# 多列排序：先按单价升序，单价相同再按销售数量降序
+df.sort_values(['单价', '销售数量'], ascending=[True, False])</pre>
+
+      <div class="highlight-box">
+        <p><strong>多列排序说明：</strong>先按第一列排序，第一列值相同时，才按第二列排序。</p>
+      </div>
+
+      <h4>分组统计</h4>
+
+      <table class="comparison-table">
+        <tr><th>统计操作</th><th>代码示例</th></tr>
+        <tr><td>分组后求和</td><td>df.groupby('产品类别')['销售额'].sum()</td></tr>
+        <tr><td>分组后统计数量</td><td>df.groupby('产品类别')['销售额'].count()</td></tr>
+        <tr><td>分组后求最大值</td><td>df.groupby('产品类别')['销售额'].max()</td></tr>
+        <tr><td>分组后求最小值</td><td>df.groupby('产品类别')['销售额'].min()</td></tr>
+        <tr><td>分组后求平均值</td><td>df.groupby('产品类别')['销售额'].mean()</td></tr>
+        <tr><td>多重聚合 (agg)</td><td>df.groupby('产品类别')['销售额'].agg(['sum', 'count', 'max', 'min', 'mean'])</td></tr>
+      </table>
+
+      <pre class="code-block">import pandas as pd
+
+df = pd.read_csv('data/sales.csv', nrows=20)
+df['销售额'] = df['销售数量'] * df['单价']
+
+# 按产品类别分组，统计订单数量
+df.groupby('产品类别')['销售数量'].count()
+
+# 按产品类别分组，统计销售数量之和
+df.groupby('产品类别')['销售数量'].sum()
+
+# 按产品类别分组，统计销售金额之和
+df.groupby('产品类别')['销售额'].sum()
+
+# 按产品类别分组，统计平均单价、最高单价、最低单价
+df.groupby('产品类别')['单价'].agg(['min', 'max', 'mean'])
+
+# 多列多聚合
+df.groupby('产品类别').agg(&#123;'单价': ['min', 'max', 'mean']&#125;)
+
+# 按产品类别分组，统计销售数量之和、销售金额之和、平均单价
+df.groupby('产品类别').agg(&#123;'销售数量': 'sum', '销售额': 'sum', '单价': 'mean'&#125;)</pre>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

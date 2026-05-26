@@ -11,6 +11,14 @@ interface PostData {
 
 const posts: PostData[] = [
   {
+    title: "数据分析入门：Pandas DataFrame、数据清洗、排序与分组统计",
+    description:
+      "系统梳理数据分析基础：Jupyter Notebook使用、Pandas核心数据结构DataFrame与Series、数据读写、查看过滤、缺失值/重复值/异常值清洗、排序与groupby分组统计。",
+    url: "./posts/data-analysis-pandas",
+    date: "2026-5-23",
+    tags: ["Python", "Pandas", "数据分析", "Jupyter Notebook", "DataFrame", "Web开发", "前端"],
+  },
+  {
     title: "Python网络爬虫入门：requests、lxml、XPath与正则表达式",
     description:
       "系统梳理网络爬虫基础：robots协议、requests发送HTTP请求、lxml解析HTML、XPath语法速查、正则表达式数据清洗、CSV数据存储，附TMDB高分电影爬取完整案例。",
@@ -943,188 +951,57 @@ const filterTags = ['全部', ...topTags];
         font-size: 0.8em;
       }
       
-      /* 分页样式 - 现代玻璃态增强版 */
-      .pagination {
+      /* 按需加载 - 哨兵 / 状态条 */
+      .load-sentinel {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px;
-        margin: 60px 0 30px;
-        flex-wrap: wrap;
-        padding: 20px 24px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-        position: relative;
-        overflow: hidden;
-      }
-      .pagination::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(168, 181, 255, 0.5), rgba(224, 195, 252, 0.5), transparent);
-      }
-      .pagination button {
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        padding: 0;
-        height: 44px;
-        min-width: 44px;
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 15px;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-family: inherit;
-      }
-      .pagination button::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: linear-gradient(135deg, rgba(168, 181, 255, 0.3), rgba(224, 195, 252, 0.2));
-        opacity: 0;
-        transform: scale(0.8);
-        transition: all 0.3s ease;
-        z-index: 0;
-      }
-      .pagination button span {
-        position: relative;
-        z-index: 1;
-      }
-      .pagination button:hover:not(:disabled)::before {
-        opacity: 1;
-        transform: scale(1);
-      }
-      .pagination button:hover:not(:disabled) {
-        color: #fff;
-        transform: translateY(-3px) scale(1.02);
-        border-color: rgba(168, 181, 255, 0.4);
-        box-shadow: 0 8px 20px rgba(168, 181, 255, 0.25);
-      }
-      .pagination button:active:not(:disabled) {
-        transform: translateY(-1px) scale(0.98);
-        transition-duration: 0.1s;
-      }
-      .pagination button:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-        transform: none;
-        background: transparent;
-      }
-      .pagination button.active {
-        background: linear-gradient(135deg, #a8b5ff, #e0c3fc);
-        border-color: transparent;
-        font-weight: 700;
-        color: #2c3e50;
-        box-shadow:
-          0 8px 24px rgba(168, 181, 255, 0.5),
-          0 4px 12px rgba(224, 195, 252, 0.35),
-          inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        transform: translateY(-2px) scale(1.08);
-        text-shadow: none;
-      }
-      .pagination button.active::before {
-        display: none;
-      }
-      .pagination button.active::after {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        border-radius: inherit;
-        background: linear-gradient(135deg, rgba(168, 181, 255, 0.6), rgba(224, 195, 252, 0.4));
-        z-index: -1;
-        filter: blur(8px);
-        opacity: 0.6;
-      }
-      .pagination .page-dots {
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 16px;
-        padding: 0 6px;
-        letter-spacing: 3px;
-        user-select: none;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        height: 44px;
-      }
-      .pagination .page-info {
+        gap: 12px;
+        margin: 40px 0 20px;
+        padding: 18px 24px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
         color: rgba(255, 255, 255, 0.85);
         font-size: 14px;
-        margin-left: 16px;
-        padding: 0 18px;
-        height: 36px;
-        display: inline-flex;
-        align-items: center;
-        background: linear-gradient(135deg, rgba(168, 181, 255, 0.12), rgba(224, 195, 252, 0.08));
-        border-radius: 18px;
-        border: 1px solid rgba(168, 181, 255, 0.2);
-        white-space: nowrap;
         font-weight: 600;
         letter-spacing: 0.5px;
-        box-shadow: 0 2px 8px rgba(168, 181, 255, 0.1);
       }
-      .pagination .btn-prev,
-      .pagination .btn-next {
-        padding: 0 20px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        gap: 6px;
-        min-width: auto;
+      .load-spinner {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid rgba(168, 181, 255, 0.25);
+        border-top-color: #a8b5ff;
+        animation: loadSpin 0.8s linear infinite;
       }
-      .pagination .btn-prev:hover:not(:disabled),
-      .pagination .btn-next:hover:not(:disabled) {
-        color: #e0c3fc;
-        background: linear-gradient(135deg, rgba(168, 181, 255, 0.15), rgba(224, 195, 252, 0.1));
+      @keyframes loadSpin {
+        to { transform: rotate(360deg); }
       }
-      .pagination .btn-prev span,
-      .pagination .btn-next span {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
+      .load-end {
+        text-align: center;
+        margin: 40px 0 16px;
+        padding: 14px 0;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 13px;
+        letter-spacing: 2px;
+        user-select: none;
+      }
+      .load-end::before,
+      .load-end::after {
+        content: '·····';
+        margin: 0 12px;
+        opacity: 0.5;
       }
       @media (max-width: 640px) {
-        .pagination {
-          gap: 6px;
-          margin: 40px 0 16px;
-          padding: 16px;
-          border-radius: 16px;
-        }
-        .pagination button {
-          height: 40px;
-          min-width: 40px;
-          font-size: 14px;
-          border-radius: 10px;
-        }
-        .pagination button.active {
-          transform: translateY(-2px) scale(1.05);
-        }
-        .pagination .btn-prev,
-        .pagination .btn-next {
-          padding: 0 14px;
+        .load-sentinel {
+          margin: 28px 0 12px;
+          padding: 14px 18px;
           font-size: 13px;
         }
-        .pagination .page-info {
-          width: 100%;
-          justify-content: center;
-          margin: 12px 0 0;
-          font-size: 13px;
-        }
-        .pagination .page-dots {
-          height: 40px;
-          font-size: 14px;
+        .load-end {
+          margin: 28px 0 12px;
         }
       }
 
@@ -1320,37 +1197,48 @@ const filterTags = ['全部', ...topTags];
           ))
         }
         
-        <!-- 分页控件 -->
-        <div class="pagination" id="pagination"></div>
+        <!-- 按需加载 哨兵 / 结束提示 -->
+        <div class="load-sentinel" id="loadSentinel" style="display: none;">
+          <span class="load-spinner" aria-hidden="true"></span>
+          <span>加载中...</span>
+        </div>
+        <div class="load-end" id="loadEnd" style="display: none;">已经到底啦</div>
       </div>
     </div>
 
     <script define:vars={{ posts }}>
-      // 分页配置
-      const POSTS_PER_PAGE = 10;
-      let currentPage = 1;
+      // 按需加载配置
+      const BATCH_SIZE = 10;
       let isSearching = false;
       let activeFilterTag = null;
-      
+
+      // 当前过滤后的文章列表（顺序与展示顺序一致）
+      let filteredPosts = [];
+      // 当前已展示的数量
+      let visibleCount = 0;
+      // 防止 IO 回调期间重复触发
+      let isLoading = false;
+
       // DOM 元素
       const searchInput = document.getElementById('searchInput');
       const searchStats = document.getElementById('searchStats');
       const noResults = document.getElementById('noResults');
       const postCards = document.querySelectorAll('.post-card');
-      const paginationContainer = document.getElementById('pagination');
+      const loadSentinel = document.getElementById('loadSentinel');
+      const loadEnd = document.getElementById('loadEnd');
       const tagFilterList = document.getElementById('tagFilterList');
       const clearFilterBtn = document.getElementById('clearFilterBtn');
       const activeFilterInfo = document.getElementById('activeFilterInfo');
       const activeTagName = document.getElementById('activeTagName');
       const filterResultCount = document.getElementById('filterResultCount');
-      
+
       // 搜索功能的文章数据
       const searchPosts = posts.map(post => ({
         ...post,
         element: null,
         _searchVisible: true
       }));
-      
+
       // 初始化：将DOM元素与数据关联
       postCards.forEach((card, index) => {
         searchPosts[index].element = card;
@@ -1415,63 +1303,53 @@ const filterTags = ['全部', ...topTags];
       function filterByTag(tag) {
         activeFilterTag = tag;
         isSearching = true;
-        currentPage = 1;
-        
+
         // 清空搜索框
         if (searchInput) searchInput.value = '';
-        
+
         // 更新标签按钮状态
         setActiveTag(tag);
-        
+
         // 显示清除按钮和筛选信息
         if (clearFilterBtn) clearFilterBtn.classList.remove('hidden');
         if (activeFilterInfo) activeFilterInfo.classList.add('show');
         if (activeTagName) activeTagName.textContent = tag;
-        
+
         // 按标签精确匹配筛选文章
         const visiblePosts = [];
         searchPosts.forEach(post => {
           const match = post.tags.includes(tag);
           post._searchVisible = match;
           if (match) visiblePosts.push(post);
-          if (post.element) post.element.style.display = 'none';
         });
-        
-        // 分页显示
-        const start = 0;
-        const end = POSTS_PER_PAGE;
-        visiblePosts.forEach((post, index) => {
-          if (post.element) {
-            post.element.style.display = (index >= start && index < end) ? 'block' : 'none';
-          }
-        });
-        
+
         // 更新统计
         if (filterResultCount) filterResultCount.textContent = visiblePosts.length;
         if (searchStats) searchStats.textContent = `「${tag}」标签下共 ${visiblePosts.length} 篇文章`;
         if (noResults) noResults.style.display = visiblePosts.length === 0 ? 'block' : 'none';
-        
-        renderPagination(visiblePosts.length);
+
+        // 重置并触发首批按需加载
+        resetAndLoad(visiblePosts);
       }
-      
+
       // 清除标签筛选
       function clearTagFilter() {
         activeFilterTag = null;
         isSearching = false;
-        currentPage = 1;
-        
+
         // 重置标签按钮状态，高亮"全部"
         setActiveTag('全部');
-        
+
         // 隐藏清除按钮和筛选信息
         if (clearFilterBtn) clearFilterBtn.classList.add('hidden');
         if (activeFilterInfo) activeFilterInfo.classList.remove('show');
-        
+
         // 恢复所有文章
         searchPosts.forEach(post => { post._searchVisible = true; });
         if (noResults) noResults.style.display = 'none';
-        
-        showPage(1);
+        if (searchStats) searchStats.textContent = `共 ${searchPosts.length} 篇文章`;
+
+        resetAndLoad(searchPosts.slice());
       }
       
       // 绑定清除按钮
@@ -1479,134 +1357,60 @@ const filterTags = ['全部', ...topTags];
         clearFilterBtn.addEventListener('click', clearTagFilter);
       }
       
-      // ========== 分页功能 ==========
-      
-      // 计算总页数
-      function getTotalPages(count) {
-        return Math.ceil(count / POSTS_PER_PAGE);
+      // ========== 按需加载功能 ==========
+
+      // 隐藏所有文章卡片
+      function hideAllPosts() {
+        searchPosts.forEach(post => {
+          if (post.element) post.element.style.display = 'none';
+        });
       }
-      
-      // 渲染分页控件
-      function renderPagination(totalItems) {
-        if (!paginationContainer) return;
-        const totalPages = getTotalPages(totalItems);
-        
-        if (totalPages <= 1) {
-          paginationContainer.innerHTML = '';
+
+      // 重置并以新的过滤列表加载首批
+      function resetAndLoad(list) {
+        filteredPosts = list;
+        visibleCount = 0;
+        hideAllPosts();
+        if (loadEnd) loadEnd.style.display = 'none';
+        if (loadSentinel) loadSentinel.style.display = 'none';
+        loadMore();
+      }
+
+      // 加载下一批
+      function loadMore() {
+        if (isLoading) return;
+        if (visibleCount >= filteredPosts.length) {
+          if (loadSentinel) loadSentinel.style.display = 'none';
+          if (loadEnd) loadEnd.style.display = filteredPosts.length > 0 ? 'block' : 'none';
           return;
         }
-        
-        let html = '';
-        
-        // 上一页按钮 - 使用SVG图标
-        html += `<button class="btn-prev" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
-          <span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-            上一页
-          </span>
-        </button>`;
-        
-        // 页码按钮
-        const maxVisible = 5;
-        let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-        
-        if (endPage - startPage < maxVisible - 1) {
-          startPage = Math.max(1, endPage - maxVisible + 1);
+
+        isLoading = true;
+        const next = Math.min(visibleCount + BATCH_SIZE, filteredPosts.length);
+        for (let i = visibleCount; i < next; i++) {
+          const el = filteredPosts[i] && filteredPosts[i].element;
+          if (el) el.style.display = 'block';
         }
-        
-        if (startPage > 1) {
-          html += `<button onclick="goToPage(1)"><span>1</span></button>`;
-          if (startPage > 2) html += `<span class="page-dots">···</span>`;
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-          html += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'active' : ''}"><span>${i}</span></button>`;
-        }
-        
-        if (endPage < totalPages) {
-          if (endPage < totalPages - 1) html += `<span class="page-dots">···</span>`;
-          html += `<button onclick="goToPage(${totalPages})"><span>${totalPages}</span></button>`;
-        }
-        
-        // 下一页按钮 - 使用SVG图标
-        html += `<button class="btn-next" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
-          <span>
-            下一页
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px;">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </span>
-        </button>`;
-        
-        // 页码信息 - 使用更丰富的展示
-        html += `<span class="page-info">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; opacity: 0.7;">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-          第 ${currentPage} / ${totalPages} 页
-        </span>`;
-        
-        paginationContainer.innerHTML = html;
-      }
-      
-      // 显示当前页的文章
-      function showPage(page) {
-        currentPage = page;
-        const start = (page - 1) * POSTS_PER_PAGE;
-        const end = start + POSTS_PER_PAGE;
-        
-        searchPosts.forEach((post, index) => {
-          if (post.element) {
-            if (index >= start && index < end) {
-              post.element.style.display = 'block';
-            } else {
-              post.element.style.display = 'none';
-            }
-          }
-        });
-        
-        renderPagination(searchPosts.length);
-        
-        if (searchStats) {
-          searchStats.textContent = `共 ${searchPosts.length} 篇文章`;
-        }
-      }
-      
-      // 跳转到指定页
-      window.goToPage = function(page) {
-        const visiblePosts = searchPosts.filter(p => p._searchVisible);
-        const totalPages = getTotalPages(visiblePosts.length);
-        if (page < 1 || page > totalPages) return;
-        
-        currentPage = page;
-        
-        if (isSearching || activeFilterTag) {
-          const start = (page - 1) * POSTS_PER_PAGE;
-          const end = start + POSTS_PER_PAGE;
-          
-          // 先隐藏所有
-          searchPosts.forEach(post => {
-            if (post.element) post.element.style.display = 'none';
-          });
-          
-          visiblePosts.forEach((post, index) => {
-            if (post.element) {
-              post.element.style.display = (index >= start && index < end) ? 'block' : 'none';
-            }
-          });
-          
-          renderPagination(visiblePosts.length);
+        visibleCount = next;
+
+        // 决定哨兵 / 结束提示展示
+        if (visibleCount < filteredPosts.length) {
+          if (loadSentinel) loadSentinel.style.display = 'flex';
+          if (loadEnd) loadEnd.style.display = 'none';
         } else {
-          showPage(page);
+          if (loadSentinel) loadSentinel.style.display = 'none';
+          if (loadEnd) loadEnd.style.display = filteredPosts.length > 0 ? 'block' : 'none';
         }
-        
-        // 滚动到顶部
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
+        isLoading = false;
+      }
+
+      // 监听哨兵元素，进入视口即加载下一批
+      const io = ('IntersectionObserver' in window) ? new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) loadMore();
+        });
+      }, { rootMargin: '200px 0px' }) : null;
+      if (io && loadSentinel) io.observe(loadSentinel);
       
       // ========== 搜索功能 ==========
       
@@ -1628,9 +1432,9 @@ const filterTags = ['全部', ...topTags];
       // 搜索函数
       function performSearch(searchTerm) {
         const term = searchTerm.toLowerCase().trim();
-        
+
         if (!term) {
-          // 清空搜索，恢复分页模式
+          // 清空搜索，恢复全量按需加载
           isSearching = false;
           activeFilterTag = null;
           searchPosts.forEach(post => { post._searchVisible = true; });
@@ -1640,42 +1444,41 @@ const filterTags = ['全部', ...topTags];
           setActiveTag('全部');
           if (clearFilterBtn) clearFilterBtn.classList.add('hidden');
           if (activeFilterInfo) activeFilterInfo.classList.remove('show');
-          currentPage = 1;
-          showPage(1);
           if (noResults) noResults.style.display = 'none';
+          if (searchStats) searchStats.textContent = `共 ${searchPosts.length} 篇文章`;
+          resetAndLoad(searchPosts.slice());
           return;
         }
-        
+
         // 清除标签筛选状态：搜索时取消所有高亮
         activeFilterTag = null;
         if (tagFilterList) tagFilterList.querySelectorAll('.filter-tag').forEach(el => el.classList.remove('active'));
         if (clearFilterBtn) clearFilterBtn.classList.add('hidden');
         if (activeFilterInfo) activeFilterInfo.classList.remove('show');
-        
+
         isSearching = true;
-        currentPage = 1;
-        let visibleCount = 0;
+        let matchCount = 0;
         const visiblePosts = [];
-        
+
         searchPosts.forEach(post => {
           const element = post.element;
           if (!element) return;
-          
+
           removeHighlight(element);
-          
+
           const titleMatch = post.title.toLowerCase().includes(term);
           const descMatch = post.description.toLowerCase().includes(term);
           const tagMatch = post.tags.some(tag => tag.toLowerCase().includes(term));
-          
+
           if (titleMatch || descMatch || tagMatch) {
             post._searchVisible = true;
             visiblePosts.push(post);
-            visibleCount++;
-            
+            matchCount++;
+
             const titleElement = element.querySelector('.post-title a');
             const descElement = element.querySelector('.post-description');
             const tagElements = element.querySelectorAll('.tag');
-            
+
             if (titleMatch && titleElement) {
               titleElement.innerHTML = highlightText(post.title, term);
             }
@@ -1691,32 +1494,22 @@ const filterTags = ['全部', ...topTags];
             }
           } else {
             post._searchVisible = false;
-            element.style.display = 'none';
           }
         });
-        
-        // 搜索结果分页
-        const start = 0;
-        const end = POSTS_PER_PAGE;
-        visiblePosts.forEach((post, index) => {
-          if (post.element) {
-            post.element.style.display = (index >= start && index < end) ? 'block' : 'none';
-          }
-        });
-        
-        renderPagination(visibleCount);
-        
+
         // 更新搜索统计
         if (searchStats) {
-          if (visibleCount === 0) {
+          if (matchCount === 0) {
             searchStats.textContent = '没有找到相关文章';
             if (noResults) noResults.style.display = 'block';
-            paginationContainer.innerHTML = '';
           } else {
-            searchStats.textContent = `找到 ${visibleCount} 篇相关文章`;
+            searchStats.textContent = `找到 ${matchCount} 篇相关文章`;
             if (noResults) noResults.style.display = 'none';
           }
         }
+
+        // 重置并触发首批按需加载
+        resetAndLoad(visiblePosts);
       }
       
       // 防抖函数
@@ -1761,7 +1554,9 @@ const filterTags = ['全部', ...topTags];
       
       // ========== 初始化 ==========
       renderTagFilter();
-      showPage(1);
+      // 默认展示全部，按需加载首批
+      if (searchStats) searchStats.textContent = `共 ${searchPosts.length} 篇文章`;
+      resetAndLoad(searchPosts.slice());
     </script>
   </body>
   <!-- 为了防止在开发环境加载脚本，你可以用条件判断包裹它： -->
