@@ -1,0 +1,571 @@
+---
+// Python面向对象高级：封装、继承、多态与鸭子类型 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python面向对象高级：封装、继承、多态、多继承MRO与鸭子类型详解</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      code {
+        background: #f1f1f1;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #c7254e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🐍 Python 面向对象高级</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-2 | 👤 作者：博主 | 🏷️ 标签：Python, 面向对象, 封装, 继承, 多态</p>
+      </div>
+
+      <div class="section-box">
+        <p>面向对象的三大特性：<strong>封装、继承、多态</strong>。本文以「汽车 / 图书馆」为例，逐一拆解封装的私有机制、继承与方法重写、多继承的 MRO 顺序、多态与鸭子类型，最后用一个图书管理系统案例把它们串起来。</p>
+      </div>
+
+      <h2>一、封装（Encapsulation）</h2>
+
+      <p>封装就是把数据（属性）和操作数据的函数（方法）捆绑在一起，形成一个独立的单元（类），隐藏内部实现细节，只对外暴露必要的功能。</p>
+
+      <h3>公共 vs 私有</h3>
+      <ul>
+        <li><strong>公共成员</strong>：可在类外部直接访问，使用普通名称。</li>
+        <li><strong>私有成员</strong>：只能在类内部使用，命名时在名称前加 <strong>两个下划线</strong> <code>__</code>，例如 <code>__owner</code>、<code>__control_fuel()</code>。</li>
+      </ul>
+
+      <pre class="code-block">class Car:
+    def __init__(self, brand, model, color, owner):
+        self.brand = brand          # 公有属性
+        self.model = model          # 公有属性
+        self.color = color          # 公有属性
+        self.__owner = owner        # 私有属性（双下划线开头）
+
+    def start(self):                # 公共方法
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 正在启动...')
+
+    def run(self):                  # 公共方法
+        print(f'&#123;self.__owner&#125; &#123;self.brand&#125; &#123;self.model&#125; 正在行驶...')
+        self.__control_fuel()       # 调用私有方法
+
+    def stop(self):                 # 公共方法
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 停止行驶...')
+
+    def __control_fuel(self):       # 私有方法
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 正在控制油门...')
+
+    def get_owner(self):            # 对外暴露脱敏后的车主
+        return self.__owner[0:1] + '**'
+
+
+if __name__ == '__main__':
+    car = Car(brand='Audi', model='A6', color='黑色', owner='海哥')
+
+    # print(car.__owner)      # 报错！不能直接访问私有属性
+    # car.__control_fuel()    # 报错！不能直接访问私有方法
+
+    # 通过名称改写(name mangling)依然能访问私有成员
+    print(car._Car__owner)
+    car._Car__control_fuel()</pre>
+
+      <div class="warning-box">
+        <strong>⚠️ 注意：Python 中没有真正的私有机制。</strong>双下划线只是触发了「名称改写（name mangling）」，把 <code>__owner</code> 改写成了 <code>_Car__owner</code>。所以用 <code>car._Car__owner</code> 仍然能访问到——它更多是一种「约定」而非强制保护。
+      </div>
+
+      <h2>二、继承（Inheritance）</h2>
+
+      <p>继承描述的是两个类之间的关系，语法格式：</p>
+
+      <pre class="code-block">class 子类(父类):
+    pass</pre>
+
+      <div class="highlight-box">
+        <strong>子类会把父类的所有属性和方法都继承下来吗？</strong>不会。子类只会继承父类<strong>公共</strong>的属性和方法，<strong>私有成员（双下划线）不会被继承</strong>。
+      </div>
+
+      <h3>方法重写（Override）</h3>
+      <p>子类继承父类后，如果父类的方法不满足需求，可以在子类中重新定义同名方法，用子类实现替换父类实现。重写时若需调用父类方法，有两种方式：</p>
+      <ul>
+        <li><code>super().方法名()</code></li>
+        <li><code>父类名.方法名(self)</code></li>
+      </ul>
+
+      <pre class="code-block">class Car:
+    def __init__(self, brand, model, color, owner):
+        self.brand = brand
+        self.model = model
+        self.color = color
+        self.__owner = owner
+
+    def charge(self):
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 正在补充燃料...')
+
+
+# 燃油车：继承 Car 并重写 charge
+class FuelCar(Car):
+    def charge(self):
+        # 方式一: super().charge()
+        # 方式二: 类名.方法名(self)
+        Car.charge(self)
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 正在加油...')
+
+
+# 电车：继承 Car 并重写 charge
+class ElectricCar(Car):
+    def charge(self):
+        Car.charge(self)
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 正在充电...')
+
+
+if __name__ == '__main__':
+    c1 = FuelCar("BMW", "X5", "黑色", "张三")
+    c1.charge()</pre>
+
+      <h2>三、多继承与 MRO</h2>
+
+      <p>多继承指一个子类同时继承多个父类。下面让「问界汽车」同时继承「汽车」和「华为AI智驾」：</p>
+
+      <pre class="code-block">class Car:
+    def __init__(self, brand, model, color, owner):
+        self.brand = brand
+        self.model = model
+        self.color = color
+        self.__owner = owner
+
+    def run(self):
+        print(f'&#123;self.__owner&#125; : &#123;self.brand&#125; &#123;self.model&#125; 正在行驶...')
+
+
+# 华为AI智能驾驶
+class HuaweiAiDriving:
+    def __init__(self, version="V1.0"):
+        self.version = version
+
+    def run(self):
+        print(f'使用华为AI智能驾驶系统&#123;self.version&#125;正在行驶...')
+
+
+# 问界汽车：同时继承 Car 和 HuaweiAiDriving
+class WenJieCar(Car, HuaweiAiDriving):
+    def __init__(self, brand, model, color, owner, version="V1.0"):
+        Car.__init__(self, brand, model, color, owner)
+        HuaweiAiDriving.__init__(self, version)
+
+    def run(self):
+        Car.run(self)
+        HuaweiAiDriving.run(self)
+
+
+if __name__ == '__main__':
+    c = WenJieCar("BMW", "X5", "黑色", "张三", "V1.1")
+    print(c.__dict__)
+    # print(WenJieCar.__mro__)
+    # print(WenJieCar.mro())
+    c.run()</pre>
+
+      <h3>方法解析顺序（MRO）</h3>
+      <p>MRO（Method Resolution Order）决定了多继承时方法的查找顺序。<code>WenJieCar.__mro__</code> 的结果是：</p>
+
+      <pre class="code-block">(&lt;class '__main__.WenJieCar'&gt;,        # 子类自身
+ &lt;class '__main__.Car'&gt;,              # 第一个父类
+ &lt;class '__main__.HuaweiAiDriving'&gt;,  # 第二个父类
+ &lt;class 'object'&gt;)                    # 顶层基类</pre>
+
+      <h2>四、多态（Polymorphism）</h2>
+
+      <p>多态是指同一个方法，在不同对象上具有不同的形态、行为、表现。函数参数声明为<strong>父类型</strong>，即可传入任意子类对象，触发各自的实现。</p>
+
+      <pre class="code-block">class Car:
+    def charge(self):
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 正在补充燃料...')
+
+
+class FuelCar(Car):
+    def charge(self):
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 正在加油...')
+
+
+class ElectricCar(Car):
+    def charge(self):
+        print(f'&#123;self.brand&#125; &#123;self.model&#125; 正在充电...')
+
+
+# 参数类型声明为父类，可传入任意子类
+def handle_charge(car: Car):
+    car.charge()
+
+
+if __name__ == '__main__':
+    # 同一调用语句，传入对象不同，触发不同行为
+    handle_charge(FuelCar("BMW", "X5", "黑色", "张三"))
+    handle_charge(ElectricCar("BYD", "汉", "黑色", "李四"))</pre>
+
+      <h3>鸭子类型（Duck Typing）</h3>
+      <div class="highlight-box">
+        「如果它走路像鸭子，叫起来像鸭子，那么它就是鸭子。」鸭子类型关注的是对象的<strong>行为（有什么方法）</strong>，而不是对象的<strong>类型（是什么类）</strong>。
+      </div>
+
+      <pre class="code-block">class Duck:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def swimming(self):
+        print(f'Duck: &#123;self.age&#125; 岁的 &#123;self.name&#125; 正在游泳...')
+
+
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def swimming(self):
+        print(f'Dog: &#123;self.age&#125; 岁的 &#123;self.name&#125; 正在游泳...')
+
+
+class Pig:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def swimming(self):
+        print(f'Pig: &#123;self.age&#125; 岁的 &#123;self.name&#125; 正在游泳...')
+
+
+# 不关心类型，只要对象有 swimming 方法就能调用
+def go_swimming(animal):
+    animal.swimming()
+
+
+if __name__ == '__main__':
+    go_swimming(Dog("旺财", 4))
+    go_swimming(Duck("唐老鸭", 2))
+    go_swimming(Pig("佩奇", 1))</pre>
+
+      <div class="section-box">
+        <strong>对比：</strong>Python 的多态通过鸭子类型实现，<strong>不需要继承关系</strong>，只要对象具备相应方法即可使用；而 Java、C++ 是「正统多态」，<strong>依赖继承关系</strong>。
+      </div>
+
+      <h2>五、三大特性速览</h2>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>特性</th>
+            <th>核心思想</th>
+            <th>关键点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>封装</td>
+            <td>数据与方法捆绑，隐藏实现</td>
+            <td>双下划线 <code>__</code> 私有；Python 无真正私有（name mangling）</td>
+          </tr>
+          <tr>
+            <td>继承</td>
+            <td>子类复用父类的公共成员</td>
+            <td>不继承私有成员；可方法重写；<code>super()</code> 调父类</td>
+          </tr>
+          <tr>
+            <td>多态</td>
+            <td>同一方法在不同对象上行为不同</td>
+            <td>父类型声明传子类对象；鸭子类型只看行为</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>六、综合案例：图书管理系统</h2>
+
+      <p>下面用一个图书管理系统综合运用上述特性：<code>Book</code> 封装可用数量；<code>Member</code> 是<strong>抽象类</strong>，强制子类实现 <code>get_max_books()</code>；普通会员与 VIP 会员通过多态返回不同借阅上限。</p>
+
+      <div class="section-box">
+        <strong>抽象类（Abstract Class）：</strong>只能被继承、不能被直接实例化，用来规定子类必须实现哪些方法，强制统一代码规范。Python 中需继承 <code>abc</code> 模块的 <code>ABC</code> 类（Abstract Base Class），并用 <code>@abstractmethod</code> 装饰抽象方法。
+      </div>
+
+      <pre class="code-block">from abc import ABC, abstractmethod
+import json
+
+
+# 书籍类：封装可用数量
+class Book:
+    def __init__(self, book_id, title, author, total_num):
+        self.book_id = book_id              # 书籍编号
+        self.title = title                  # 书籍标题
+        self.author = author                # 作者
+        self.total_num = total_num          # 总数量
+        self.__available_num = total_num    # 可用数量(私有)
+
+    def borrow_book(self):
+        if self.__available_num &gt; 0:
+            self.__available_num -= 1
+            return True
+        return False
+
+    def return_book(self):
+        self.__available_num += 1
+
+    def get_available_num(self):
+        return self.__available_num
+
+
+# 抽象类：强制子类实现 get_max_books
+class Member(ABC):
+    def __init__(self, member_id, name, password):
+        self.member_id = member_id      # 会员卡号
+        self.name = name                # 会员姓名
+        self.__password = password      # 会员密码(私有)
+        self.__borrowed_books = []      # 借阅列表(私有)
+
+    def borrow_book(self, book: Book):
+        # 借阅数量是否达到上限
+        if len(self.__borrowed_books) &gt;= self.get_max_books():
+            print("借阅失败，您的借阅数量已达到最大限制！")
+            return False
+        # 书籍是否可借
+        if book.borrow_book():
+            self.__borrowed_books.append(book)
+            print(f"&#123;self.name&#125; 已成功借阅图书 &#123;book.title&#125;")
+            return True
+        else:
+            print(f"借阅失败，图书 &#123;book.title&#125; 已被借完！")
+            return False
+
+    def return_book(self, book: Book):
+        if book in self.__borrowed_books:
+            book.return_book()
+            self.__borrowed_books.remove(book)
+            print(f"&#123;self.name&#125; 已成功归还图书 &#123;book.title&#125;")
+        else:
+            print(f"归还失败，您没有借阅图书 &#123;book.title&#125;")
+
+    def get_password(self):
+        return self.__password
+
+    def get_borrowed_books(self):
+        return self.__borrowed_books
+
+    # 抽象方法：最大借阅数量，子类必须实现
+    @abstractmethod
+    def get_max_books(self) -&gt; int:
+        pass
+
+
+# 普通会员：上限 3 本
+class NormalMember(Member):
+    def get_max_books(self) -&gt; int:
+        return 3
+
+
+# VIP会员：上限随等级提升（多态）
+class VIPMember(Member):
+    def __init__(self, member_id, name, password, vip_level):
+        super().__init__(member_id, name, password)
+        self.vip_level = vip_level
+
+    def get_max_books(self) -&gt; int:
+        return 6 + self.vip_level</pre>
+
+      <p>系统主控类负责加载数据、登录与菜单调度。借书 / 还书逻辑直接委托给 <code>Member</code> 对象，借助多态自动适配普通会员与 VIP：</p>
+
+      <pre class="code-block">class LibrarySystem:
+    def __init__(self):
+        self.books = &#123;&#125;        # &#123;"AI001": Book对象, ...&#125;
+        self.members = &#123;&#125;      # &#123;"N001": Member对象, ...&#125;
+        self.current_member: Member | None = None   # 当前登录会员
+        self.load_books_data()
+        self.load_members_data()
+
+    def load_books_data(self):
+        with open("data/books.json", "r", encoding="utf-8") as f:
+            for b in json.load(f):
+                self.books[b['编号']] = Book(b['编号'], b['标题'], b['作者'], b['数量'])
+        print("加载书籍数据成功！")
+
+    def load_members_data(self):
+        with open("data/members.json", "r", encoding="utf-8") as f:
+            for m in json.load(f):
+                if m['卡号'].startswith('N'):
+                    self.members[m['卡号']] = NormalMember(m['卡号'], m['姓名'], m['密码'])
+                elif m['卡号'].startswith('V'):
+                    self.members[m['卡号']] = VIPMember(m['卡号'], m['姓名'], m['密码'], m['会员等级'])
+        print("加载会员数据成功！")
+
+    def login(self):
+        while True:
+            member_id = input("请输入会员卡号: ")
+            password = input("请输入会员密码: ")
+            if member_id not in self.members:
+                print("登录失败，会员卡号不存在！")
+                continue
+            member = self.members[member_id]
+            if member.get_password() == password:
+                print(f"登录成功, 欢迎您, &#123;member.name&#125;")
+                self.current_member = member
+                return True
+            print("登录失败，密码错误！")
+
+    def run(self):
+        if self.login():
+            while True:
+                print("\n1. 借阅图书\n2. 归还图书\n3. 查看借阅\n4. 退出系统")
+                choice = input("请选择操作(1-4): ")
+                match choice:
+                    case "1":
+                        # 委托给会员对象，多态自动适配借阅上限
+                        ...
+                    case "4":
+                        print("退出系统, Bye Bye ~")
+                        break
+                    case _:
+                        print("无效的选项，请重新选择！")
+
+
+if __name__ == '__main__':
+    LibrarySystem().run()</pre>
+
+      <div class="success-box">
+        <strong>✅ 案例小结：</strong>封装（<code>Book.__available_num</code>、<code>Member.__borrowed_books</code>）保护核心数据；抽象类 <code>Member</code> 约束子类实现规范；多态让同一段借书逻辑无需改动即可适配普通会员与 VIP，扩展新的会员类型也无需修改主控代码。
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>

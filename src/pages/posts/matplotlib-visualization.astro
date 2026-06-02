@@ -1,0 +1,453 @@
+---
+// Matplotlib 数据可视化入门 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matplotlib数据可视化入门：折线图、柱状图、饼状图与子图实战</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      h4 {
+        color: #2c3e50;
+        margin-top: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      code {
+        background: #f1f1f1;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #c0392b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📈 Matplotlib 数据可视化入门</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-1 | 👤 作者：博主 | 🏷️ 标签：Python, Matplotlib, 数据可视化, 折线图, 柱状图, 饼状图</p>
+      </div>
+
+      <!-- 介绍 -->
+      <h2>一、Matplotlib 是什么</h2>
+
+      <div class="section-box">
+        <p>Matplotlib 是一个功能强大的数据可视化开源 Python 库，也是 Python 中使用最多的图形绘图库，可以创建<strong>静态、动态、交互式</strong>的图表。</p>
+        <p>🔗 官网：<a href="https://matplotlib.org" target="_blank">https://matplotlib.org</a></p>
+      </div>
+
+      <p>安装命令：</p>
+      <pre class="code-block">pip install matplotlib</pre>
+
+      <!-- 图表详解 -->
+      <h2>二、Matplotlib 图表详解</h2>
+
+      <p>一张完整的图表由多个组件构成，理解这些组件的英文术语，有助于查阅文档和定位 API。</p>
+
+      <table class="comparison-table">
+        <tr><th>组件名称</th><th>英文术语</th><th>图中示例 / 说明</th></tr>
+        <tr><td>标题</td><td>Title</td><td>北京气温变化曲线</td></tr>
+        <tr><td>图例</td><td>Legend</td><td>北京、西安</td></tr>
+        <tr><td>网格线</td><td>Grid</td><td>图表中的虚线网格</td></tr>
+        <tr><td>画布</td><td>Figure</td><td>整个图表区域</td></tr>
+        <tr><td>X轴</td><td>X axis</td><td>底部横轴</td></tr>
+        <tr><td>X轴刻度</td><td>X tick</td><td>1, 2, 3 ... 10</td></tr>
+        <tr><td>X轴刻度标签</td><td>X tick_label</td><td>刻度对应的数字标签</td></tr>
+        <tr><td>X轴标签</td><td>X label</td><td>时间</td></tr>
+        <tr><td>Y轴</td><td>Y axis</td><td>左侧纵轴</td></tr>
+        <tr><td>Y轴标签</td><td>Y label</td><td>气温</td></tr>
+        <tr><td>Y轴刻度</td><td>Y tick</td><td>1, 2, 3 ... 10</td></tr>
+        <tr><td>Y轴刻度标签</td><td>Y tick_label</td><td>刻度对应的数字标签</td></tr>
+      </table>
+
+      <h3>1）折线图初体验</h3>
+
+      <pre class="code-block">import matplotlib.pyplot as plt
+import random
+
+# 展示中文
+plt.rcParams['font.sans-serif'] = ['SimHei']
+
+x = [i for i in range(1, 25)]
+y_bj = [random.randint(10, 15) for i in x]
+y_xa = [random.randint(13, 18) for i in x]
+
+plt.figure(figsize=(10, 5))     # 设置画布大小（宽, 高）
+
+plt.plot(x, y_bj, label='北京')  # 折线图 -> 如果没有画布，会自动创建一个画布
+plt.plot(x, y_xa, label='西安')
+
+# 设置折线图的详细信息
+plt.title('气温变化折线图', fontsize=15)  # 标题
+plt.xlabel('时间')                        # x轴标签
+plt.ylabel('温度')                        # y轴标签
+
+# plt.xticks(x[::2])
+# plt.xticks(x[1::2])
+plt.xticks(x)                             # x轴刻度
+y_ticks = [i for i in range(5, 21)]
+plt.yticks(y_ticks)                       # y轴刻度
+
+plt.grid(linestyle='--', alpha=0.3)       # 显示网格
+plt.legend(loc='upper right')             # 显示图例
+
+plt.show()                                # 显示图表</pre>
+
+      <div class="highlight-box">
+        <p><strong>注意：</strong>Matplotlib 默认不支持中文，需要通过 <code>plt.rcParams['font.sans-serif'] = ['SimHei']</code> 设置中文字体，否则中文会显示为方框。</p>
+      </div>
+
+      <!-- 创建子图 -->
+      <h2>三、创建子图</h2>
+
+      <div class="section-box">
+        <p>为了能同时展示多个图表，便于图表之间数据的直观对比和分析，更高效、更专业地组织和呈现复杂的可视化信息，通常会在一个画布上创建多个子图。</p>
+      </div>
+
+      <pre class="code-block"># 1 行 2 列：取值 axes[0], axes[1]
+figure, axes = plt.subplots(nrows=1, ncols=2, figsize=(20, 6), dpi=100)
+
+# 2 行 2 列：取值 axes[0][0], axes[0][1], ...
+figure, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 6), dpi=100)</pre>
+
+      <h3>subplots 参数说明</h3>
+      <table class="comparison-table">
+        <tr><th>参数</th><th>说明</th><th>示例值</th></tr>
+        <tr><td>nrows</td><td>子图行数</td><td>1</td></tr>
+        <tr><td>ncols</td><td>子图列数</td><td>2</td></tr>
+        <tr><td>figsize</td><td>画布大小（宽, 高）</td><td>(20, 6)</td></tr>
+        <tr><td>dpi</td><td>分辨率</td><td>100</td></tr>
+      </table>
+
+      <h3>柱状图 + 饼状图示例</h3>
+
+      <pre class="code-block">from matplotlib.axes import Axes
+import matplotlib.pyplot as plt
+
+# 展示中文
+plt.rcParams['font.sans-serif'] = ['SimHei']
+
+# 创建子图
+# figure：画布对象；axes：子图数组（里面存放的是 Axes 类型的对象）
+figure, axes = plt.subplots(nrows=1, ncols=2, figsize=(20, 6), dpi=100)  # nrows：行，ncols：列
+
+# 图一：柱状图（世界石油储备）
+countries = ['中国', '美国', '印度', '加拿大', '伊拉克', '沙特', '伊朗', '英国', '德国']
+values = [35, 23, 18, 21, 56, 78, 51, 12, 18]
+
+axes1: Axes = axes[0]
+axes1.bar(countries, values, width=0.6, color='g')  # 柱状图 - width：柱子宽度，color：颜色
+axes1.set_title('世界石油储备', fontsize=18)          # 设置标题
+axes1.set_xlabel('国家')                              # X轴标签
+axes1.set_ylabel('石油储备(亿吨)')                     # Y轴标签
+axes1.grid(linestyle='--', alpha=0.3)                # 网格线
+
+# 图二：饼状图（世界人口）---> 擅长比例分析 -- pie 方法
+countries2 = ['印度', '中国', '美国', '印尼', '巴基斯坦', '尼日利亚', '巴西', '俄罗斯', '其他']
+values = [14.51, 14.09, 3.4, 2.83, 2.51, 2.33, 2.12, 1.44, 20]
+
+axes2: Axes = axes[1]
+axes2.pie(values, labels=countries2, autopct='%1.1f%%')  # 饼状图
+axes2.set_title('世界人口比例', fontsize=18)              # 设置标题
+# 显示图例，ncol：每行显示的个数，bbox_to_anchor：图例位置（0.5 控制水平方位，-0.08 控制垂直方位）
+axes2.legend(loc='lower center', ncol=5, bbox_to_anchor=(0.5, -0.08))
+
+# 保存图片
+plt.savefig('data/01.png')
+
+plt.show()  # 展示图表</pre>
+
+      <!-- 三种图表对比 -->
+      <h2>四、如何绘制折线图、柱状图、饼状图？</h2>
+
+      <table class="comparison-table">
+        <tr><th>图表类型</th><th>方法</th><th>适用场景</th></tr>
+        <tr><td>折线图</td><td><code>plot(...)</code></td><td>适合展示趋势变化</td></tr>
+        <tr><td>柱状图</td><td><code>bar(...)</code></td><td>适合展示数量对比</td></tr>
+        <tr><td>饼状图</td><td><code>pie(...)</code></td><td>适合展示比例构成</td></tr>
+      </table>
+
+      <!-- 案例 -->
+      <h2>五、综合案例：TMDB-TOP300 电影榜单分析</h2>
+
+      <div class="section-box">
+        <p>结合 Pandas 数据处理与 Matplotlib 可视化，在一张 2×2 的画布上呈现四个维度的统计结果：每年电影数量变化、不同语言电影数量、不同类型电影数量、不同评分电影数量占比。</p>
+        <p>📓 Jupyter Notebook 文件：<code>09. TMDB-TOP300电影榜单分析.ipynb</code></p>
+      </div>
+
+      <pre class="code-block">from matplotlib.axes import Axes
+import pandas as pd
+import matplotlib.pyplot as plt
+from pandas import Series
+
+# 展示中文
+plt.rcParams['font.sans-serif'] = ['SimHei']
+
+# 创建子图
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(20, 12), dpi=100)
+# 添加画布标题 - x=0.5：X轴位置；y=0.95：Y轴位置
+fig.suptitle('TMDB-TOP300电影榜单数据统计', fontsize=23, x=0.5, y=0.95)
+# 调整子图间距，hspace：控制垂直间距，wspace：控制水平间距
+fig.subplots_adjust(hspace=0.4, wspace=0.2)
+
+# 获取子图
+axes1: Axes = axes[0][0]
+axes2: Axes = axes[0][1]
+axes3: Axes = axes[1][0]
+axes4: Axes = axes[1][1]
+
+# 加载数据
+# int64：整型数字（不支持空值）；Int64：整型数字（支持空值）；float64：浮点型数字（支持空值）
+data = pd.read_csv('data/movies.csv',
+                   usecols=['电影名', '年份', '上映时间', '类型', '时长', '评分', '语言'],
+                   dtype=&#123;'年份': 'Int64'&#125;)</pre>
+
+      <h3>需求一：每年上映电影数量变化（折线图）</h3>
+
+      <pre class="code-block"># 1.1 缺失值、异常值处理
+# data.isnull().sum()
+data['年份'] = data['年份'].fillna(data['上映时间'].str[:4])
+
+# 1.2 分组统计
+year_count = data.groupby('年份')['年份'].count()
+
+# 1.3 组装数据
+# x轴数据
+min_year = year_count.index.min()
+max_year = year_count.index.max()
+x = [i for i in range(min_year, max_year + 1)]
+
+# y轴数据
+y = [int(year_count.get(i, 0)) for i in x]
+
+# 1.4 绘制折线图
+axes1.plot(x, y, color='green')                     # 折线图
+axes1.set_title('每年电影数量变化折线图', fontsize=18)  # 添加子图标题
+axes1.set_xlabel('年份', fontsize=12)                # 添加X轴标签
+axes1.set_ylabel('电影数量', fontsize=12)            # 添加Y轴标签
+
+axes1.set_xticks(x[::8])                            # 设置X轴刻度间隔
+y_ticks = [i for i in range(0, 31, 3)]
+axes1.set_yticks(y_ticks)                           # 设置Y轴刻度间隔
+axes1.grid(linestyle='--', alpha=0.5)               # 添加网格线</pre>
+
+      <h3>需求二：不同语言电影数量对比（柱状图）</h3>
+
+      <pre class="code-block"># 2.1 获取不同语言对应的电影数量
+language_count = data.groupby('语言')['语言'].count().sort_values(ascending=False)
+
+x_language = language_count.index.tolist()
+y_language_count = language_count.values.tolist()
+
+# 2.2 绘制柱状图
+axes2.bar(x_language, y_language_count, color='green', width=0.7)  # 柱状图
+axes2.set_title('不同语言电影数量柱状图', fontsize=18)              # 添加子图标题
+axes2.set_xlabel('语言', fontsize=12)                              # 添加X轴标签
+axes2.set_ylabel('电影数量', fontsize=12)                          # 添加Y轴标签
+axes2.grid(linestyle='--', alpha=0.5)                             # 添加网格线
+axes2.tick_params(axis='x', rotation=90)                          # 旋转X轴标签</pre>
+
+      <h3>需求三：不同类型电影数量对比（柱状图）</h3>
+
+      <pre class="code-block"># 3.1 获取不同类型对应的电影数量
+# 传统写法（字典累加）：
+# type_count = &#123;&#125;  # &#123;'剧情': 5, '犯罪': 3&#125;
+# for types in data['类型'].str.split(','):  # [剧情, 犯罪]
+#     for t in types:                        # 剧情
+#         if t in type_count:
+#             type_count[t] += 1
+#         else:
+#             type_count[t] = 1
+# x_types = list(type_count.keys())   # 类型列表
+# y_values = list(type_count.values()) # 数量列表
+
+# 推荐：使用 explode + value_counts（最推荐）
+type_counts = data['类型'].str.split(',').explode().value_counts()
+x_types = type_counts.index.tolist()
+y_values = type_counts.values.tolist()
+
+# 3.2 绘制柱状图
+axes3.bar(x_types, y_values, color='green', width=0.7)  # 柱状图
+axes3.set_title('不同类型电影数量柱状图', fontsize=18)    # 添加子图标题
+axes3.set_xlabel('类型', fontsize=12)                    # 添加X轴标签
+axes3.set_ylabel('电影数量', fontsize=12)                # 添加Y轴标签
+axes3.grid(linestyle='--', alpha=0.5)                   # 添加网格线
+axes3.tick_params(axis='x', rotation=90)                # 旋转X轴标签</pre>
+
+      <div class="success-box">
+        <p>💡 <strong>小技巧：</strong>当一列中存储了用逗号分隔的多个值（如 <code>剧情,犯罪</code>）时，使用 <code>str.split(',').explode().value_counts()</code> 可以一行代码完成"拆分 → 展开 → 计数"，比双重循环更简洁高效。</p>
+      </div>
+
+      <h3>需求四：不同评分电影数量占比（饼状图）</h3>
+
+      <pre class="code-block"># 4.1 获取不同评分对应的电影数量
+score_count = data.groupby('评分')['评分'].count()
+
+# 合并小数据（比例 &lt; 2%）--> 其他
+total = score_count.sum()
+large_scores: Series = score_count.loc[score_count >= total * 0.02]  # 大数据，比例 >= 2%
+small_scores: Series = score_count.loc[score_count &lt; total * 0.02]   # 小数据，比例 &lt; 2%
+
+if small_scores.shape[0] > 0:
+    large_scores['其他'] = small_scores.sum()
+
+scores = large_scores.index.tolist()          # 评分列表
+scores_values = large_scores.values.tolist()  # 数量列表
+
+# 4.2 绘制饼状图
+axes4.pie(scores_values, labels=scores, autopct='%1.1f%%', startangle=0, radius=1.2)  # startangle 起始角度
+axes4.set_title('不同评分电影数量占比饼状图', fontsize=18)
+axes4.legend(loc='lower center', ncol=4, bbox_to_anchor=(0.5, -0.2))
+
+# 5. 保存图片
+plt.savefig('data/TMDB-TOP300.png')
+
+plt.show()  # 显示画布</pre>
+
+      <div class="highlight-box">
+        <p><strong>饼状图优化技巧：</strong>当类别过多且部分占比极小时，饼图会显得杂乱。先按阈值（如 2%）筛选，把小占比类别合并为"其他"，可让饼图更清晰易读。</p>
+      </div>
+
+      <!-- 总结 -->
+      <h2>六、总结</h2>
+
+      <table class="comparison-table">
+        <tr><th>知识点</th><th>核心 API</th></tr>
+        <tr><td>中文显示</td><td>plt.rcParams['font.sans-serif'] = ['SimHei']</td></tr>
+        <tr><td>创建画布</td><td>plt.figure(figsize=...) / plt.subplots(nrows, ncols)</td></tr>
+        <tr><td>折线图</td><td>plot() / axes.plot()</td></tr>
+        <tr><td>柱状图</td><td>bar() / axes.bar()</td></tr>
+        <tr><td>饼状图</td><td>pie() / axes.pie()</td></tr>
+        <tr><td>标题/轴标签</td><td>set_title() / set_xlabel() / set_ylabel()</td></tr>
+        <tr><td>刻度/网格/图例</td><td>set_xticks() / grid() / legend()</td></tr>
+        <tr><td>保存图片</td><td>plt.savefig('xxx.png')</td></tr>
+      </table>
+
+      <div class="success-box">
+        <p>📌 <strong>选图口诀：</strong>趋势变化用折线，数量对比用柱状，比例构成用饼图。</p>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
