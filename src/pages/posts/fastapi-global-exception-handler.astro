@@ -1,0 +1,272 @@
+---
+// FastAPI 全局异常处理 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FastAPI全局异常处理：@app.exception_handler统一捕获异常与返回标准JSON</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      code {
+        background: #f1f1f1;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #c0392b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🛡️ FastAPI 全局异常处理</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-3 | 👤 作者：博主 | 🏷️ 标签：FastAPI, Python, 异常处理, 后端开发</p>
+      </div>
+
+      <!-- 背景 -->
+      <h2>一、为什么需要全局异常处理</h2>
+
+      <div class="section-box">
+        <p>在后端接口开发中，如果不对异常做统一处理，一旦代码抛出未捕获的异常，FastAPI 默认会直接返回 <code>500 Internal Server Error</code>，并可能把堆栈细节暴露给前端。这既不安全，也不利于前端统一解析响应格式。</p>
+        <p>通过 <strong>全局异常处理器</strong>，我们可以在一个地方集中捕获所有未处理的异常，统一记录日志、返回标准化的 JSON 结构。</p>
+      </div>
+
+      <!-- 核心实现 -->
+      <h2>二、核心实现</h2>
+
+      <p>使用 <code>@app.exception_handler(Exception)</code> 装饰器注册一个兜底处理器，捕获所有未被显式处理的异常：</p>
+
+      <pre class="code-block">import logging
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
+app = FastAPI()
+
+# 统一处理异常信息
+@app.exception_handler(Exception)
+def handle_exception(request: Request, exc: Exception):
+    logging.error(f"处理异常，请求路径：&#123;request.url&#125;，异常信息：&#123;exc&#125;")
+    return JSONResponse(
+        status_code=500,
+        content=&#123;"code": 500, "message": "服务器内部错误"&#125;,
+    )</pre>
+
+      <div class="highlight-box">
+        <p><strong>关键点：</strong>处理器函数接收两个参数 —— <code>request</code>（当前请求对象）和 <code>exc</code>（捕获到的异常实例）。返回 <code>JSONResponse</code> 即可自定义响应内容与状态码。</p>
+      </div>
+
+      <!-- 参数说明 -->
+      <h2>三、参数说明</h2>
+
+      <table class="comparison-table">
+        <tr><th>参数 / 方法</th><th>说明</th></tr>
+        <tr><td>@app.exception_handler(Exception)</td><td>注册异常处理器，参数为要捕获的异常类型，<code>Exception</code> 表示兜底捕获所有异常</td></tr>
+        <tr><td>request: Request</td><td>当前请求对象，可获取请求路径、方法、Header 等信息</td></tr>
+        <tr><td>exc: Exception</td><td>捕获到的异常实例，可用于记录详细错误信息</td></tr>
+        <tr><td>JSONResponse</td><td>FastAPI 提供的 JSON 响应类，可指定 <code>status_code</code> 和 <code>content</code></td></tr>
+      </table>
+
+      <div class="warning-box">
+        <p>⚠️ <strong>注意：</strong>原始代码中的 <code>JSONResponse</code> 没有显式指定 <code>status_code</code>，默认会返回 <strong>200</strong>，这与「服务器内部错误」的语义不符。建议显式设置 <code>status_code=500</code>，让 HTTP 状态码与业务语义保持一致。</p>
+      </div>
+
+      <!-- 进阶 -->
+      <h2>四、进阶：分类型处理异常</h2>
+
+      <div class="section-box">
+        <p>除了兜底捕获 <code>Exception</code>，还可以针对不同异常类型注册多个处理器，实现更精细的控制。FastAPI 会优先匹配最具体的异常类型。</p>
+      </div>
+
+      <pre class="code-block">from fastapi import HTTPException
+from fastapi.exceptions import RequestValidationError
+
+# 1. 处理参数校验异常（422）
+@app.exception_handler(RequestValidationError)
+def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=422,
+        content=&#123;"code": 422, "message": "参数校验失败", "detail": exc.errors()&#125;,
+    )
+
+# 2. 处理业务自定义异常
+class BusinessException(Exception):
+    def __init__(self, code: int, message: str):
+        self.code = code
+        self.message = message
+
+@app.exception_handler(BusinessException)
+def business_exception_handler(request: Request, exc: BusinessException):
+    return JSONResponse(
+        status_code=200,
+        content=&#123;"code": exc.code, "message": exc.message&#125;,
+    )
+
+# 3. 兜底处理其余所有异常（500）
+@app.exception_handler(Exception)
+def global_exception_handler(request: Request, exc: Exception):
+    logging.error(f"未处理异常，路径：&#123;request.url&#125;，异常：&#123;exc&#125;")
+    return JSONResponse(
+        status_code=500,
+        content=&#123;"code": 500, "message": "服务器内部错误"&#125;,
+    )</pre>
+
+      <!-- 最佳实践 -->
+      <h2>五、最佳实践</h2>
+
+      <div class="success-box">
+        <p>✅ <strong>推荐做法：</strong></p>
+        <ul>
+          <li>对外只返回<strong>友好、脱敏</strong>的错误信息，不暴露堆栈细节</li>
+          <li>用 <code>logging.error</code> 记录完整异常，便于排查（生产环境可配合 <code>exc_info=True</code> 打印堆栈）</li>
+          <li>统一响应结构（如 <code>code</code> / <code>message</code> / <code>data</code>），方便前端解析</li>
+          <li>HTTP 状态码与业务语义保持一致，避免「200 装错误」</li>
+        </ul>
+      </div>
+
+      <div class="error-box">
+        <p>❌ <strong>避免做法：</strong>直接把 <code>str(exc)</code> 或异常堆栈返回给前端，容易泄露数据库结构、文件路径等敏感信息，存在安全风险。</p>
+      </div>
+
+      <!-- 总结 -->
+      <h2>六、总结</h2>
+
+      <p>FastAPI 的全局异常处理通过 <code>@app.exception_handler</code> 实现，核心思路是：<strong>集中捕获 → 记录日志 → 返回标准化 JSON</strong>。一行装饰器即可让接口的错误处理更安全、更统一，是后端工程化的基础环节。</p>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
