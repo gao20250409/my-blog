@@ -1,0 +1,451 @@
+---
+// Agent 基础入门：Agent 与大模型区别、Coze 平台与提示词工程 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agent基础入门：AI Agent与大模型区别、Coze智能体开发与提示词工程</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: top;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🤖 Agent 基础入门</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-4 | 👤 作者：博主 | 🏷️ 标签：AI Agent, 大模型, Coze, 提示词工程, Prompt, Web开发, 前端</p>
+      </div>
+
+      <div class="section-box">
+        <p>本文带你快速建立对 AI Agent 的认知：从 Agent 与大模型的本质区别，到 Coze 智能体开发平台的能力体验，再到提示词工程（Prompt）的设计方法与实战案例。一篇看懂 Agent 入门全景。</p>
+      </div>
+
+      <h2>一、Agent 和大模型的区别</h2>
+
+      <h3>1. 能力对比：传统大模型 vs AI Agent</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>对比维度</th>
+            <th>传统大模型</th>
+            <th>AI Agent</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>定位</td>
+            <td>被动响应</td>
+            <td>主动执行</td>
+          </tr>
+          <tr>
+            <td>信息获取</td>
+            <td>仅限训练数据</td>
+            <td>可实时搜索</td>
+          </tr>
+          <tr>
+            <td>能力边界</td>
+            <td>只能对话</td>
+            <td>可调用工具</td>
+          </tr>
+          <tr>
+            <td>任务处理</td>
+            <td>单轮回答</td>
+            <td>多步规划</td>
+          </tr>
+          <tr>
+            <td>应用场景</td>
+            <td>咨询问答</td>
+            <td>实际业务</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="highlight-box">
+        <p><strong>什么是 AI Agent？</strong><br/>感知环境、自主决策、使用工具完成任务的智能实体。</p>
+        <p><strong>Agent 和大模型的区别？</strong><br/>大模型是「聊天对象」；Agent 不仅能聊，还能做、能执行。</p>
+      </div>
+
+      <h2>二、了解 Coze 智能体开发平台</h2>
+
+      <h3>Coze 主要特点</h3>
+      <ul>
+        <li>⚡ <strong>快速搭建</strong>：低门槛、可视化构建智能体</li>
+        <li>🧩 <strong>插件丰富</strong>：海量插件，扩展能力边界</li>
+        <li>🔄 <strong>工作流强大</strong>：可编排复杂的多步任务流程</li>
+        <li>🆓 <strong>免费使用</strong>：无限调用大模型</li>
+        <li>🌐 <strong>多渠道发布</strong>：支持微信、飞书、网页等多端</li>
+      </ul>
+
+      <h2>三、案例体验 Agent 的能力</h2>
+
+      <h3>案例 1：橘猫漫画家</h3>
+      <div class="section-box">
+        <p><strong>功能：</strong>制作猫咪漫画</p>
+        <p><strong>场景：</strong>漫画创作</p>
+        <p><strong>亮点：</strong>一键操作生成漫画，生动形象</p>
+        <p><strong>路径：</strong>作品社区 → 漫画生成：橘猫漫画家</p>
+      </div>
+
+      <h3>案例 2：爸妈防骗小助手</h3>
+      <div class="section-box">
+        <p><strong>功能：</strong>自动识别诈骗风险并提醒</p>
+        <p><strong>场景：</strong>短信信息鉴定、谣言粉碎</p>
+        <p><strong>亮点：</strong>AI 精准 24 小时守护，简单易用</p>
+        <p><strong>路径：</strong>作品社区 → 搜索「爸妈防骗小助手」</p>
+      </div>
+
+      <h3>Agent 编程完整步骤</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>步骤</th>
+            <th>目标</th>
+            <th>重点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Step 1</td>
+            <td>让 Bot 听懂人话</td>
+            <td>实现提示词工程</td>
+          </tr>
+          <tr>
+            <td>Step 2</td>
+            <td>让 Bot 专业</td>
+            <td>实现 RAG 应用</td>
+          </tr>
+          <tr>
+            <td>Step 3</td>
+            <td>让 Bot 做事</td>
+            <td>实现插件制作</td>
+          </tr>
+          <tr>
+            <td>Step 4</td>
+            <td>让 Bot 工作</td>
+            <td>实现工作流的编排</td>
+          </tr>
+          <tr>
+            <td>Step 5</td>
+            <td>让 Bot 应用</td>
+            <td>发布运营，触达用户</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>四、提示词工程</h2>
+
+      <h3>1. 什么是 Prompt 提示词</h3>
+      <div class="highlight-box">
+        <p>提示词 = 与 AI 沟通的「说明书」。</p>
+        <p>提示词（Prompt）：开发者赋予 Bot 的身份、能力和行为规范，它决定了 Bot 的响应质量和风格。</p>
+      </div>
+
+      <h3>1.1 如何设计提示词：4 个关键要素</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>要素</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🗨️ 角色定位</td>
+            <td>明确 Bot 的身份，建立专业形象</td>
+          </tr>
+          <tr>
+            <td>▶️ 技能描述</td>
+            <td>清晰的目标，让 Bot 知道做什么</td>
+          </tr>
+          <tr>
+            <td>⭐ 输出格式</td>
+            <td>结构化回复要求，确保输出规范</td>
+          </tr>
+          <tr>
+            <td>📞 约束条件</td>
+            <td>限制不当行为，保证安全合规</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>1.1.1 角色定位</h3>
+      <p>让 Bot 扮演某种角色：<strong>角色越具体 = 回复越专业</strong>。</p>
+      <div class="success-box">
+        <p><strong>✅ 好的示例</strong></p>
+        <ul>
+          <li>职业身份：你是一位有 15 年经验的职场 HR</li>
+          <li>专业领域：擅长处理敏感的人际关系问题</li>
+          <li>性格特征：温和、专业、善于共情</li>
+        </ul>
+      </div>
+      <div class="error-box">
+        <p><strong>❌ 差的示例</strong></p>
+        <ul>
+          <li>职业身份：你是一个助手</li>
+          <li>专业领域：什么都懂一点</li>
+          <li>性格特征：随便聊聊</li>
+        </ul>
+      </div>
+
+      <h3>1.1.2 技能描述</h3>
+      <p>让 Bot 知道做什么。</p>
+      <div class="success-box">
+        <p><strong>✅ 好的示例：</strong>帮助用户生成高情商的职场回复，针对老板批评、同事冲突等场景，给出 3 种不同风格的回复方案。</p>
+      </div>
+      <div class="error-box">
+        <p><strong>❌ 差的示例：</strong>帮用户回答问题。</p>
+      </div>
+
+      <h3>1.1.3 输出格式</h3>
+      <p>让 Bot 知道怎么做。</p>
+      <div class="success-box">
+        <p><strong>✅ 好的输出格式：</strong></p>
+        <ol>
+          <li>情况分析（50 字）</li>
+          <li>回复建议（3 条，每条 30 字）</li>
+          <li>完整范文（150 字）</li>
+        </ol>
+      </div>
+      <div class="error-box">
+        <p><strong>❌ 差的输出格式：</strong>随便回复就行。</p>
+      </div>
+
+      <h3>1.1.4 约束条件</h3>
+      <p>给 Bot 设置边界。</p>
+      <div class="section-box">
+        <p><strong>📝 内容约束</strong></p>
+        <ul>
+          <li>避免敏感话题（政治、宗教）</li>
+          <li>避免冒犯性语言</li>
+          <li>不提供未经证实的信息</li>
+        </ul>
+        <p><strong>🎨 风格约束</strong></p>
+        <ul>
+          <li>语气诚恳但不卑微</li>
+          <li>避免过度道歉</li>
+          <li>保持专业性</li>
+        </ul>
+      </div>
+
+      <h3>1.2 Coze 中提示词分类</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>定义</th>
+            <th>位置</th>
+            <th>作用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🤖 系统提示词</td>
+            <td>大模型角色定位 + 回复逻辑</td>
+            <td>Agent 的「人设与回复逻辑」中设置</td>
+            <td>持续影响整个会话响应模式</td>
+          </tr>
+          <tr>
+            <td>💬 用户提示词</td>
+            <td>用户直接提出的具体指令或问题</td>
+            <td>在对话框中输入</td>
+            <td>指导模型执行特定任务</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>五、Coze 中如何应用 Prompt</h2>
+
+      <h3>2.1 在 Coze 中设置提示词的三种方法</h3>
+      <ol>
+        <li><strong>直接编写：</strong>根据业务需要编写提示词，写得越清晰明确，智能体的回复越符合预期。</li>
+        <li><strong>提示词模板：</strong>扣子根据不同业务场景提供多套模板，可直接使用或参考编写。</li>
+        <li><strong>AI 自动生成：</strong>用自然语言告诉 AI 你想编写或优化的提示词，大模型会自动生成。</li>
+      </ol>
+      <div class="highlight-box">
+        <p><strong>常用方式：</strong>编写提示词 + AI 调优。</p>
+      </div>
+
+      <h3>📝 健康咨询助手示例</h3>
+      <div class="section-box">
+        <p><strong>系统提示词：</strong>你是一个友好且专业的健康咨询助手，专注于提供基于科学和医学知识的健康建议。回答应专业且易懂，语言温和鼓励。确保建议基于最新健康指南，避免提供具体医疗诊断。</p>
+        <p><strong>用户提示词：</strong>我最近总是感到疲劳，这可能是什么原因呢？</p>
+      </div>
+
+      <h2>六、案例实践：高情商职场回复助手</h2>
+      <p>下面是一个可直接套用的完整系统提示词模板，包含角色、技能、输出格式与约束四大要素：</p>
+      <pre class="code-block"># 角色
+你是一位经验丰富的沟通专家，拥有 10 年职场历练，在各类职场场景中都能游刃有余。
+尤其擅长撰写高情商、得体且有效的沟通文本，在拒绝请求时，能巧妙地平衡关系与边界。
+
+## 技能
+### 技能 1: 语气把控
+1. 以积极、友好的话语作为开头，营造融洽氛围。
+2. 表达观点时，以「我」为主语阐述自身限制。
+3. 杜绝使用指责性、命令式的语言。
+
+### 技能 2: 内容构建
+1. 率先表达对对方请求的理解以及诚挚的感谢。
+2. 清晰、明确地说明自身存在的限制。
+3. 根据实际情况，提供切实可行的替代方案或合理建议。
+4. 以开放的态度，展望未来合作的可能性。
+
+### 技能 3: 关系维护
+1. 适时、恰当地表达歉意。
+2. 真诚肯定对方工作的价值与贡献。
+3. 始终保持专业且友善的态度。
+
+## 输出格式
+【开场寒暄】用积极友好的语言开启交流。
+【表达理解与感谢】清晰传达对对方的理解与感激。
+【委婉说明限制】明确阐述自身的限制条件。
+【提供替代方案】给出具体的替代办法或建议。
+【结尾祝福】以积极的话语结束对话，表达美好祝愿。
+
+## 限制
+- 避免使用「不」「拒绝」等直接的负面词汇。
+- 不可过度承诺或给予虚假安慰。
+- 不贬低对方请求的合理性。
+- 不过多解释个人情况。</pre>
+
+      <div class="warning-box">
+        <p><strong>小结：</strong>Agent 的本质是「会用工具、能执行任务」的智能体；而提示词工程则是驱动 Agent 表现的底层能力。掌握「角色定位 + 技能描述 + 输出格式 + 约束条件」四要素，再借助 Coze 这类平台快速搭建，就能把一个普通大模型变成真正能干活的智能助手。</p>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
