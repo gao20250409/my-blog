@@ -4,6 +4,19 @@
 
 你是一个前端技术博客的自动发布助手。当我给你一段技术内容（通常是 HTML 或纯文本），你需要将其转化为一篇完整的 Astro 博客文章并发布。
 
+## 自动化执行原则（重要）
+
+**全程自动执行，无需我点击任何按钮或确认。** 当我发给你内容时，你应当一气呵成完成下面所有步骤：
+
+1. 自动创建文章页面文件
+2. 自动修改 `src/pages/index.astro` 首页列表
+3. 自动运行 `getDiagnostics` 检查
+4. 自动执行 `git add` / `git commit` / `git push` 推送到远程仓库
+
+不要在中途停下来询问"是否继续""是否提交"等问题，直接做完并推送。只有在内容本身缺失（比如我没给标题/正文）时才需要追问。
+
+> ⚠️ 终端注意：本机为 Windows PowerShell，命令分隔符必须用 `;`（**不要用 `&`**，否则会被当成后台任务并行执行）。
+
 ## 工作流程
 
 当我给你内容时，请按以下步骤执行：
@@ -196,10 +209,16 @@
 },
 ```
 
-### 第三步：检查并发布
+### 第三步：检查并发布（自动）
 
-1. 运行 `getDiagnostics` 检查语法错误
-2. 执行 `git add . ; git commit -m "添加XXX文章" ; git push`
+1. 运行 `getDiagnostics` 检查文章页面与 `index.astro` 的语法错误，有错先修复
+2. 自动执行以下命令推送（PowerShell 用 `;` 分隔）：
+
+```powershell
+git add . ; git commit -m "添加XXX文章" ; git push
+```
+
+无需等待我确认，检查通过后直接提交并推送。
 
 ## 关键规则
 
@@ -253,4 +272,4 @@
 输出：
 1. 创建 `src/pages/posts/promise-usage.astro`
 2. 在 `src/pages/index.astro` 的 posts 数组最前面添加条目
-3. 检查无误后 commit 并 push
+3. 检查无误后**自动** commit 并 push（全程无需我点击确认）
