@@ -1,0 +1,358 @@
+---
+// 知识库应用：RAG 检索增强生成 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAG检索增强生成详解：原理、知识库构建流程与LOL游戏助手实战</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      .step-flow {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 4px solid #2196f3;
+      }
+      .step-flow ol {
+        margin: 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🧠 知识库应用：RAG 检索增强生成详解</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-5 | 👤 作者：博主 | 🏷️ 标签：RAG, 大模型, 知识库, 向量化, AI Agent</p>
+      </div>
+
+      <div class="section-box">
+        <p>本文系统梳理 RAG（检索增强生成）的核心概念、知识库构建的完整流程，并以"英雄联盟游戏助手"为例，串起从文档上传到大模型生成答案的全链路。</p>
+      </div>
+
+      <h2>一、RAG 相关知识</h2>
+
+      <h3>1.1 什么是 RAG</h3>
+      <p>
+        <strong>RAG（Retrieval-Augmented Generation，检索增强生成）</strong>
+        是一种结合<strong>知识检索</strong>与<strong>语言生成</strong>的人工智能技术，主要用于解决大型语言模型的<strong>幻觉问题</strong>。
+      </p>
+
+      <h3>RAG 工作流程对比</h3>
+      <div class="comparison-table">
+        <table class="comparison-table">
+          <tr>
+            <th>方式</th>
+            <th>流程</th>
+          </tr>
+          <tr>
+            <td><strong>没有 RAG</strong></td>
+            <td>直接将用户问题（query）送入 LLM（大模型）得到结果</td>
+          </tr>
+          <tr>
+            <td><strong>有 RAG</strong></td>
+            <td>
+              ① 将 query 先和知识库做相关性检索，检索出相关的 Context（上下文）<br />
+              ② 将 query 和 Context 融合拼接得到完整结果 result<br />
+              ③ 将 result 送入大模型得到最终答案
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="highlight-box">
+        <strong>💡 基本原理：</strong>在生成回答时，先从知识库中检索相关文档，将检索到的文档与原始问题一起输入 LLM，LLM 基于检索内容生成最终答案。
+      </div>
+
+      <div class="section-box">
+        <h3>📌 核心问答总结</h3>
+        <p><strong>传统 LLM 的缺陷？</strong><br />消息滞后，无法获取最新的知识。</p>
+        <p><strong>RAG 的原理是什么？</strong><br />先基于知识库检索问题相关的上下文，再将问题和上下文结合送入大模型回答。</p>
+        <p><strong>RAG 解决什么问题？</strong><br />大模型幻觉问题。</p>
+      </div>
+
+      <h2>二、RAG 中的知识库如何构建</h2>
+
+      <p>知识库构建的主流程为：<strong>文档准备 → 文档切分 → 文档向量化</strong>。</p>
+
+      <h3>2.1 文档准备</h3>
+      <div class="comparison-table">
+        <table class="comparison-table">
+          <tr>
+            <th>类型</th>
+            <th>支持格式</th>
+            <th>适用场景</th>
+            <th>LOL 案例</th>
+          </tr>
+          <tr>
+            <td>📄 文档类型</td>
+            <td>PDF、Word、TXT</td>
+            <td>攻略文章、教程文档</td>
+            <td>英雄攻略 PDF</td>
+          </tr>
+          <tr>
+            <td>📊 表格类型</td>
+            <td>Excel、CSV</td>
+            <td>结构化数据、统计信息</td>
+            <td>英雄属性表</td>
+          </tr>
+          <tr>
+            <td>🖼️ 照片类型</td>
+            <td>JPG、JPEG、PNG</td>
+            <td>图像生成</td>
+            <td>英雄战斗画面</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="highlight-box">
+        <strong>💡 文档预处理建议：</strong>
+        <ul>
+          <li>清理无关内容（广告、水印）</li>
+          <li>按主题分类整理</li>
+          <li>文件命名规范（含关键信息）</li>
+        </ul>
+      </div>
+
+      <h3>2.2 文档切片</h3>
+      <p>
+        <strong>文档切片：</strong>为了适应大语言模型的上下文长度限制，并提升检索的精确度和效率。
+      </p>
+
+      <h4>切分方式</h4>
+      <ul>
+        <li><strong>① 按字符数切分：</strong>固定长度（如每 300 字一段）</li>
+        <li><strong>② 按符号切分：</strong>按照句号、换行符、感叹号等</li>
+        <li><strong>③ 按语义切分：</strong>识别主题变化点，智能切分</li>
+      </ul>
+
+      <div class="warning-box">
+        <strong>⚠️ 一般选择方式：</strong>按照符号和字符长度一块切分，一般 <strong>200-500 字/段</strong>。
+        <ul>
+          <li>长度太小：上下文不完整，检索不准</li>
+          <li>长度太大：无关信息过多，干扰判断</li>
+        </ul>
+      </div>
+
+      <h3>2.3 文档向量化</h3>
+      <p>
+        <strong>文档向量化：</strong>将切分后的文本进行向量数字化，便于计算问题和文档的相似性。
+      </p>
+
+      <div class="section-box">
+        <strong>💡 什么是向量化？</strong>
+        <pre class="code-block">"问题：盲僧Q技能"   &#8594; [0.8, 0.6, ...]
+"文档1：烹饪技巧"   &#8594; [0.1, 0.8, ...]
+"文档2：盲僧出装"   &#8594; [0.7, 0.5, ...]</pre>
+      </div>
+
+      <div class="success-box">
+        <strong>✅ 向量化作用：</strong>语义理解 · 相似度计算 · 快速检索
+      </div>
+
+      <div class="section-box">
+        <h3>📌 知识库构建小结</h3>
+        <p><strong>主要流程？</strong><br />文档准备 → 文档切分 → 文档向量化。</p>
+        <p><strong>文档为什么要切片？</strong><br />为了适应大语言模型的上下文长度限制，并提升检索的精确度和效率。</p>
+        <p><strong>文档向量化原因？</strong><br />将文本进行向量数字化，便于计算问题和文档的相似性。</p>
+      </div>
+
+      <h2>三、案例实践：英雄联盟游戏助手</h2>
+
+      <h3>环节 1：创建 LOL 攻略知识库</h3>
+      <div class="step-flow">
+        <ol>
+          <li><strong>进入资源库：</strong>Coze → 左侧菜单 → 资源库</li>
+          <li><strong>创建知识库：</strong>资源 → 知识库 → 命名"LOL 攻略库"</li>
+          <li><strong>上传文件：</strong>拖拽/上传文件，支持批量上传</li>
+          <li><strong>文档切块：</strong>自动切块 300/500 字</li>
+          <li><strong>向量化：</strong>预处理分段</li>
+          <li><strong>查看结果：</strong>预览文本处理的效果</li>
+        </ol>
+      </div>
+
+      <h3>环节 2：让 Bot 应用知识库</h3>
+      <div class="step-flow">
+        <ol>
+          <li><strong>进入 Bot：</strong>Coze → 创建 → 智能体</li>
+          <li><strong>构建提示词：</strong>明确角色 → 说明功能 → 规范回复格式</li>
+          <li><strong>选择知识库：</strong>编排模块 → 知识库 → 点击"添加知识库"</li>
+          <li><strong>结果验证：</strong>调试 → 输入问题 → 验证结果</li>
+        </ol>
+      </div>
+
+      <div class="highlight-box">
+        <strong>💡 关键提示：</strong>一个 Bot 可以关联多个知识库，设置优先级可控制检索顺序。
+      </div>
+
+      <h3>英雄联盟助手系统提示词模板</h3>
+      <pre class="code-block"># 角色
+你叫小智，是一个英雄联盟游戏助手
+
+## 技能
+### 技能1：问题理解与回复分析
+1. 认真理解从知识库中召回的内容和用户输入的问题，判断召回的内容是否是用户问题的答案。
+2. 如果你不能理解用户的问题，例如用户的问题太简单、不包含必要信息，
+   此时你需要追问用户，直到你确定已理解了用户的问题和需求。
+
+### 技能2：回答用户问题
+1. 如果知识库中没有召回任何内容，你的话术可以参考"对不起，我已经学习的
+   知识中不包含问题相关内容，暂时无法提供答案。"
+2. 如果召回的内容与用户问题有关，你应该只提取知识库中和问题相关的部分，
+   整理总结、整合优化从知识库中召回的内容。你提供给用户的答案必须精确且
+   简洁，无需注明答案的数据来源。
+3. 为用户提供准确而简洁的答案，同时你需要判断用户的问题属于哪个文档的内容，
+   根据判断结果把相应的文档名称一起返回给用户。
+
+## 限制
+1. 禁止回答的问题（可根据用户问题想一个合适的话术）：
+   - 个人隐私信息：真实姓名、电话号码、地址、账号密码等敏感信息。
+   - 违法、违规内容：政治敏感话题、色情、暴力、赌博、侵权等违反法律
+     法规和道德伦理的内容。
+2. 你必须确保你的回答容易理解。
+3. 你应该用与用户输入相同的语言回答。
+4. 回答长度：不超过 300 字。
+5. 一定要使用 Markdown 格式回复。</pre>
+
+      <div class="section-box">
+        <h3>📌 实现 LOL 游戏助手的全流程</h3>
+        <p>上传文件 → 文档切分 → 文档向量化 → 存储知识库 → 问题检索知识库获取相关上下文 → 问题和上下文融合送入 LLM → 得到预测结果。</p>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
