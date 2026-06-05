@@ -1,0 +1,483 @@
+---
+// 让Bot做事：Function Calling与插件技术 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Function Calling与Coze插件详解：原理、插件生态与自定义天气插件实战</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      h4 {
+        color: #34495e;
+        margin-top: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      .step-flow {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 4px solid #2196f3;
+      }
+      .step-flow ol {
+        margin: 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔌 让 Bot 做事：Function Calling 与插件技术</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-5 | 👤 作者：博主 | 🏷️ 标签：Function Calling, 插件, Coze, 大模型, AI Agent</p>
+      </div>
+
+      <div class="section-box">
+        <p>本文系统讲解 Function Calling（函数调用）的概念与工作原理，梳理 Coze 插件生态与应用方式，并以「智能天气助手」为例，完整演示自定义插件的开发流程与 Python 实现代码。</p>
+      </div>
+
+      <h2>一、什么是 Function Calling</h2>
+      <p>
+        2023 年 6 月 13 日，OpenAI 公布了 <strong>Function Call（函数调用）</strong>功能。该功能指在语言模型中集成<strong>外部功能或 API 的调用能力</strong>，意味着模型可以在生成文本的过程中调用外部函数或服务，获取额外数据或执行特定任务。
+      </p>
+
+      <h3>1.1 Function Call 能解决大模型什么问题</h3>
+      <div class="comparison-table">
+        <table class="comparison-table">
+          <tr>
+            <th>问题</th>
+            <th>说明</th>
+          </tr>
+          <tr>
+            <td><strong>01 信息实时性</strong></td>
+            <td>训练数据无法包含最新信息（如最新新闻、实时股价）。通过 Function Call 可实时获取最新数据，提供时效服务。</td>
+          </tr>
+          <tr>
+            <td><strong>02 数据局限性</strong></td>
+            <td>训练数据虽多但有限，无法覆盖所有领域（如医学、法律）。Function Call 允许模型调用外部数据库或 API 获取专业信息。</td>
+          </tr>
+          <tr>
+            <td><strong>03 功能扩展性</strong></td>
+            <td>大模型不可能内置所有功能。通过 Function Call 可轻松扩展能力，如调用外部工具进行复杂计算、数据分析。</td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>1.2 Function Call 工作原理</h3>
+
+      <h4>没有函数调用时</h4>
+      <div class="section-box">
+        <p>调用 GPT 构建 AI 应用的模式非常简单：</p>
+        <ul>
+          <li>用户（Client）发请求给我们的服务（Chat Server）</li>
+          <li>我们的服务（Chat Server）给 GPT 提示词</li>
+          <li>重复执行</li>
+        </ul>
+      </div>
+
+      <h4>有函数调用时</h4>
+      <div class="section-box">
+        <p>模式会复杂一些：</p>
+        <ul>
+          <li>用户（Client）发请求 prompt 以及 functions 给 Chat Server</li>
+          <li>GPT 模型根据 prompt 判断是用普通文本还是函数调用的格式响应</li>
+          <li>若是函数调用格式，Chat Server 执行该函数并将结果返回给 GPT</li>
+          <li>模型使用提供的数据，用连贯的文本响应返回</li>
+        </ul>
+      </div>
+
+      <div class="highlight-box">
+        <strong>🔄 交互流程示意（序列图）</strong>
+        <pre class="code-block">Client &#8594; Chat Server:  what's weather like today?
+
+Chat Server &#8594; GPT API:  传递 Prompt 和可用函数列表
+   Prompt: "what's weather like today?"
+   Available functions:
+     1. get_location()
+     2. get_weather(location)
+
+GPT API &#8594; Chat Server:  返回函数调用指令
+   Call get_weather(location)
+
+Chat Server:  本地执行函数
+   call get_weather(location)
+
+Chat Server &#8594; GPT API:  返回函数执行结果
+   Result: "Raining"
+
+GPT API &#8594; Chat Server:  结合结果生成自然语言回复
+   Response: "It is raining today, don't forget your umbrella"
+
+Chat Server &#8594; Client:  返回最终回答
+   It is raining today, don't forget your umbrella</pre>
+      </div>
+
+      <div class="section-box">
+        <h3>📌 小结</h3>
+        <p><strong>什么是 Function Calling？</strong><br />让大模型具备调用外部工具的能力。</p>
+        <p><strong>Function Calling 的原理？</strong><br />用户请求 → 大模型判断是否调用函数 → 函数结果返回大模型 → 给出答案。</p>
+      </div>
+
+      <h2>二、Coze 中如何应用 Function Calling</h2>
+
+      <h3>视角对比</h3>
+      <div class="comparison-table">
+        <table class="comparison-table">
+          <tr>
+            <th>程序员视角</th>
+            <th>Coze 视角</th>
+          </tr>
+          <tr>
+            <td>Function Call</td>
+            <td>🔌 插件（插件是一个工具集，包含一个或多个工具，每个工具 = 一个可调用的 API）</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="highlight-box">
+        <strong>💡 核心机制不变：</strong>模型通过阅读<strong>【插件描述】</strong>来决定是否调用该插件！
+      </div>
+
+      <h3>Coze 插件生态一览</h3>
+      <div class="section-box">
+        <h4>📖 插件分类体系</h4>
+        <ul>
+          <li><strong>官方插件</strong>（Coze 提供）：免费插件 + 付费插件（部分有免费额度）</li>
+          <li><strong>👥 第三方插件</strong>（开发者提供）：免费插件 + 付费插件（部分有免费额度）</li>
+          <li><strong>🔧 自定义插件</strong>（你自己创建）：集成你需要的任何 API</li>
+        </ul>
+      </div>
+
+      <div class="section-box">
+        <h4>💼 常见插件类别</h4>
+        <ul>
+          <li><strong>信息查询：</strong>搜索、新闻、天气、地图</li>
+          <li><strong>📊 数据分析：</strong>股票、汇率、图表生成</li>
+          <li><strong>🎨 内容创作：</strong>图片生成、视频编辑</li>
+          <li><strong>💼 效率工具：</strong>邮件、日历、翻译、计算器</li>
+          <li><strong>🛍️ 生活服务：</strong>美食、旅游、购物推荐</li>
+        </ul>
+      </div>
+
+      <h3>案例：AI 旅行规划助手（利用已有插件）</h3>
+      <p>🎯 目标：基于现有插件，帮我规划去北京旅游的行程。所用插件：联网问答 search_url、高德地图 Search_around、墨迹天气 DayWeather、简易计算器 calculate。</p>
+
+      <pre class="code-block"># 角色
+你是一位专业且贴心的旅游规划助手，擅长综合考虑时间、天气、价格、
+旅游景点等多元信息，为用户精心打造性价比超高的出行计划。不仅如此，
+还能凭借丰富的知识储备，深入解读旅行目的地的文化历史内涵。
+
+## 技能
+### 技能 1: 深度探索名胜古迹历史
+当用户提出旅行计划相关需求时，首先运用 &#123;search_url&#125; 搜索插件精准
+挖掘相关历史信息，并以生动、易懂的方式呈现给用户。
+
+### 技能 2: 精准搜索周边特色饭店
+1. 当用户提出旅行计划相关需求时，借助 &#123;search_around&#125; 插件全面搜索。
+2. 对搜索到的饭店信息进行细致整理，涵盖饭店名称、详细地址、招牌特色
+   菜品等关键内容。
+===回复示例===
+   - 饭店名称: &lt;饭店具体名称&gt;
+   - 地址: &lt;详细地址&gt;
+   - 特色菜品: &lt;列举几道特色菜品&gt;
+===示例结束===
+
+### 技能 3: 实时掌握出行天气
+1. 利用 &#123;DayWeather&#125; 插件获取目的地出行期间的准确天气状况。
+2. 若天气状况可能影响旅行体验，依据天气特点给出合理的出行日期调整建议。
+===回复示例===
+   - 预计出行期间天气状况: &lt;具体天气描述&gt;
+   - 基于天气情况，建议出行日期调整为: &lt;具体日期&gt;
+===示例结束===
+
+### 技能 4: 精细规划旅行费用预算
+1. 根据目的地、出行时长、住宿要求等，通过 &#123;calculate&#125; 插件进行精确
+   的费用预算。
+2. 费用预算全面覆盖交通、住宿、餐饮、景点门票等主要支出项目。
+===回复示例===
+   - 交通费用预算: &lt;具体金额&gt;
+   - 住宿费用预算: &lt;具体金额&gt;
+   - 餐饮费用预算: &lt;具体金额&gt;
+   - 景点门票费用预算: &lt;具体金额&gt;
+   - 总预算: &lt;各项费用总和&gt;
+===示例结束===
+
+## 输出格式
+### 旅行计划输出示例
+- 旅行目的地: &lt;具体城市/地点&gt;
+- 地点文化历史: &lt;描述名胜古迹历史&gt;
+- 出行时间: &lt;开始日期 - 结束日期&gt;
+- 总预算: &lt;具体金额&gt;
+- 天气情况: &lt;具体天气信息描述&gt;
+- 行程安排:
+   - 第 1 天:
+      - 上午: &lt;具体行程安排&gt;
+      - 中午: &lt;推荐用餐饭店&gt;
+      - 下午: &lt;具体行程安排&gt;
+      - 晚上: &lt;推荐用餐饭店及活动安排&gt;
+   - ……（按实际行程天数依次详细罗列）
+- 特色饭店推荐:
+   - &lt;饭店 1 名称&gt;：地址 - &lt;详细地址&gt;，特色菜品 - &lt;列举菜品&gt;
+   - ……（如有多个饭店依次详细罗列）
+
+## 限制
+- 专注提供与旅行规划紧密相关的信息，拒绝回答无关话题。
+- 输出内容务必严格按照给定格式组织，不得偏离框架要求。
+- 行程安排描述要简洁明了且重点突出。
+- 确保信息来源准确可靠，插件获取的信息需经过严谨整理筛选。
+- 请使用 Markdown 的 ^^ 形式清晰说明引用来源（若有）。</pre>
+
+      <h2>三、案例实践：智能天气助手（自定义插件）</h2>
+
+      <h3>3.1 什么时候需要自定义插件？</h3>
+      <div class="section-box">
+        <ul>
+          <li><strong>🔧 官方插件没有你想要的功能：</strong>现有插件库找不到满足特定需求的工具</li>
+          <li><strong>💰 付费插件费用太贵：</strong>官方或第三方付费插件成本过高，自行开发更经济</li>
+          <li><strong>🔌 想连接特定的第三方 API 服务：</strong>需要集成特定的外部服务或 API 接口</li>
+          <li><strong>🏢 需要对接企业内部系统：</strong>与企业内部数据库、业务系统等进行集成</li>
+        </ul>
+      </div>
+
+      <h3>3.2 自定义插件基本流程</h3>
+      <div class="step-flow">
+        <ol>
+          <li><strong>进入资源库：</strong>Coze → 左侧菜单 → 资源库</li>
+          <li><strong>新建插件：</strong>资源 → 插件命名 → IDE Python 插件</li>
+          <li><strong>元数据操作：</strong>定义输入参数 → 定义输出参数</li>
+          <li><strong>代码编写：</strong>编写主逻辑代码</li>
+          <li><strong>测试代码：</strong>测试代码功能</li>
+          <li><strong>发布插件：</strong>将插件发布，供后续 Bot 调用</li>
+        </ol>
+      </div>
+
+      <div class="success-box">
+        <strong>✅ 完整过程：</strong>打开资源库 → 点击插件 → 选择 Python 开发 → 定义输入和输出 → 构建代码 → 测试插件 → 发布 → 添加到 Bot。
+      </div>
+
+      <h3>3.3 天气插件助手实现（自定义开发）</h3>
+      <pre class="code-block"># 导入 Coze 运行时所需的 Args 类，用于获取输入参数和日志记录器
+from runtime import Args
+# 导入 requests 库，用于发送 HTTP 请求（调用天气 API），需要安装对应的库
+import requests
+
+
+# 定义插件的主入口函数 handler；Coze 平台会自动调用此函数
+# 参数 args 是 Coze 传入的运行时上下文对象
+# 返回值为 dict 类型，将作为插件的输出结果返回给 Agent
+def handler(args: Args):
+    """
+    天气查询插件：
+        根据城市地址查询天气信息，比如输入"北京"，输出
+        &#123;
+            high: "高温 7℃",
+            low: "低温 -1℃",
+            weather: "晴",
+            week: "星期二"
+        &#125;
+    """
+
+    # === 1. 解析输入 ===
+    try:
+        # 从 args.input 获取 location 字段并去除首尾空格（如 " 北京 "）
+        location = args.input.location.strip()
+    except Exception:
+        # 若获取失败（字段不存在、输入非对象等），设为空字符串
+        location = ""
+
+    # === 2. 城市编码映射（仅北京、天津，内置）===
+    city_code_map = &#123;
+        "北京": "101010100",   # 北京市的天气 API 编码
+        "天津": "101030100"    # 天津市的天气 API 编码
+    &#125;
+    # 根据城市名查找编码，找不到返回 None
+    city_code = city_code_map.get(location)
+
+    # 不支持的城市（如"上海"或空字符串）→ 返回空值结构
+    if not city_code:
+        args.logger.warning(f"Unsupported location: '&#123;location&#125;'")
+        return &#123;
+            "high": None,       # 最高温度
+            "low": None,        # 最低温度
+            "weather": None,    # 天气类型（如"晴"）
+            "week": None        # 星期（如"星期二"）
+        &#125;
+
+    # === 3. 调用天气 API ===
+    # 拼接完整请求 URL，替换 &#123;city_code&#125; 为实际城市编码
+    url = f"http://t.weather.itboy.net/api/weather/city/&#123;city_code&#125;"
+
+    try:
+        # 发起 GET 请求，超时 5 秒（防止插件卡死）
+        response = requests.get(url, timeout=5)
+        # HTTP 状态码非 2xx 时主动抛异常（404、500 等）
+        response.raise_for_status()
+        # 安全方式解析 JSON（避免危险的 eval）
+        data = response.json()
+
+        # 检查 API 业务层状态码（约定 status=200 表示成功）
+        if data.get("status") != 200:
+            raise ValueError("Weather API returned non-200 status")
+
+        # 提取「今日」天气预报（forecast 列表第 0 项即当天）
+        forecast = data["data"]["forecast"][0]
+
+        # 构造并返回天气基本信息字典
+        return &#123;
+            "high": forecast["high"],     # 如 "高温 7℃"
+            "low": forecast["low"],       # 如 "低温 -1℃"
+            "weather": forecast["type"],  # 如 "晴"、"小雨"
+            "week": forecast["week"]      # 如 "星期二"
+        &#125;
+
+    # 捕获所有异常（网络错误、JSON 解析失败、字段缺失等）
+    except Exception as e:
+        # 记录错误日志，含异常信息和请求城市，便于调试
+        args.logger.error(f"Weather query failed for '&#123;location&#125;': &#123;e&#125;")
+        # 统一返回空值结构，确保插件健壮性
+        return &#123;
+            "high": None,
+            "low": None,
+            "weather": None,
+            "week": None
+        &#125;</pre>
+
+      <div class="warning-box">
+        <strong>⚠️ 健壮性要点：</strong>对外部 API 调用设置超时、用 <code>response.json()</code> 替代危险的 <code>eval()</code>、捕获全部异常并统一返回空值结构，可避免单个请求失败导致整个 Agent 崩溃。
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
