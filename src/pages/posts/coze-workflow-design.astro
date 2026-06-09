@@ -1,0 +1,331 @@
+---
+// Coze实战：工作流设计与编排 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coze实战：工作流设计与编排详解，工作流vs对话流、节点组件与四种形式</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      h4 {
+        color: #34495e;
+        margin-top: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      .step-flow {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 4px solid #2196f3;
+      }
+      .step-flow ol {
+        margin: 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔧 Coze 实战：让 Bot 做复杂事——工作流设计与编排</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-5 | 👤 作者：博主 | 🏷️ 标签：Coze, 工作流, Workflow, 对话流, AI Agent</p>
+      </div>
+
+      <div class="section-box">
+        <p>本文系统讲解 Coze 工作流的核心概念：工作流与对话流的区别、节点这一核心组件的分类、工作流的四种典型形式，以及从创建到发布的标准流程。</p>
+      </div>
+
+      <h2>一、什么是工作流</h2>
+      <div class="highlight-box">
+        <strong>工作流 = 业务逻辑的可视化执行</strong>
+      </div>
+      <p>
+        <strong>工作流的作用：</strong>它将一个复杂的任务分解成一系列可管理的、按顺序或按条件执行的步骤，并通过图形化界面将这些步骤连接起来。
+      </p>
+
+      <h2>二、Coze 的两种工作流类型</h2>
+      <p>Coze 提供两种工作流：<strong>工作流（Workflow）</strong>和<strong>对话流（Chatflow）</strong>。</p>
+
+      <div class="comparison-table">
+        <table class="comparison-table">
+          <tr>
+            <th>对比维度</th>
+            <th>工作流 (Workflow)</th>
+            <th>对话流 (Chatflow)</th>
+          </tr>
+          <tr>
+            <td><strong>适用场景</strong></td>
+            <td>功能类、数据处理</td>
+            <td>对话类、交互式应用</td>
+          </tr>
+          <tr>
+            <td><strong>典型案例</strong></td>
+            <td>报告生成、海报制作、数据分析</td>
+            <td>智能客服、AI 助手、虚拟伴侣</td>
+          </tr>
+          <tr>
+            <td><strong>上下文</strong></td>
+            <td>不支持对话历史</td>
+            <td>支持读取对话历史</td>
+          </tr>
+          <tr>
+            <td><strong>会话管理</strong></td>
+            <td>无会话概念</td>
+            <td>必须传入会话名称</td>
+          </tr>
+          <tr>
+            <td><strong>发布渠道</strong></td>
+            <td>API、模板、商店</td>
+            <td>全渠道（含社交平台）</td>
+          </tr>
+        </table>
+      </div>
+
+      <h2>三、节点 = 工作流的核心组件</h2>
+      <p>
+        <strong>节点定义：</strong>每个节点是一个具有特定功能的独立组件，负责处理数据、执行任务。
+      </p>
+
+      <h3>节点分类及功能</h3>
+      <div class="comparison-table">
+        <table class="comparison-table">
+          <tr>
+            <th>类型</th>
+            <th>作用</th>
+            <th>常用节点</th>
+          </tr>
+          <tr>
+            <td>基础</td>
+            <td>流程控制</td>
+            <td>开始/结束</td>
+          </tr>
+          <tr>
+            <td>逻辑</td>
+            <td>条件判断</td>
+            <td>选择器/循环/批处理</td>
+          </tr>
+          <tr>
+            <td>功能</td>
+            <td>能力调用</td>
+            <td>LLM/插件/问答</td>
+          </tr>
+          <tr>
+            <td>数据</td>
+            <td>数据处理</td>
+            <td>变量/转换/聚合</td>
+          </tr>
+          <tr>
+            <td>输出</td>
+            <td>结果返回</td>
+            <td>输出节点</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="highlight-box">
+        <strong>💡 核心思想：</strong>通过将不同功能的节点连接起来，就能精确控制数据流向和任务执行顺序，从而实现任何复杂的业务逻辑。
+      </div>
+
+      <h2>四、工作流的 4 种不同形式</h2>
+
+      <div class="section-box">
+        <h3>📝 多步骤任务</h3>
+        <p><strong>特征：</strong>需要按顺序执行多个操作</p>
+        <p><strong>案例：</strong>生成行业分析报告</p>
+        <pre class="code-block">搜索资料 &#8594; 提取信息 &#8594; 整理成文 &#8594; 格式化输出</pre>
+      </div>
+
+      <div class="section-box">
+        <h3>🔀 条件分支</h3>
+        <p><strong>特征：</strong>根据不同情况走不同路径</p>
+        <p><strong>案例：</strong>智能客服分流</p>
+        <pre class="code-block">判断问题类型 &#8594; 选择处理方式 &#8594; 返回结果</pre>
+      </div>
+
+      <div class="section-box">
+        <h3>📦 批量处理</h3>
+        <p><strong>特征：</strong>对多个对象执行相同操作</p>
+        <p><strong>案例：</strong>批量生成图片</p>
+        <pre class="code-block">读取提示词列表 &#8594; 逐个生成图片 &#8594; 汇总输出</pre>
+      </div>
+
+      <div class="section-box">
+        <h3>🔄 数据转换</h3>
+        <p><strong>特征：</strong>多环节的数据清洗与加工</p>
+        <p><strong>案例：</strong>表格数据分析</p>
+        <pre class="code-block">读取数据 &#8594; 清洗格式 &#8594; 计算统计 &#8594; 可视化呈现</pre>
+      </div>
+
+      <h2>五、创建工作流的标准流程</h2>
+
+      <h3>✏️ Step 1：创建工作流</h3>
+      <div class="step-flow">
+        <p><strong>操作路径：</strong>资源库 → +资源 → 工作流</p>
+        <p><strong>设置内容：</strong></p>
+        <ul>
+          <li>工作流名称（清晰明确）</li>
+          <li>功能描述（帮助 AI 理解）</li>
+        </ul>
+      </div>
+
+      <h3>🎨 Step 2：编排工作流</h3>
+      <div class="step-flow">
+        <p><strong>核心操作：</strong></p>
+        <ul>
+          <li>在可视化画布中添加节点</li>
+          <li>连接节点形成数据流</li>
+          <li>配置每个节点的输入输出参数</li>
+        </ul>
+        <p><strong>设置内容：</strong></p>
+        <pre class="code-block">开始节点 &#8594; LLM 节点 &#8594; 插件节点 &#8594; 结束节点</pre>
+      </div>
+
+      <h3>✅ Step 3：测试并发布</h3>
+      <div class="step-flow">
+        <p><strong>测试方法：</strong>点击测试按钮 → 输入测试数据 → 检查节点状态</p>
+        <p><strong>发布流程：</strong>测试通过后点击"发布"，发布后其他用户可以使用该工作流</p>
+      </div>
+
+      <div class="section-box">
+        <h3>📌 小结</h3>
+        <p><strong>什么是工作流？</strong><br />业务逻辑的可视化执行。</p>
+        <p><strong>Coze 的两种工作流类型？</strong><br />对话流和工作流。</p>
+        <p><strong>工作流的核心组件？</strong><br />节点：具有特定功能的独立组件，负责处理数据、执行任务。</p>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
