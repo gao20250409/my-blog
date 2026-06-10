@@ -1,0 +1,478 @@
+---
+// Coze实战：对话流与工作流案例实践 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coze实战：对话流与工作流案例，跨境电商答疑助手与历史人物视频生成</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 { color: #2c3e50; margin-top: 25px; }
+      h4 { color: #34495e; margin-top: 20px; }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover { background: #2980b9; }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover { background: #f8f9fa; }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      .step-flow {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 4px solid #2196f3;
+      }
+      ul, ol { margin: 15px 0; padding-left: 30px; }
+      li { margin: 8px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🤖 Coze 实战：对话流与工作流案例实践</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-10 | 👤 作者：博主 | 🏷️ 标签：Coze, 对话流, 工作流, RAG, AI Agent, Python</p>
+      </div>
+
+      <div class="section-box">
+        <p>本文通过两个完整案例讲解 Coze 对话流与工作流的应用：①「跨境电商答疑助手」演示对话流的意图识别 + RAG 检索完整链路；②「历史人物视频生成」演示工作流的多步骤批量自动化设计。</p>
+      </div>
+
+      <!-- ============================
+           案例一：跨境电商答疑助手
+           ============================ -->
+      <h2>一、案例实践：跨境电商答疑助手（对话流）</h2>
+
+      <h3>1.1 ⭐ 为什么选择对话流</h3>
+      <div class="success-box">
+        <ul>
+          <li>多轮交互</li>
+          <li>上下文记忆</li>
+          <li>理解对话历史</li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <strong>🎯 业务场景痛点：</strong>学生学习中产生大量问题，教师答疑压力大。
+      </div>
+
+      <h3>1.2 核心功能设计</h3>
+      <div class="section-box">
+        <p><strong>1️⃣ 智能意图识别</strong><br />打招呼/感谢、人工服务请求、专业问题等区分</p>
+        <p><strong>2️⃣ 知识库智能检索</strong></p>
+        <ul>
+          <li>命中相关内容 → 基于内容回答</li>
+          <li>未命中相关内容 → 结合通用知识回答</li>
+        </ul>
+      </div>
+
+      <h3>1.3 基本流程</h3>
+      <div class="step-flow">
+        <ol>
+          <li><strong>开始节点</strong></li>
+          <li><strong>意图识别</strong>
+            <ul>
+              <li>如果属于打招呼/找人工，直接回复结果</li>
+              <li>否则，进入知识检索</li>
+            </ul>
+          </li>
+          <li><strong>知识检索</strong>
+            <ul>
+              <li>检索出相关上下文 → 基于 RAG 大模型回答</li>
+              <li>没有检索出上下文 → 基于闲聊大模型回答</li>
+            </ul>
+          </li>
+          <li><strong>结束节点</strong></li>
+        </ol>
+      </div>
+
+      <h3>1.4 完整对话流逐节点详解</h3>
+
+      <h4>节点 1：开始节点</h4>
+      <div class="section-box">
+        <p><strong>作用：</strong>接受用户输入的问题（query）</p>
+        <p><strong>实现方式：</strong>《默认节点》</p>
+      </div>
+
+      <h4>节点 2：意图识别节点</h4>
+      <div class="section-box">
+        <p><strong>作用：</strong>判断用户的 query 是否属于跨境电商知识范畴</p>
+        <p><strong>主要三种结果：</strong>打招呼（greeting）、找人工（human）、RAG 检索（rag）</p>
+        <p><strong>实现方式：</strong>添加《插件》节点，自定义 Python 实现</p>
+      </div>
+
+      <pre class="code-block">from runtime import Args
+import random
+
+def handler(args) -&gt; dict:
+    """
+    基于固定短语匹配的跨境电商问答处理器
+    Returns: Dict，包含回复类型、回复内容等信息
+    """
+    query = args.input.query.strip()
+
+    # ---- 短语集合定义 ----
+    greeting_phrases = &#123;
+        "你好", "您好", "hi", "hello", "嗨", "哈喽", "哈罗",
+        "早上好", "下午好", "晚上好", "上午好", "中午好", "晚安",
+        "早", "午安", "good morning", "good afternoon", "good evening",
+        "你是谁", "你是什么", "你叫什么", "你的名字", "介绍一下自己",
+        "自我介绍", "你是什么东西", "你是哪个", "你是啥",
+        "你好吗", "怎么样", "还好吗", "你还好吗", "最近怎么样",
+        "你在吗", "在不在", "还在吗", "在线吗", "你在线吗",
+        "你能干什么", "你会做什么", "你能做什么", "你的功能",
+        "你有什么用", "你的作用", "你的职责", "你的用途",
+        "你能帮我什么", "你可以做什么", "你会什么", "你懂什么",
+        "能力介绍", "功能介绍", "你的能力", "你有什么功能",
+        "开始", "开始咨询", "开始对话", "开始聊天", "我想咨询",
+        "我有问题", "我想问问题", "我想了解", "咨询一下",
+        "测试", "试试", "试一试", "test", "testing", "试试看",
+        "测试一下", "看看", "检查一下"
+    &#125;
+
+    thank_phrases = &#123;
+        "谢谢", "感谢", "多谢", "谢了", "thanks", "thank you",
+        "thx", "3q", "3x", "谢谢你", "感谢你", "多谢了",
+        "非常感谢", "十分感谢", "万分感谢", "太感谢了"
+    &#125;
+
+    goodbye_phrases = &#123;
+        "再见", "拜拜", "bye", "byebye", "goodbye", "88", "走了", "告辞",
+        "先走了", "下次见", "回头见", "有空再聊", "改天聊",
+        "see you", "拜", "溜了", "闪了", "slip away"
+    &#125;
+
+    human_service_phrases = &#123;
+        "人工服务", "人工客服", "人工坐席", "人工咨询", "人工帮助",
+        "人工支持", "人工答疑", "人工解答", "人工回复", "人工对话",
+        "转人工", "找人工", "要人工", "转接人工", "转接客服",
+        "切换人工", "接入人工", "联系人工", "答疑入口",
+        "真人服务", "真人客服", "真人咨询", "真人对话", "真人帮助",
+        "活人", "真人", "人类", "人工", "真的人",
+        "客服", "在线客服", "联系客服", "找客服", "客服电话",
+        "客服微信", "客服qq", "官方客服",
+        "联系老师", "找老师", "咨询老师", "请教老师", "老师帮忙",
+        "专业老师", "课程老师", "指导老师",
+        "专人服务", "专人客服", "专业咨询", "专业服务", "专家咨询",
+        "顾问咨询", "一对一服务", "专属服务",
+        "投诉", "举报", "反馈问题", "意见反馈", "服务投诉",
+        "质量问题", "服务问题", "系统问题",
+        "退款", "退货", "售后", "售后服务", "退换货", "申请退款",
+        "退费", "取消订单", "订单问题",
+        "不满意", "有问题", "出问题", "不行", "太差了", "服务差",
+        "回答不对", "答非所问", "听不懂", "不准确"
+    &#125;
+
+    # ---- 固定回复 ----
+    greeting_response = "你好，很高兴为您服务！我是您的跨境电商学习小助手，专业为您答疑解惑。"
+    polite_responses = &#123;
+        "thank": [
+            "不用客气，随时为您服务！",
+            "很高兴能帮助到您！",
+            "这是我应该做的，有问题随时找我哦！",
+            "客气了，有什么问题尽管问！",
+            "不客气，祝您跨境电商生意兴隆！"
+        ],
+        "goodbye": [
+            "再见！期待下次为您服务！",
+            "祝您生活愉快，有问题随时来找我！",
+            "再见！祝您跨境电商生意兴隆！",
+            "拜拜！有问题随时回来咨询！",
+            "再见！祝您学习愉快！"
+        ]
+    &#125;
+    human_service_response = "同学，点击 https://www.123.com 可进入人工答疑"
+
+    # ---- 工具函数 ----
+    def normalize_text(text: str) -&gt; str:
+        import re
+        return re.sub(r'[^\w\u4e00-\u9fff]', '', text.lower().strip())
+
+    def exact_match_check(query_text: str, phrase_set) -&gt; bool:
+        nq = normalize_text(query_text)
+        return any(normalize_text(p) == nq for p in phrase_set)
+
+    def contains_match_check(query_text: str, phrase_set) -&gt; bool:
+        nq = normalize_text(query_text)
+        if len(nq) &lt;= 10:
+            return any(normalize_text(p) in nq or nq in normalize_text(p)
+                       for p in phrase_set)
+        return False
+
+    # ---- 主逻辑 ----
+    if not query:
+        return &#123;"type": "error", "response": "请输入您的问题。",
+                "need_rag": False, "original_query": query&#125;
+
+    if exact_match_check(query, thank_phrases):
+        return &#123;"type": "greeting",
+                "response": random.choice(polite_responses["thank"]),
+                "need_rag": False, "original_query": query&#125;
+
+    if exact_match_check(query, goodbye_phrases):
+        return &#123;"type": "greeting",
+                "response": random.choice(polite_responses["goodbye"]),
+                "need_rag": False, "original_query": query&#125;
+
+    if exact_match_check(query, greeting_phrases) or \
+       contains_match_check(query, greeting_phrases):
+        return &#123;"type": "greeting", "response": greeting_response,
+                "need_rag": False, "original_query": query&#125;
+
+    if exact_match_check(query, human_service_phrases) or \
+       contains_match_check(query, human_service_phrases):
+        return &#123;"type": "human_service", "response": human_service_response,
+                "need_rag": False, "original_query": query&#125;
+
+    # 其他情况：需要 RAG 检索
+    return &#123;"type": "rag_needed", "response": "",
+            "need_rag": True, "original_query": query&#125;</pre>
+
+      <h4>节点 3：选择器</h4>
+      <div class="section-box">
+        <p><strong>作用：</strong>获取意图识别结果，进行路由分发</p>
+        <ul>
+          <li>意图为打招呼或人工服务 → 直接返回默认结果结束</li>
+          <li>其他 → 进入知识库检索</li>
+        </ul>
+        <p><strong>实现方式：</strong>添加《选择器》节点</p>
+      </div>
+
+      <h4>节点 4：知识库检索</h4>
+      <div class="section-box">
+        <p><strong>作用：</strong>输入用户的专业问题，经过知识库检索，得到相关上下文（可能为空）</p>
+        <p><strong>实现方式：</strong>添加《知识库检索》节点</p>
+      </div>
+
+      <h4>节点 5：判断是否检索出结果（选择器）</h4>
+      <div class="section-box">
+        <ul>
+          <li>检索出相关上下文 → 交由《大模型 RAG 回答》：基于问题 + 上下文回答</li>
+          <li>未检索出上下文 → 交由《闲聊大模型回答》：直接将问题送入大模型</li>
+        </ul>
+        <p><strong>实现方式：</strong>添加《选择器》节点</p>
+      </div>
+
+      <h4>节点 6：大模型 RAG 回答</h4>
+      <div class="section-box">
+        <p><strong>作用：</strong>接受用户的 query 和上下文，经过大模型得到结果</p>
+        <p><strong>实现方式：</strong>添加《大模型》节点</p>
+      </div>
+
+      <p><strong>RAG 大模型系统 Prompt：</strong></p>
+      <pre class="code-block"># 角色
+你是一位专业且高效的跨境电商答疑小助手，精通跨境电商领域的各类知识，
+能够依据相关信息准确回答用户关于跨境电商的问题。
+
+## 技能
+### 技能 1: 基于上下文解答问题
+1. 严格依据提供的上下文内容进行回答，不添加上下文中未出现的信息。
+2. 回答需精准、简洁、有条理，重点突出，逻辑严密，避免歧义。
+
+### 技能 2: 答案优化
+1. 若检索出的上下文答案比较简单，需进行优化，但不能改变原来核心内容。
+2. 示例：
+   - 问题：是不是不能在一个页面里面同时设置两个素材只能选一个通用图案？
+   - 检索答案：是的
+   - 优化后：是的，不能同时设置两个素材（A图案对应白T，B图案对应黑T），
+     只能选一个通用于白黑T的图案。
+
+### 技能 3: 上下文不足时补齐
+1. 若上下文信息非常少或没有，需结合自身专业知识回答。
+2. 示例：
+   - 问题：产品标题中即有泰文和英文，算重复吗？
+   - 上下文：请不要在标题中出现叠词
+   - 回答：本地知识库未提供相关内容，结合专业知识，目前没有明确标准判定
+     这种情况一定算重复，具体要根据不同平台规则和实际情况判断。以上仅供参考。
+
+### 技能 4: 敏感词过滤
+1. 遇到不符合安全规范或敏感词汇时，优先利用插件 check 进行敏感词搜索，然后去除。
+
+## 限制
+- 仅回答与跨境电商相关的问题，拒绝处理无关话题。
+- 优先以检索的知识库内容为答案，内容不全时再优化或补全。
+- 若知识库中没有相关内容，应按技能 3 要求回答。</pre>
+
+      <p><strong>RAG 大模型用户 Prompt：</strong></p>
+      <pre class="code-block">问题：&#123;&#123;input&#125;&#125;, 上下文：&#123;&#123;context[0].output&#125;&#125;</pre>
+
+      <h4>节点 7：大模型闲聊回答</h4>
+      <div class="section-box">
+        <p><strong>作用：</strong>接受用户的问题，直接基于大模型本身回答</p>
+        <p><strong>实现方式：</strong>添加《大模型》节点</p>
+      </div>
+
+      <p><strong>闲聊大模型系统 Prompt：</strong></p>
+      <pre class="code-block"># 角色
+你是一位专业且亲切的跨境电商答疑小助手，拥有深厚的跨境电商专业知识，
+也具备广泛的通用知识储备，能灵活切换角色，既能解答专业问题，也能日常闲聊。
+
+## 技能
+### 技能 1: 精准解答跨境电商问题
+1. 充分运用专业知识，结合实际案例，提供准确、全面且详细的解答。
+2. 针对复杂概念，用通俗易懂的语言深入浅出地解释。
+3. 在回答结尾注明"以上答案仅供参考"。
+
+### 技能 2: 耐心回应非跨境电商问题
+1. 当用户提及非电商问题时，耐心、准确地回答。
+2. 在回答结尾同样注明"以上答案仅供参考"。
+
+### 技能 3: 合理引导不明确问题
+1. 当问题含义不明确时，输出：
+   "我还在努力理解您的问题，请您详细描述后再来询问吧，这样我能更好地为您解答。"
+
+## 限制
+- 对与跨境电商学习及通用知识无关的话题，礼貌拒绝并告知：
+  "抱歉，我只能回答与跨境电商学习和其他非电商知识相关的问题哦"。
+- 回答中禁止提及：需要进行知识库检索。</pre>
+
+      <p><strong>闲聊大模型用户 Prompt：</strong></p>
+      <pre class="code-block">用户输入：&#123;&#123;input&#125;&#125;</pre>
+
+      <h4>节点 8：结束节点</h4>
+      <div class="section-box">
+        <p><strong>作用：</strong>输出最终结果</p>
+        <p><strong>实现方式：</strong>默认节点</p>
+      </div>
+
+      <!-- ============================
+           案例二：历史人物视频生成
+           ============================ -->
+      <h2>二、案例实践：历史人物视频生成（工作流）</h2>
+
+      <h3>2.1 🌟 为什么选择工作流</h3>
+      <div class="success-box">
+        <ul>
+          <li>功能类 AI 应用</li>
+          <li>批量数据处理</li>
+          <li>多步骤自动化</li>
+          <li>无需对话交互</li>
+        </ul>
+      </div>
+
+      <h3>2.2 🎯 业务场景</h3>
+      <div class="highlight-box">
+        <strong>目标：</strong>输入人物名字，自动生成视频。
+      </div>
+
+      <h3>2.3 核心功能设计</h3>
+      <div class="section-box">
+        <ul>
+          <li><strong>内容规划：</strong>LLM 生成人物一生重要节点（时间、事件、提示词）</li>
+          <li><strong>素材批量制作：</strong>根据提示词生成 AI 图片和 AI 视频</li>
+          <li><strong>视频合成：</strong>计算每段视频的时间线，添加字幕、标题、音乐</li>
+        </ul>
+      </div>
+
+      <div class="warning-box">
+        <strong>🎬 最终输出：</strong>返回剪映草稿 ID，用户直接导入剪映，生成视频。
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
