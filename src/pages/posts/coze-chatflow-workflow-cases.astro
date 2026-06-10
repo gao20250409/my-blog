@@ -7,7 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coze实战：对话流与工作流案例，跨境电商答疑助手与历史人物视频生成</title>
+    <title>Coze实战：对话流与工作流案例，跨境电商答疑助手</title>
 
     <style>
       body {
@@ -138,7 +138,7 @@
       </div>
 
       <div class="section-box">
-        <p>本文通过两个完整案例讲解 Coze 对话流与工作流的应用：①「跨境电商答疑助手」演示对话流的意图识别 + RAG 检索完整链路；②「历史人物视频生成」演示工作流的多步骤批量自动化设计。</p>
+        <p>本文通过两个完整案例讲解 Coze 对话流与工作流的应用：①「跨境电商答疑助手」演示对话流的意图识别 + RAG 检索完整链路；。</p>
       </div>
 
       <!-- ============================
@@ -435,39 +435,6 @@ def handler(args) -&gt; dict:
       <div class="section-box">
         <p><strong>作用：</strong>输出最终结果</p>
         <p><strong>实现方式：</strong>默认节点</p>
-      </div>
-
-      <!-- ============================
-           案例二：历史人物视频生成
-           ============================ -->
-      <h2>二、案例实践：历史人物视频生成（工作流）</h2>
-
-      <h3>2.1 🌟 为什么选择工作流</h3>
-      <div class="success-box">
-        <ul>
-          <li>功能类 AI 应用</li>
-          <li>批量数据处理</li>
-          <li>多步骤自动化</li>
-          <li>无需对话交互</li>
-        </ul>
-      </div>
-
-      <h3>2.2 🎯 业务场景</h3>
-      <div class="highlight-box">
-        <strong>目标：</strong>输入人物名字，自动生成视频。
-      </div>
-
-      <h3>2.3 核心功能设计</h3>
-      <div class="section-box">
-        <ul>
-          <li><strong>内容规划：</strong>LLM 生成人物一生重要节点（时间、事件、提示词）</li>
-          <li><strong>素材批量制作：</strong>根据提示词生成 AI 图片和 AI 视频</li>
-          <li><strong>视频合成：</strong>计算每段视频的时间线，添加字幕、标题、音乐</li>
-        </ul>
-      </div>
-
-      <div class="warning-box">
-        <strong>🎬 最终输出：</strong>返回剪映草稿 ID，用户直接导入剪映，生成视频。
       </div>
 
       <div style="text-align: center;">
