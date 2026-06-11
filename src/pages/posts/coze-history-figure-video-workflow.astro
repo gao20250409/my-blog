@@ -1,0 +1,644 @@
+---
+// Coze实战：历史人物一生视频生成工作流（22节点完整拆解）
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coze实战：历史人物一生视频生成工作流（22节点完整拆解）</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.4em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 40px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      h4 {
+        color: #34495e;
+        margin-top: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      .node-card {
+        background: #fafafa;
+        border: 1px solid #e0e0e0;
+        border-left: 4px solid #9b59b6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+      .node-card h3 {
+        margin-top: 0;
+        color: #8e44ad;
+      }
+      .pipeline {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        text-align: center;
+        font-weight: 600;
+        line-height: 2;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      code.inline {
+        background: #f1f3f5;
+        color: #c0392b;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎬 Coze实战：历史人物一生视频生成工作流</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-11 | 👤 作者：博主 | 🏷️ 标签：Coze, 工作流, AI视频, 剪映, 大模型, Web开发, 前端</p>
+      </div>
+
+      <div class="section-box">
+        <p>本文完整拆解一个 <strong>22 节点</strong>的 Coze 工作流案例：用户输入历史人物名字，自动生成包含图片、视频、字幕、标题、背景音乐的剪映草稿。</p>
+        <p>覆盖<strong>大模型生成文案 → 图片提示词 → 批量出图 → 视频提示词 → 批量出视频 → 时间线计算 → 草稿合成</strong>全链路。</p>
+      </div>
+
+      <h2>🌟 一、为什么选择工作流</h2>
+      <div class="highlight-box">
+        <ul>
+          <li><strong>功能类 AI 应用</strong>：业务目标明确，结果可直接使用</li>
+          <li><strong>批量数据处理</strong>：一次输入产出多张图、多段视频</li>
+          <li><strong>多步骤自动化</strong>：节点间数据流清晰，无需人工干预</li>
+          <li><strong>无需对话交互</strong>：纯流水线作业，不必走 Chatflow</li>
+        </ul>
+      </div>
+
+      <h2>🎯 二、业务场景与核心设计</h2>
+      <h3>目标</h3>
+      <p>输入：历史人物名字（如"拿破仑"）。</p>
+      <p>输出：剪映草稿 ID，用户在剪映客户端一键导入即可看到成片。</p>
+
+      <h3>核心功能设计</h3>
+      <ol>
+        <li><strong>内容规划</strong>：LLM 生成人物一生重要节点（时间、事件、提示词）</li>
+        <li><strong>素材批量制作</strong>：根据提示词生成 AI 图片和 AI 视频</li>
+        <li><strong>视频合成</strong>：计算每段视频时间线，添加字幕、标题、音乐</li>
+        <li><strong>最终输出</strong>：返回剪映草稿 ID，用户直接导入剪映生成视频</li>
+      </ol>
+
+      <h2>🗺️ 三、整体流程图</h2>
+      <div class="pipeline">
+        开始 → 文案生成 → 图片提示词 → 批量出图 → 格式转换<br />
+        → 视频提示词（批量）→ 批量出视频 → 提取链接 → 列表转换<br />
+        → 预估时长 → 创建时间线 → 视频/字幕/标题/音频数据<br />
+        → 创建草稿 → 添加视频/字幕/标题/音频 → 输出 draft_id
+      </div>
+
+      <h2>🧩 四、节点逐个拆解</h2>
+
+      <div class="node-card">
+        <h3>① 开始节点</h3>
+        <p><strong>作用</strong>：接收用户输入的历史人物《名称》。</p>
+        <p><strong>输入</strong>：<code class="inline">name</code>（用户输入）</p>
+      </div>
+
+      <div class="node-card">
+        <h3>② 大模型生成文案</h3>
+        <p><strong>作用</strong>：根据人物名称，生成主要事迹与视频标题。</p>
+        <p><strong>输入</strong>：<code class="inline">name</code> ← 开始节点 input</p>
+        <h4>系统提示词（核心要点）</h4>
+        <ul>
+          <li>角色：熟悉世界历史人物生平的叙事专家</li>
+          <li>技能 1：用编年体提炼最关键的 6 个事迹</li>
+          <li>技能 2：根据主题生成简短标题（如"拿破仑的帝国之路"）</li>
+          <li>技能 3：以 JSON 输出 <code class="inline">&#123; "content": ..., "title": ... &#125;</code></li>
+        </ul>
+        <h4>限制条件</h4>
+        <ul>
+          <li>仅展示 6 个最关键事迹</li>
+          <li>只回答与该人物相关的内容</li>
+          <li>所有叙述必须按时间顺序排列</li>
+          <li>场景描述注重叙事性，弱化冲突与刺激性细节</li>
+        </ul>
+        <h4>用户提示词</h4>
+        <pre class="code-block">&#123;&#123;name&#125;&#125;</pre>
+        <h4>输出</h4>
+        <p>JSON 两部分：<code class="inline">context: Array&lt;String&gt;</code>（文案）、<code class="inline">title: Array&lt;String&gt;</code>（标题）</p>
+      </div>
+
+      <div class="node-card">
+        <h3>③ 大模型生成图片提示词</h3>
+        <p><strong>作用</strong>：把文案转换成可绘制的视觉化提示词。</p>
+        <p><strong>输入</strong>：<code class="inline">prompt</code> ← 文案生成.context</p>
+        <h4>系统提示词（核心要点）</h4>
+        <ul>
+          <li>角色：擅长将历史场景具象化的叙事型绘画提示词创作者</li>
+          <li>分析故事中的视觉元素：外貌、服饰、环境、姿态、表情，结合人物年龄</li>
+          <li>婴儿场景必须包含"一个坐着正在啼哭的婴儿"</li>
+          <li>输入数组与输出数组数量必须一致</li>
+        </ul>
+        <h4>用户提示词</h4>
+        <pre class="code-block">&#123;&#123;prompt&#125;&#125;，中国历史题材古代写实风格，超高清晰度，强烈对比，细腻质感</pre>
+        <h4>输出</h4>
+        <p><code class="inline">image_context: Array&lt;String&gt;</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>④ 批处理 - 图像生成</h3>
+        <p><strong>作用</strong>：根据提示词批量生成图片。</p>
+        <p><strong>输入</strong>：<code class="inline">input</code> ← image_context</p>
+        <h4>批处理体配置</h4>
+        <ul>
+          <li>模型：<strong>通用-Pro/Seedream 3.0</strong></li>
+          <li>比例：<strong>9:16</strong>（竖屏）</li>
+          <li>正向提示词：<code class="inline">&#123;&#123;input&#125;&#125;，中国历史题材古代写实风格，超高清晰度，强烈对比，细腻质感</code></li>
+        </ul>
+        <h4>输出</h4>
+        <p><code class="inline">output</code>：图片地址数组（默认 <code class="inline">Array&lt;image&gt;</code>）</p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑤ 图片格式转换（代码节点）</h3>
+        <p><strong>作用</strong>：把 <code class="inline">Array&lt;image&gt;</code> 转成 <code class="inline">Array&lt;string&gt;</code>，并去重、清理 URL 查询参数。</p>
+        <p><strong>输入</strong>：<code class="inline">images</code> ← 批处理.output</p>
+        <pre class="code-block">async def main(args):
+    params = args.get("params", &#123;&#125;)
+    images = params.get("images", [])
+    beiyong = params.get("beiyong", [])
+
+    # 创建结果列表，初始为 images 的副本
+    result = list(images)
+
+    # 过滤 beiyong 中非空项
+    valid_beiyong_items = [
+        item.strip() for item in beiyong
+        if isinstance(item, str) and item.strip() != ""
+    ]
+
+    # 用 beiyong 中的有效项填充 images 中的空项
+    beiyong_index = 0
+    for i in range(len(result)):
+        item = result[i]
+        if item is None or (isinstance(item, str) and item.strip() == ""):
+            if beiyong_index &lt; len(valid_beiyong_items):
+                result[i] = valid_beiyong_items[beiyong_index]
+                beiyong_index += 1
+
+    # 剩余 beiyong 追加到末尾
+    while beiyong_index &lt; len(valid_beiyong_items):
+        result.append(valid_beiyong_items[beiyong_index])
+        beiyong_index += 1
+
+    # 去重 &amp; URL 标准化
+    processed_result = []
+    seen_urls = set()
+    for item in result:
+        if not isinstance(item, str) or not item.strip():
+            continue
+        url = item.strip()
+        # 含查询参数的 URL，截取问号前部分
+        if url.startswith(("http://", "https://")) and "?" in url:
+            url = url.split("?", 1)[0]
+            if not url.endswith("/"):
+                url += "/"
+        if url not in seen_urls:
+            seen_urls.add(url)
+            processed_result.append(url)
+
+    return &#123;"KEYS": processed_result&#125;</pre>
+        <h4>输出</h4>
+        <p><code class="inline">KEYS: Array&lt;string&gt;</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑥ 批处理 - 生成视频提示词</h3>
+        <p><strong>作用</strong>：综合图片提示词 + 文案，批量生成视频提示词。</p>
+        <p><strong>输入</strong>：<code class="inline">input</code> ← image_context、<code class="inline">content</code> ← 文案 context</p>
+
+        <h4>系统提示词（安全合规重点）</h4>
+        <p>这是整个工作流的"内容安全总闸"，把所有可能触发审核的元素降级处理：</p>
+
+        <h4>1. 内容三级安全处理</h4>
+        <ul>
+          <li><strong>第一层</strong>：直接移除禁用内容（暴力、血腥、危险动作）</li>
+          <li><strong>第二层</strong>：弱化情绪或动作（"冲突"→"争论"，"战斗"→"技能展示"）</li>
+          <li><strong>第三层</strong>：高风险场景转换为无害设定（"战场"→"历史研究中心的模拟演练区"，"处刑"→"舞台剧排练片段"）</li>
+        </ul>
+
+        <h4>2. 身份柔化替换表</h4>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>原始身份</th>
+              <th>可能风险</th>
+              <th>替代安全身份</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>士兵</td><td>暴力联想</td><td>历史活动讲解员</td></tr>
+            <tr><td>囚犯</td><td>社会风险</td><td>剧场演员</td></tr>
+            <tr><td>宗教人物</td><td>容易引发争议</td><td>文化史学研究者</td></tr>
+          </tbody>
+        </table>
+
+        <h4>3. 道具替代方案</h4>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>原始道具</th>
+              <th>替代道具</th>
+              <th>安全说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>金属武器</td><td>橡胶或泡沫道具</td><td>用于教学演示的轻质模型</td></tr>
+            <tr><td>枪械</td><td>彩色水枪</td><td>明显玩具化外观</td></tr>
+            <tr><td>炸药</td><td>礼花、烟雾机</td><td>用于舞台效果的庆典装置</td></tr>
+          </tbody>
+        </table>
+
+        <h4>4. 替代词库</h4>
+        <ul>
+          <li>"攻击" → "示范动作"</li>
+          <li>"爆炸" → "舞台闪光效果"</li>
+          <li>"死亡" → "人物人生阶段结束的象征性画面"</li>
+          <li>"血迹" → "红色化妆颜料用于戏剧效果"</li>
+        </ul>
+
+        <h4>5. 安全提示词结构模板</h4>
+        <p><strong>镜头语言 + 安全化身份 + 温和动作 + 非风险场景 + 积极氛围</strong></p>
+
+        <div class="warning-box">
+          <strong>最终守则</strong>：所有生成内容必须符合"幼儿园可播放标准"，温和、积极、无害。
+        </div>
+
+        <h4>用户提示词</h4>
+        <pre class="code-block">&#123;&#123;input&#125;&#125;&#123;&#123;content&#125;&#125;</pre>
+        <h4>输出</h4>
+        <p><code class="inline">output</code>：视频提示词数组</p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑦ 批处理 - 生成视频</h3>
+        <p><strong>作用</strong>：根据视频提示词 + 首帧图片，批量生成视频。</p>
+        <p><strong>模式</strong>：图文生成视频</p>
+        <ul>
+          <li>参考图片首帧：<code class="inline">KEYS</code>（转换格式后的图片链接）</li>
+          <li>提示词：<code class="inline">&#123;&#123;prompt&#125;&#125;</code></li>
+        </ul>
+        <p><strong>输出</strong>：默认 video msg</p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑧ 提取视频链接 get_url（剪映小助手插件）</h3>
+        <p><strong>模式</strong>：批处理</p>
+        <ul>
+          <li>批处理变量：<code class="inline">item1</code> ← 批处理-生成视频.output</li>
+          <li>输入：<code class="inline">output</code> ← <code class="inline">get_url.item1</code></li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">outputList</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑨ objs_to_str_list（剪映小助手插件）</h3>
+        <p><strong>作用</strong>：把对象列表转成字符串列表。</p>
+        <p><strong>模式</strong>：单次</p>
+        <p><strong>输入</strong>：<code class="inline">outputs</code> ← <code class="inline">get_url.outputList</code></p>
+        <p><strong>输出</strong>：<code class="inline">infos: Array&lt;String&gt;</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑩ 预估视频时间及数量（代码节点）</h3>
+        <p><strong>作用</strong>：根据视频链接预估总时长（微秒）与有效数量。</p>
+        <p><strong>输入</strong>：<code class="inline">video_url</code> ← <code class="inline">get_url.outputList</code></p>
+        <pre class="code-block">import asyncio
+
+async def main(input):
+    # 1. 多层级安全提取 video_url 参数
+    video_url = None
+    if input.get("arguments") and input["arguments"].get("video_url") is not None:
+        video_url = input["arguments"]["video_url"]
+    elif input.get("video_url") is not None:
+        video_url = input["video_url"]
+    elif input.get("params") and input["params"].get("video_url") is not None:
+        video_url = input["params"]["video_url"]
+
+    # 2. 统一规范化为字符串列表
+    if isinstance(video_url, list):
+        video_urls = [str(u).strip() for u in video_url if u is not None]
+    elif isinstance(video_url, str) and video_url.strip():
+        video_urls = [video_url.strip()]
+    else:
+        video_urls = []
+
+    # 3. 数量统计
+    num = len(video_urls)
+
+    # 4. 估算总时长（微秒），每段视频 5 秒
+    duration = num * 5_000_000
+
+    return &#123;"duration": duration, "num": num&#125;</pre>
+        <div class="highlight-box">
+          <strong>关键</strong>：Coze 时间字段单位是<strong>微秒</strong>，5 秒 = 5_000_000 μs。
+        </div>
+        <p><strong>输出</strong>：<code class="inline">num: Integer</code>、<code class="inline">duration: Integer</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑪ 创建 timelines 时间线列表（剪映小助手插件）</h3>
+        <p><strong>作用</strong>：根据数量与总时长生成时间线。</p>
+        <ul>
+          <li><code class="inline">duration</code> ← 预估.duration</li>
+          <li><code class="inline">num</code> ← 预估.num</li>
+          <li><code class="inline">start</code>：0</li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">all_timelines</code>、<code class="inline">timelines</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑫ 制作视频数据 video_infos</h3>
+        <ul>
+          <li><code class="inline">timelines</code> ← 时间线.timelines</li>
+          <li><code class="inline">video_urls</code> ← objs_to_str_list.infos</li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">info: String</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑬ 制作字幕 caption_infos</h3>
+        <ul>
+          <li><code class="inline">text</code> ← 文案生成.context</li>
+          <li><code class="inline">timelines</code> ← 时间线.timelines</li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">info: String</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑭ 制作标题 caption_infos</h3>
+        <ul>
+          <li><code class="inline">text</code> ← 文案生成.title</li>
+          <li><code class="inline">timelines</code> ← 时间线.timelines</li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">info: String</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑮ 配置背景音乐 str_to_list</h3>
+        <p><strong>作用</strong>：把单个音频 URL 转成字符串列表。</p>
+        <p><strong>输入</strong>：<code class="inline">obj</code>（音乐 URL，可自行替换）</p>
+        <pre class="code-block">https://ve-template-0920.oss-cn-shanghai.aliyuncs.com/uploads/1752207976590_oihrjdq8s3f.mp3</pre>
+        <p><strong>输出</strong>：<code class="inline">infos: Array&lt;String&gt;</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑯ 制作音频 audio_infos</h3>
+        <ul>
+          <li><code class="inline">mps_urls</code> ← str_to_list.infos</li>
+          <li><code class="inline">timelines</code> ← 时间线.all_timelines</li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">infos: String</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑰ 生成草稿 create_draft</h3>
+        <ul>
+          <li><code class="inline">height</code>：1920</li>
+          <li><code class="inline">width</code>：1080</li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">draft_id: String</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑱ 批量添加视频 add_videos</h3>
+        <ul>
+          <li><code class="inline">draft_id</code> ← create_draft.draft_id</li>
+          <li><code class="inline">video_infos</code> ← 制作视频.info</li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">draft_id</code>、<code class="inline">segments_ids</code>、<code class="inline">segments_infos</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>⑲ 批量添加字幕 add_captions</h3>
+        <h4>样式参数（字幕黄色，居底）</h4>
+        <table class="comparison-table">
+          <thead>
+            <tr><th>参数</th><th>值</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>border_color</td><td>#000000</td></tr>
+            <tr><td>font</td><td>江湖体</td></tr>
+            <tr><td>font_size</td><td>12</td></tr>
+            <tr><td>line_spacing</td><td>10</td></tr>
+            <tr><td>text_color</td><td>#ffde00</td></tr>
+            <tr><td>transform_y</td><td>-794</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><code class="inline">captions</code> ← 制作字幕.info</li>
+          <li><code class="inline">draft_id</code> ← create_draft.draft_id</li>
+        </ul>
+      </div>
+
+      <div class="node-card">
+        <h3>⑳ 添加标题 add_captions</h3>
+        <h4>样式参数（标题白色，居顶）</h4>
+        <table class="comparison-table">
+          <thead>
+            <tr><th>参数</th><th>值</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>border_color</td><td>#000000</td></tr>
+            <tr><td>font</td><td>江湖体</td></tr>
+            <tr><td>font_size</td><td>15</td></tr>
+            <tr><td>line_spacing</td><td>10</td></tr>
+            <tr><td>text_color</td><td>#ffffff</td></tr>
+            <tr><td>transform_y</td><td>1369</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><code class="inline">captions</code> ← 制作标题.info</li>
+          <li><code class="inline">draft_id</code> ← create_draft.draft_id</li>
+        </ul>
+      </div>
+
+      <div class="node-card">
+        <h3>㉑ 批量添加音频 add_audios</h3>
+        <ul>
+          <li><code class="inline">audio_infos</code> ← 制作音频.infos</li>
+          <li><code class="inline">draft_id</code> ← create_draft.draft_id</li>
+        </ul>
+        <p><strong>输出</strong>：<code class="inline">draft_id</code></p>
+      </div>
+
+      <div class="node-card">
+        <h3>㉒ 结束节点</h3>
+        <p><strong>输出</strong>：<code class="inline">draft_id</code> —— 用户拿到 ID 后，到剪映小助手客户端粘贴即可创建草稿。</p>
+      </div>
+
+      <h2>🛠️ 五、米核剪映小助手</h2>
+      <div class="section-box">
+        <p><strong>下载地址</strong>：<a href="https://www.miheai.com/#/jianying" target="_blank">https://www.miheai.com/#/jianying</a></p>
+        <p><strong>使用方式</strong>：把工作流输出的 draft_id（例如 <code class="inline">1deb4473-e979-4b95-a27c-454f9997d94f7</code>）粘贴进客户端 → 创建剪映草稿 → 在剪映打开即可看到自动排好的视频、字幕、标题、背景音乐。</p>
+      </div>
+
+      <h2>📝 六、踩坑与最佳实践</h2>
+      <div class="success-box">
+        <strong>✅ 推荐做法</strong>
+        <ul>
+          <li>图像/视频生成节点的提示词都加风格后缀，保证视觉风格一致</li>
+          <li>视频提示词系统提示词必须做"幼儿园可播放级"安全降级，否则极易触发审核</li>
+          <li>代码节点用 <code class="inline">params</code> / <code class="inline">arguments</code> / 根层级三层兜底取值，兼容不同插件传参</li>
+          <li>时间统一用<strong>微秒</strong>（µs）单位，1 秒 = 1_000_000</li>
+        </ul>
+      </div>
+
+      <div class="error-box">
+        <strong>❌ 常见坑</strong>
+        <ul>
+          <li>图像生成默认输出 <code class="inline">Array&lt;image&gt;</code>，必须做格式转换为 <code class="inline">Array&lt;string&gt;</code></li>
+          <li>get_url 必须选"批处理"模式，否则只取一条</li>
+          <li>字幕和标题用同一个 <code class="inline">add_captions</code> 插件，靠 <code class="inline">transform_y</code> 区分位置（负值居底，正值居顶）</li>
+          <li>大模型生成文案数与图片提示词数必须严格一致，否则后续批处理会错位</li>
+        </ul>
+      </div>
+
+      <h2>🎯 七、总结</h2>
+      <div class="highlight-box">
+        <p>这个工作流的本质是<strong>"LLM 内容规划 + 多模态批量生成 + 时间线编排"</strong>三件事。</p>
+        <p>能跑通的关键有三：</p>
+        <ol>
+          <li><strong>数据形状对齐</strong>：每一步的数组长度必须严格一致</li>
+          <li><strong>提示词工程</strong>：图片/视频提示词的风格 + 安全降级直接决定成片质量</li>
+          <li><strong>剪映小助手插件</strong>：把"草稿 JSON 协议"封装成开箱即用的节点，省去手撸协议的工作量</li>
+        </ol>
+        <p>跑通这条流水线，把"输入名字 → 输出剪映草稿"做成一键操作，就具备了量产人物科普短视频的能力。</p>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
