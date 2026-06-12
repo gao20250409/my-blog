@@ -1,7 +1,7 @@
 {
   "name": "course-bot",
   "version": "1.0.0",
-  "description": "Manban 1v1 课程自动预约脚本",
+  "description": "通用时段预约引擎",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
