@@ -1,0 +1,488 @@
+---
+// 微信小程序抓包 + 自动抢课脚本实战 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>微信小程序抓包逆向 + Node 自动抢课脚本实战</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎯 微信小程序抓包 + Node 自动抢课脚本实战</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-12 | 👤 作者：博主 | 🏷️ 标签：抓包, 微信小程序, Node.js, 逆向, 自动化, Web开发, 前端</p>
+      </div>
+
+      <div class="warning-box">
+        <strong>⚠️ 阅读前请注意</strong>
+        <p>本文是<strong>个人学习</strong>性质的网络抓包与脚本自动化技术分享，所有接口、域名、ID 均已脱敏。仅适用于<strong>对自己有合法账号、个人非商业使用</strong>的场景。请勿用于：商业代抢、影响他人正常使用、绕过付费墙等行为。技术本身中性，使用边界请自己把握。</p>
+      </div>
+
+      <h2>📖 起因</h2>
+      <div class="section-box">
+        <p>报了个 1v1 私教课，约课要进微信小程序选时段。教练空闲时间总被人秒抢，手动刷新根本来不及。想着既然能用"抢票脚本"抢演唱会票，那给小程序写个自动抢课的应该也不难 ── 本质都是一回事：<strong>找到下单接口，拿到鉴权，用脚本高频调用</strong>。</p>
+        <p>这篇文章把整个过程从抓包到部署完整拆开讲。技术不复杂，但坑挺多，尤其抓 PC 微信小程序 HTTPS 的部分。</p>
+      </div>
+
+      <h2>🧭 三种方案对比</h2>
+      <p>实现自动化的路径有三种，难度和适用场景不同：</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>方案</th>
+            <th>原理</th>
+            <th>优点</th>
+            <th>缺点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>小程序前台轮询</td>
+            <td>在小程序里 setInterval 不断刷请求</td>
+            <td>不用抓包</td>
+            <td>切后台就停，要改源码（你得是开发者）</td>
+          </tr>
+          <tr>
+            <td><strong>服务端脚本（本文方案）</strong></td>
+            <td>抓包拿接口，写脚本模拟请求</td>
+            <td>稳、快、可挂 7×24</td>
+            <td>需要分析接口和鉴权</td>
+          </tr>
+          <tr>
+            <td>手机 UI 自动化</td>
+            <td>Auto.js / 无障碍服务模拟点击</td>
+            <td>不动协议，最安全</td>
+            <td>慢，UI 改版就废</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>下面走"服务端脚本"路线，分四个阶段：<strong>抓包 → 解析鉴权 → 识别核心接口 → 写脚本</strong>。</p>
+
+      <h2>🛠️ 阶段一：抓包</h2>
+
+      <h3>1.1 工具选型</h3>
+      <p>抓 PC 微信小程序的 HTTPS 流量，推荐 <strong>Reqable 桌面版</strong>（reqable.com），免费、UI 现代、装证书一键到位。Fiddler、Charles、mitmproxy 也都能用，老手按习惯选。</p>
+
+      <p>之所以选 PC 微信而不是手机：</p>
+      <ul>
+        <li>PC 微信支持大部分小程序，电脑装根证书比手机简单</li>
+        <li>不用管手机 Root、安卓 7+ 用户证书不被信任这些破事</li>
+        <li>所有操作在一台机器上完成</li>
+      </ul>
+
+      <h3>1.2 装证书</h3>
+      <p>Reqable 第一次启动会引导装根证书，选 <strong>"自动 → 现在安装"</strong>，Windows 安全警告点 "是"，红 ✗ 变绿 ✓ 就好。这一步是为了 Reqable 能解 HTTPS 流量做中间人。</p>
+
+      <h3>1.3 关掉梯子</h3>
+      <div class="error-box">
+        <strong>这是个大坑</strong>：电脑上跑着 Clash Verge / V2Rayn 等代理工具会跟 Reqable 抢系统代理，导致 PC 微信的请求绕过抓包工具。<strong>抓包前先把梯子退出</strong>（系统托盘右键退出），抓完再开回来。
+      </div>
+
+      <h3>1.4 操作流程</h3>
+      <ol>
+        <li>Reqable 按 <code>Ctrl + G</code> 启动调试，顶部显示 <code>Proxying on 192.168.x.x:9000</code></li>
+        <li>清空旧请求列表</li>
+        <li>打开 PC 微信，进入目标小程序</li>
+        <li><strong>完整走一遍预约流程</strong>：进入课程 → 选时段 → 点确定预约</li>
+        <li>回 Reqable 看请求列表</li>
+      </ol>
+
+      <h2>🔐 阶段二：解析鉴权</h2>
+
+      <p>找到任意一个目标域名的请求，看请求头。常见的鉴权字段：</p>
+
+      <pre class="code-block">authorization: Basic eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IDEyMzQ1NiwgInNhbHQiOiAuLi59.SIGNATURE_HERE
+x-device-id:   xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x-version:     2.5.2
+x-timezone:    8
+x-os:          WindowsUnknownx64
+referer:       https://servicewechat.com/&lt;appid&gt;/197/page-frame.html</pre>
+
+      <p>本案中 <code>authorization</code> 是 <code>Basic + base64(JWT)</code> 的格式。把 base64 那段解开（去掉末尾的冒号）：</p>
+
+      <pre class="code-block">// 解码后是标准 JWT，三段用 . 分隔
+header:    &#123; "alg": "HS256" &#125;
+payload:   &#123; "id": 123456, "salt": 1773000000 &#125;
+signature: 62_Hx4UKROsr1MvMC1q2tDmDsfirDO5Q...</pre>
+
+      <div class="highlight-box">
+        <strong>关键观察</strong>：payload 里没有 <code>exp</code>（过期时间）字段。这意味着这个 token 理论上不过期，对长期挂机的脚本超友好。即使有过期，看到 exp 字段对应的时间戳也能直接判断什么时候得重抓。
+      </div>
+
+      <p>没看到 <code>X-Sign</code> / <code>X-Signature</code> 这种动态签名字段，说明请求体没有被签名保护 ── 这是最理想的情况，参数能任意改。如果存在签名，就要反编译小程序代码（用 <code>wxappUnpacker</code> 之类工具）找加密算法，工作量翻几倍。</p>
+
+      <h2>🎯 阶段三：识别核心接口</h2>
+
+      <p>抓包列表里筛掉腾讯自己的域名（<code>*.qq.com</code>、<code>*.weixin.qq.com</code>），剩下的就是业务接口。本案中找到三个关键请求：</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>接口</th>
+            <th>方法</th>
+            <th>路径关键字</th>
+            <th>触发时机</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>查时段</td>
+            <td>GET</td>
+            <td>/api/booking/slots</td>
+            <td>进课程页</td>
+          </tr>
+          <tr>
+            <td>冲突检查</td>
+            <td>POST</td>
+            <td>/api/booking/check_conflict</td>
+            <td>点确定预约（前置）</td>
+          </tr>
+          <tr>
+            <td>提交预约</td>
+            <td>POST</td>
+            <td>/api/booking/submit</td>
+            <td>点确定预约（核心）</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>3.1 查时段接口</h3>
+
+      <pre class="code-block">GET /api/booking/slots
+?timestamp=&lt;ms&gt;
+&amp;appid=&lt;mini_program_appid&gt;
+&amp;class_id=&lt;课程ID&gt;
+&amp;student_id=&lt;学员ID&gt;
+&amp;teacher_id=&lt;教练ID&gt;
+&amp;start_ts=&lt;那天0点的unix秒&gt;
+
+响应:
+&#123;
+  "ranges": [
+    &#123; "can_use": true,  "start_time": "08:00", "end_time": "09:00", "error_msg": "" &#125;,
+    &#123; "can_use": false, "start_time": "10:00", "end_time": "11:00", "error_msg": "已被占用" &#125;,
+    ...
+  ]
+&#125;</pre>
+
+      <p>查询单位是"按天"，<code>start_ts</code> 是那天 00:00（北京时间）的 unix 秒。响应里每个时段给一个 <code>can_use</code> 标志。</p>
+
+      <h3>3.2 提交预约接口</h3>
+
+      <pre class="code-block">POST /api/booking/submit
+Content-Type: application/json
+
+请求体:
+&#123;
+  "timestamp": &lt;ms&gt;,
+  "appid": "&lt;mini_program_appid&gt;",
+  "student_id": &lt;学员ID&gt;,
+  "teacher_id": &lt;教练ID&gt;,
+  "class_id": &lt;课程ID&gt;,
+  "ranges": [
+    &#123; "start_ts": &lt;开始时刻unix秒&gt;, "end_ts": &lt;结束时刻unix秒&gt; &#125;
+  ]
+&#125;
+
+响应: HTTP 201 &#123;&#125;   ← 空对象就是成功</pre>
+
+      <div class="highlight-box">
+        <strong>注意 ranges 是数组</strong>：API 支持一次提交多个时段。这意味着脚本可以批量抢，进一步提升成功率。
+      </div>
+
+      <h2>💻 阶段四：写 Node 脚本</h2>
+
+      <h3>4.1 项目结构</h3>
+
+      <pre class="code-block">course-bot/
+├── package.json     # 只依赖 axios
+├── config.js        # 鉴权 + 偏好
+├── index.js         # 主轮询脚本
+├── peek.js          # 单天查询工具（不下单）
+└── README.md</pre>
+
+      <h3>4.2 配置文件 config.js</h3>
+
+      <pre class="code-block">module.exports = &#123;
+  // 鉴权（从抓包来的，不要泄露）
+  authorization: 'Basic &lt;base64_jwt&gt;:',
+
+  // 课程信息（从 URL 参数里抠）
+  appid: 'wx_xxxxxxxxxxxxxxxx',
+  studentId: 123456,
+  teacherId: 78910,
+  classId:   456789,
+
+  // 设备指纹（从请求头抄）
+  deviceId: 'xxxxxxxxxxxxxxxxxxxxx',
+  version:  '2.5.2',
+  userAgent: 'Mozilla/5.0 ... MiniProgramEnv/Windows ...',
+
+  // 抢课偏好
+  targetDates: ['2026-06-15', '2026-06-16'],
+  preferredSlots: ['08:00-09:00', '09:00-10:00', '17:30-18:30'],
+
+  // 行为参数
+  pollInterval: 800,            // 多少毫秒查一次
+  maxConsecutiveErrors: 10,     // 连续失败几次自动停
+&#125;;</pre>
+
+      <h3>4.3 时间转换工具</h3>
+
+      <p>API 用 unix 秒，脚本写日期偏好用 <code>YYYY-MM-DD</code> 字符串更友好。要做两个转换：</p>
+
+      <pre class="code-block">// "YYYY-MM-DD" → 当天 00:00 北京时间的 unix 秒
+function dateToDayTs(dateStr) &#123;
+  return Math.floor(new Date(`$&#123;dateStr&#125;T00:00:00+08:00`).getTime() / 1000);
+&#125;
+
+// "YYYY-MM-DD" + "HH:MM" → 该时刻的 unix 秒
+function dateTimeToTs(dateStr, timeStr) &#123;
+  return Math.floor(new Date(`$&#123;dateStr&#125;T$&#123;timeStr&#125;:00+08:00`).getTime() / 1000);
+&#125;</pre>
+
+      <p>关键是 <code>+08:00</code> 这个时区后缀，让 JavaScript 不踩本地时区的坑。</p>
+
+      <h3>4.4 核心轮询逻辑</h3>
+
+      <pre class="code-block">const http = axios.create(&#123;
+  baseURL: BASE_URL,
+  headers: HEADERS,
+  timeout: 8000,
+  validateStatus: () =&gt; true,  // 不让 axios 把非 2xx 当异常
+&#125;);
+
+// 偏好匹配：按 preferredSlots 顺序找第一个可约的
+function findPreferredAvailable(ranges) &#123;
+  for (const pref of config.preferredSlots) &#123;
+    const [start, end] = pref.split('-');
+    const found = ranges.find(
+      r =&gt; r.can_use &amp;&amp; r.start_time === start &amp;&amp; r.end_time === end
+    );
+    if (found) return found;
+  &#125;
+  return null;
+&#125;
+
+async function tryBookOneDate(dateStr) &#123;
+  const ranges = await querySlots(dateStr);
+  const slot = findPreferredAvailable(ranges);
+  if (!slot) return false;
+
+  const res = await submitBooking(dateStr, slot);
+  return res.status === 200 || res.status === 201;
+&#125;
+
+// 主循环：抢到一天就从待办移除，剩下接着抢
+async function main() &#123;
+  const success = new Set();
+  while (true) &#123;
+    const pending = config.targetDates.filter(d =&gt; !success.has(d));
+    if (pending.length === 0) break;
+    for (const date of pending) &#123;
+      if (await tryBookOneDate(date)) success.add(date);
+    &#125;
+    await new Promise(r =&gt; setTimeout(r, config.pollInterval));
+  &#125;
+&#125;</pre>
+
+      <h3>4.5 跑起来</h3>
+
+      <pre class="code-block">npm install
+node peek.js 2026-06-15   # 先看下那天有啥时段（不下单）
+npm run dry               # 找到可约不真下单（试跑）
+npm start                 # 正式抢</pre>
+
+      <h2>🚧 几个值得说的坑</h2>
+
+      <h3>5.1 PC 微信抓不到包</h3>
+      <ul>
+        <li>梯子没关 → 关掉 Clash / V2Ray 等</li>
+        <li>微信进程是抓包前就开着的 → 杀掉重开，让它继承新代理</li>
+        <li>证书未生效 → Reqable 顶部菜单"证书"检查状态</li>
+      </ul>
+
+      <h3>5.2 时区陷阱</h3>
+      <p>不要用 <code>new Date('2026-06-15')</code>，这会按 UTC 解析，得到的是 06-15 08:00 北京时间。一定要带时区：<code>new Date('2026-06-15T00:00:00+08:00')</code>。</p>
+
+      <h3>5.3 不要无脑高频</h3>
+      <p>默认 800ms 轮询一次足够。再激进容易触发风控（IP 临时封禁、token 失效）。如果是放课的固定时间点（比如每周一晚 8 点），可以平时低频，临到点前 30 秒再切到 200ms 高频。</p>
+
+      <h3>5.4 token 等于账号密码</h3>
+      <div class="error-box">
+        <strong>重中之重</strong>：<code>config.js</code> 里的 authorization 字段相当于你的账号密码，能用来做任何你账号能做的事。
+        <ul>
+          <li>加 <code>.gitignore</code>，不要 push 到公开仓库</li>
+          <li>不要发到群、论坛、博客（包括这篇）</li>
+          <li>分享脚本给朋友前先把字段清空</li>
+        </ul>
+      </div>
+
+      <h2>⚖️ 法律和道德边界</h2>
+
+      <div class="warning-box">
+        <p>这种"抢课/抢票"自动化在国内属于<strong>灰色地带</strong>。判断尺度大致是：</p>
+        <ul>
+          <li>✅ <strong>自用、低频、不影响他人</strong>：基本无风险，类似手动刷得快</li>
+          <li>⚠️ <strong>商业代抢、收费</strong>：可能触犯"非法经营"或"破坏计算机信息系统"</li>
+          <li>❌ <strong>大规模抢占 + 倒卖</strong>：明确违法，已有判例</li>
+          <li>❌ <strong>逆向加密签名 + 公开传播</strong>：可能涉及刑法 285 条</li>
+        </ul>
+        <p>另外，频繁请求会增加目标系统负担，平台运营方可能对你账号封号、IP 拉黑。出问题别拿"我只是学习"当挡箭牌，要做好后果自负的心理准备。</p>
+      </div>
+
+      <h2>📦 总结</h2>
+
+      <div class="success-box">
+        <p>整套流程的核心其实就两步：</p>
+        <ol>
+          <li><strong>抓包</strong>：让小程序的 HTTPS 流量在你眼前可见</li>
+          <li><strong>模拟</strong>：用脚本复现请求，定时高频调用</li>
+        </ol>
+        <p>同样的方法可以用在很多场景：抢演唱会票、抢健身房名额、抢限购商品、自动签到、批量数据采集。技术是中性的，真正决定它是好是坏的，是你拿它做什么。</p>
+      </div>
+
+      <p>从抓包到第一次抢到课，整个工程大约花了 2 小时（含踩坑），代码 200 行不到。Node 生态写这种脚本太合适了 ── axios + 少量异步代码足够，不需要任何重型框架。</p>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
