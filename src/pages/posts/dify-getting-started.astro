@@ -1,0 +1,361 @@
+---
+// Dify入门与本地部署 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dify入门与本地部署：开源LLM应用平台、Ollama接入、RAG与提示词工程实战</title>
+    <meta name="description" content="Dify开源LLM应用开发平台入门：从Docker本地部署、Ollama与主流大模型接入，到聊天助手、知识库RAG、工作流、Agent四大应用类型，附镜像加速配置与提示词工程要点。" />
+    <meta name="keywords" content="Dify,LLM,大模型,RAG,Agent,工作流,Ollama,Docker,提示词工程,Web开发,前端" />
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      code {
+        background: #f1f3f5;
+        color: #c0392b;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Dify入门与本地部署：开源LLM应用平台实战</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-15 | 👤 作者：博主 | 🏷️ 标签：Dify, LLM, RAG, Agent, Ollama, Docker</p>
+      </div>
+
+      <h2>一、什么是Dify</h2>
+
+      <div class="section-box">
+        <p><strong>Dify</strong> 是一个开源的大语言模型（LLM）应用开发平台，旨在简化和加速生成式AI应用的创建和部署。</p>
+        <p>官网地址：<a href="https://dify.ai/zh" target="_blank" rel="noopener">https://dify.ai/zh</a></p>
+      </div>
+
+      <h3>核心特点</h3>
+      <ul>
+        <li><strong>低代码 / 无代码</strong>：像拖拽积木一样编排业务逻辑</li>
+        <li><strong>功能完整强大</strong>：支持 100+ 主流模型接入，满足各种企业级场景</li>
+        <li><strong>开源免费</strong>：支持私有化本地部署</li>
+      </ul>
+
+      <h3>Dify能做什么</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>能力</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>聊天助手</td>
+            <td>快速构建具备上下文理解能力的对话机器人，支持多轮对话</td>
+          </tr>
+          <tr>
+            <td>知识库（RAG）</td>
+            <td>轻松接入企业私有文档，实现基于自有知识的精准问答</td>
+          </tr>
+          <tr>
+            <td>工作流（Workflow）</td>
+            <td>通过可视化画布编排复杂业务逻辑，实现任务自动化</td>
+          </tr>
+          <tr>
+            <td>Agent 智能体</td>
+            <td>构建能够自主调用工具、拆解并完成复杂任务的智能助手</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>二、平台安装部署</h2>
+
+      <p>Dify 推荐通过 Docker Compose 一键部署，整体五步走。</p>
+
+      <h3>Step 1：安装 Docker Desktop</h3>
+      <ul>
+        <li>下载地址：<a href="https://docs.docker.com/desktop/setup/install/windows-install/" target="_blank" rel="noopener">Docker Desktop for Windows</a></li>
+        <li>版本：<code>Docker Desktop for Windows - x86_64</code></li>
+      </ul>
+
+      <p><strong>① 修改安装/数据存放路径</strong>：打开 Docker → 设置 → Resources，把镜像数据迁到非 C 盘，避免后续吃满系统盘。</p>
+
+      <p><strong>② 配置镜像加速</strong>：在 Docker Engine 配置里写入下面 JSON，国内拉镜像速度立竿见影。</p>
+
+      <div class="code-block">&#123;
+  "builder": &#123;
+    "gc": &#123;
+      "defaultKeepStorage": "20GB",
+      "enabled": true
+    &#125;
+  &#125;,
+  "experimental": false,
+  "features": &#123;
+    "buildkit": true
+  &#125;,
+  "registry-mirrors": [
+    "https://docker.1panelproxy.com",
+    "https://docker.m.daocloud.io",
+    "https://hub-mirror.c.163.com",
+    "https://mirror.baidubce.com",
+    "https://dockerhub.icu",
+    "https://docker.registry.cyou",
+    "https://docker-cf.registry.cyou",
+    "https://dockercf.jsdelivr.fyi",
+    "https://docker.jsdelivr.fyi",
+    "https://mirror.aliyuncs.com",
+    "https://dockerproxy.com",
+    "https://docker.nju.edu.cn",
+    "https://docker.mirrors.sjtug.sjtu.edu.cn",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://mirror.iscas.ac.cn",
+    "https://docker.rainbond.cc"
+  ]
+&#125;</div>
+
+      <div class="warning-box">
+        <strong>⚠️ 注意：</strong>镜像源会随着政策变化失效，遇到拉取失败时优先排查 <code>registry-mirrors</code> 是否还活着，必要时增删几条。
+      </div>
+
+      <h3>Step 2：克隆 Dify 仓库</h3>
+      <p>本质就是把 Dify 源码下载到本地：</p>
+      <div class="code-block">git clone https://github.com/langgenius/dify.git</div>
+
+      <h3>Step 3：Docker 环境配置</h3>
+      <p>进入 <code>dify-main/docker</code> 目录，把 <code>.env.example</code> 复制为 <code>.env</code>：</p>
+      <div class="code-block">cp .env.example .env</div>
+
+      <h3>Step 4：启动 Dify</h3>
+      <p>在 <code>docker</code> 目录下打开 cmd / PowerShell 执行：</p>
+      <div class="code-block">docker compose up -d</div>
+
+      <p>容器拉起后，nginx、api、web、worker、db、redis、weaviate 等服务会按编排顺序启动。</p>
+
+      <h3>Step 5：初始化与登录</h3>
+      <ul>
+        <li>访问 <a href="http://localhost/signin" target="_blank" rel="noopener">http://localhost/signin</a></li>
+        <li>首次进入设置管理员邮箱、用户名、密码</li>
+        <li>之后用同一账号登录即可进入控制台</li>
+      </ul>
+
+      <h2>三、接入大模型</h2>
+
+      <h3>1. 接入本地 Ollama</h3>
+      <p>在 Dify 中接入 Ollama 路径：右上角头像 → <strong>设置</strong> → <strong>模型供应商</strong> → 选择 <strong>Ollama</strong> → <strong>添加模型</strong>。</p>
+
+      <div class="highlight-box">
+        <strong>关键：基础 URL 怎么填？</strong>
+        <ul>
+          <li>Dify 与 Ollama 在<strong>同一台机器</strong>且都跑在 Docker 中：<code>http://host.docker.internal:11434</code></li>
+          <li>Dify 与 Ollama 在<strong>不同机器</strong>：<code>http://192.168.x.x:11434</code>（填 Ollama 所在主机的 IP）</li>
+        </ul>
+      </div>
+
+      <div class="error-box">
+        <strong>常见踩坑：</strong>容器里直接写 <code>http://localhost:11434</code> 永远连不上，因为容器内的 localhost 是容器自己，必须用 <code>host.docker.internal</code> 或宿主机 IP。
+      </div>
+
+      <h3>2. 接入主流模型（GPT、Claude、文心等）</h3>
+      <p>新建应用流程：<strong>创建空白应用</strong> → <strong>新手适用</strong> → <strong>聊天助手</strong>。</p>
+
+      <p>在 Dify 中应用大模型 API 的标准四步：</p>
+      <ol>
+        <li>申请 API Key（OpenAI、Anthropic、百度文心等官方平台）</li>
+        <li>在「模型供应商」里下载/启用对应供应商插件</li>
+        <li>填入 API Key、Base URL 等配置完成模型添加</li>
+        <li>在应用编排页面里选择刚配好的模型，开始对话</li>
+      </ol>
+
+      <h2>四、提示词工程</h2>
+
+      <div class="section-box">
+        <p>提示词（Prompt）是大模型应用的「方向盘」，结构化的提示词能让输出稳定可控。</p>
+      </div>
+
+      <h3>Prompt 结构设计</h3>
+      <ul>
+        <li><strong>角色（Role）</strong>：你是谁，比如「资深前端面试官」</li>
+        <li><strong>任务（Task）</strong>：要做什么，目标尽量明确可量化</li>
+        <li><strong>输出格式（Format）</strong>：JSON / Markdown / 表格，越具体越好</li>
+        <li><strong>约束（Constraint）</strong>：不能说什么、长度限制、语气风格</li>
+      </ul>
+
+      <h3>变量设计与管理</h3>
+      <p>Dify 在 Prompt 中支持 <code>&#123;&#123;变量名&#125;&#125;</code> 双花括号语法。把可变内容（用户输入、知识库片段、工作流上游节点输出）抽成变量，能让同一个 Prompt 适配多业务场景，也方便后续 A/B 测试。</p>
+
+      <h2>五、RAG 技术应用</h2>
+
+      <h3>知识库搭建</h3>
+      <p>Dify 知识库的标准链路：<strong>上传文档 → 自动切片 → 向量化 → 存入向量库（Weaviate/Qdrant/Milvus 任选）</strong>。在应用编排里挂载知识库后，Dify 会在每轮对话前自动召回相关片段拼进 Prompt。</p>
+
+      <h3>检索优化策略</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>优化方向</th>
+            <th>常用做法</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>切片策略</td>
+            <td>按语义/标题切，控制 chunk 在 300-800 字，避免「切碎语义」</td>
+          </tr>
+          <tr>
+            <td>召回方式</td>
+            <td>向量检索 + 关键词检索（BM25）混合，再做 Rerank</td>
+          </tr>
+          <tr>
+            <td>Top-K 调参</td>
+            <td>默认 3-5 条，召回不准就调高，幻觉多就调低</td>
+          </tr>
+          <tr>
+            <td>引用元数据</td>
+            <td>在 chunk 里附文件名/章节号，让模型可标注出处</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>六、小结</h2>
+
+      <div class="success-box">
+        <p>Dify 把「大模型应用」抽象成了四种范式：聊天助手、知识库、工作流、Agent。从本地 Docker 部署到接入 Ollama / GPT / Claude，再到 Prompt 与 RAG 调优，整条链路都能可视化拖出来。对于想在企业内快速搭一套自有 LLM 平台的团队，这是上手成本最低的开源选项之一。</p>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
