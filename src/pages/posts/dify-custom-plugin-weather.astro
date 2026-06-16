@@ -1,0 +1,484 @@
+---
+// Dify自定义插件实战：FastAPI + localtunnel 自建天气查询插件 - 页面
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dify自定义插件实战：FastAPI + localtunnel 30分钟搭建天气查询插件（Function Calling）</title>
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+        background: #f8f9fa;
+        color: #333;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 30px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-top: 25px;
+      }
+      .back-link {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        transition: background 0.3s ease;
+      }
+      .back-link:hover {
+        background: #2980b9;
+      }
+      .meta-info {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        padding: 15px;
+        background: #ecf0f1;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background: #fff3cd;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #f39c12;
+        margin: 20px 0;
+      }
+      .section-box {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        margin: 20px 0;
+      }
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85em;
+        overflow-x: auto;
+        border-left: 4px solid #4299e1;
+        white-space: pre-wrap;
+      }
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .comparison-table th {
+        background: #3498db;
+        color: white;
+        font-weight: 600;
+      }
+      .comparison-table tr:hover {
+        background: #f8f9fa;
+      }
+      .success-box {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .error-box {
+        background: #ffe8e8;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .warning-box {
+        background: #fff4e6;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #ff9800;
+        margin: 20px 0;
+      }
+      ul, ol {
+        margin: 15px 0;
+        padding-left: 30px;
+      }
+      li {
+        margin: 8px 0;
+      }
+      .step-badge {
+        display: inline-block;
+        background: #3498db;
+        color: white;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        margin-right: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🌤️ Dify 自定义插件实战：30 分钟搭建天气查询插件</h1>
+
+      <div class="meta-info">
+        <p>📅 发布于 2026-6-16 | 👤 作者：博主 | 🏷️ 标签：Dify, Function Calling, 自定义插件, FastAPI, localtunnel, OpenAPI</p>
+      </div>
+
+      <div class="section-box">
+        <p><strong>适用场景：</strong>个人开发者快速搭建天气查询插件，无需服务器，30 分钟内完成。</p>
+        <p><strong>技术栈：</strong>FastAPI + localtunnel + Dify</p>
+        <p><strong>最终效果：</strong>在 Dify 中通过自然语言查询天气，如"北京今天天气如何？"</p>
+      </div>
+
+      <h2>一、先理清概念：插件与 Function Calling 的关系</h2>
+
+      <div class="highlight-box">
+        <p><strong>核心结论：</strong>在 Dify 中，<strong>工具（插件）就是 Function Calling 的实现形式</strong>。大模型本身只会"说话"，要让它能查天气、查数据库、调外部接口，就得给它挂上工具，由模型决定何时调用、传什么参数。</p>
+      </div>
+
+      <h3>如何应用 Dify 插件？</h3>
+      <p>整体路径很简单：</p>
+      <div class="code-block">工具 --&gt; 下载插件 --&gt; 创建 Agent --&gt; 选择插件 --&gt; 应用</div>
+
+      <h3>自定义接口开发的 6 个步骤</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>步骤</th>
+            <th>操作</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Step 1</td><td>脚本开发</td><td>基于本地用 Python 实现接口逻辑</td></tr>
+          <tr><td>Step 2</td><td>运行脚本</td><td>后台运行 API 服务</td></tr>
+          <tr><td>Step 3</td><td>创建工具</td><td>在 Dify 工具中创建自定义工具</td></tr>
+          <tr><td>Step 4</td><td>Schema 配置</td><td>配置 OpenAPI Schema</td></tr>
+          <tr><td>Step 5</td><td>测试</td><td>输入参数测试功能</td></tr>
+          <tr><td>Step 6</td><td>保存</td><td>在 Agent 中应用插件</td></tr>
+        </tbody>
+      </table>
+
+      <h2>二、FastAPI 服务搭建</h2>
+
+      <h3>2.1 安装依赖</h3>
+      <div class="code-block"># 创建虚拟环境（推荐）
+python -m venv weather-env
+source weather-env/bin/activate    # Linux/Mac
+# weather-env\Scripts\activate     # Windows
+
+# 安装依赖
+pip install fastapi uvicorn requests</div>
+
+      <h3>2.2 完整代码实现（main.py）</h3>
+      <div class="code-block">from fastapi import FastAPI, Request, HTTPException
+from pydantic import BaseModel
+import requests
+
+app = FastAPI()
+
+# 身份验证令牌（个人使用，简单安全）
+VALID_TOKEN = "itcast"
+
+# 城市编码数据（直接硬编码，无需外部文件）
+CITY_CODES = &#123;
+    "北京": "101010100",
+    "上海": "101020100",
+    "广州": "101280101",
+    "深圳": "101280601",
+    "杭州": "101210101",
+    "成都": "101270101",
+    "武汉": "101200101",
+    "西安": "101110101",
+    "南京": "101190101",
+    "重庆": "101040100",
+    "天津": "101030100",
+    "苏州": "101190401",
+    "郑州": "101180101",
+    "长沙": "101250101",
+    "青岛": "101120201",
+    "厦门": "101230201",
+    "济南": "101120101",
+    "昆明": "101290101",
+    "贵阳": "101260101",
+    "哈尔滨": "101050101",
+    "沈阳": "101070101",
+    "海口": "101310101",
+    "三亚": "101310201"
+    # ……可继续按需补充更多城市
+&#125;
+
+class WeatherRequest(BaseModel):
+    location: str
+
+@app.post("/weather")
+def get_current_weather(request: Request, body: WeatherRequest):
+    """
+    天气查询接口
+    - 需要 Authorization 头认证
+    - 返回自然语言格式的天气信息
+    """
+    # 1. 验证身份
+    auth_header = request.headers.get("Authorization")
+    if auth_header != f"Bearer &#123;VALID_TOKEN&#125;":
+        raise HTTPException(status_code=403, detail="Invalid Authorization header")
+
+    location = body.location
+
+    # 2. 查找城市编码
+    city_code = CITY_CODES.get(location)
+    if not city_code:
+        return &#123;
+            "status": "error",
+            "message": f"请提供&#123;location&#125;对应的编码方可查询，目前支持：&#123;','.join(CITY_CODES.keys())&#125;"
+        &#125;
+
+    # 3. 调用天气 API
+    url = f"http://t.weather.itboy.net/api/weather/city/&#123;city_code&#125;"
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+    except Exception as e:
+        return &#123;"status": "error", "message": f"天气服务请求失败: &#123;str(e)&#125;"&#125;
+
+    # 4. 解析天气数据
+    try:
+        forecast = data["data"]["forecast"][0]
+        weather_type = forecast["type"]
+        high = forecast["high"].replace("高温 ", "")
+        low = forecast["low"].replace("低温 ", "")
+        temperature = f"&#123;high&#125;/&#123;low&#125;"
+
+        # 5. 返回自然语言格式
+        return f"&#123;location&#125;今天是&#123;weather_type&#125;，温度&#123;temperature&#125;"
+    except (KeyError, IndexError) as e:
+        return &#123;"status": "error", "message": f"天气数据解析失败: &#123;str(e)&#125;"&#125;
+
+# 启动入口
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8081)</div>
+
+      <h3>2.3 启动服务</h3>
+      <div class="code-block">python main.py</div>
+      <div class="success-box">
+        ✅ 预期输出：<br />
+        <code>INFO:     Uvicorn running on http://0.0.0.0:8081 (Press CTRL+C to quit)</code>
+      </div>
+
+      <h2>三、公网穿透配置</h2>
+
+      <div class="warning-box">
+        <strong>为什么需要穿透？</strong> Dify（尤其云端）无法访问你本机的 <code>localhost</code>，必须暴露一个公网可达的 URL。localtunnel 就是把本地端口临时映射到公网的小工具。
+      </div>
+
+      <h3>3.1 安装 localtunnel</h3>
+      <div class="code-block"># 全局安装
+npm install -g localtunnel</div>
+
+      <h3>3.2 启动穿透服务</h3>
+      <div class="code-block"># 新开一个终端窗口
+lt --port 8081</div>
+      <div class="success-box">
+        ✅ 预期输出：<code>your url is: https://random-name-123.loca.lt</code><br />
+        复制这个 URL（如 <code>https://weather-api-abc123.loca.lt</code>）。
+      </div>
+      <div class="error-box">
+        ⚠️ 重要：保持这个终端窗口开启，关闭后链接失效。
+      </div>
+
+      <h2>四、服务测试验证</h2>
+      <p>用 Postman 创建一个 POST 请求快速验证：</p>
+      <ul>
+        <li><strong>URL：</strong><code>https://your-url.loca.lt/weather</code></li>
+        <li><strong>Headers：</strong><code>Authorization: Bearer itcast</code>、<code>Content-Type: application/json</code></li>
+        <li><strong>Body（raw, JSON）：</strong><code>&#123;"location": "广州"&#125;</code></li>
+      </ul>
+
+      <h2>五、Dify 插件配置</h2>
+
+      <h3>5.1 OpenAPI 3.1.0 Schema</h3>
+      <div class="code-block">&#123;
+  "openapi": "3.1.0",
+  "info": &#123;
+    "title": "天气查询API",
+    "description": "查询中国城市当前天气信息",
+    "version": "v1.0.0"
+  &#125;,
+  "servers": [
+    &#123; "url": "https://weather-api-abc123.loca.lt" &#125;
+  ],
+  "paths": &#123;
+    "/weather": &#123;
+      "post": &#123;
+        "summary": "查询城市天气",
+        "security": [ &#123; "BearerAuth": [] &#125; ],
+        "requestBody": &#123;
+          "required": true,
+          "content": &#123;
+            "application/json": &#123;
+              "schema": &#123;
+                "type": "object",
+                "properties": &#123;
+                  "location": &#123;
+                    "type": "string",
+                    "description": "城市名称",
+                    "example": "北京"
+                  &#125;
+                &#125;,
+                "required": ["location"]
+              &#125;
+            &#125;
+          &#125;
+        &#125;,
+        "responses": &#123;
+          "200": &#123; "description": "成功获取天气信息" &#125;
+        &#125;
+      &#125;
+    &#125;
+  &#125;,
+  "components": &#123;
+    "schemas": &#123;&#125;,
+    "securitySchemes": &#123;
+      "BearerAuth": &#123; "type": "http", "scheme": "bearer" &#125;
+    &#125;
+  &#125;
+&#125;</div>
+
+      <h3>5.2 Dify 插件创建步骤</h3>
+      <ol>
+        <li><strong>登录 Dify 控制台：</strong>访问 https://cloud.dify.ai，选择工作空间</li>
+        <li><strong>创建插件：</strong>导航到「工具」→「自定义」</li>
+        <li><strong>配置 OpenAPI Schema：</strong>把上面的 JSON 完整复制进编辑器</li>
+        <li>
+          <strong>关键步骤：</strong>把 <code>servers.url</code> 替换成你的 localtunnel URL
+          <div class="code-block">"servers": [
+  &#123; "url": "https://weather-api-abc123.loca.lt" &#125;   // ← 替换这里！
+]</div>
+        </li>
+        <li><strong>配置认证：</strong>鉴权方式选「请求头」→ 类型「Bearer Token」→ Value 填 <code>itcast</code> → 保存</li>
+        <li>
+          <strong>测试插件：</strong>在测试区域输入 <code>&#123;"location": "深圳"&#125;</code>，点击「测试」
+          <div class="success-box">预期结果：<code>深圳今天是晴，温度33℃/27℃</code></div>
+        </li>
+        <li><strong>启用插件：</strong>点击「发布」，选择要启用该插件的应用</li>
+      </ol>
+
+      <h2>六、在 Dify 应用中使用</h2>
+
+      <h3>6.1 创建支持天气查询的 Agent</h3>
+      <ul>
+        <li>创建新应用或编辑现有应用</li>
+        <li>在「上下文/提示词」中加入引导：<em>你可以使用天气查询工具帮助用户获取天气信息。当用户询问天气时，调用天气插件。</em></li>
+        <li>在「工具」部分启用刚创建的天气插件</li>
+      </ul>
+
+      <h3>6.2 测试对话</h3>
+      <div class="section-box">
+        <p><strong>用户：</strong>北京今天天气怎么样？</p>
+        <p><strong>Agent：</strong>让我帮您查询北京的天气…… 北京今天是多云，温度 32℃/22℃</p>
+        <hr />
+        <p><strong>用户：</strong>上海明天会下雨吗？</p>
+        <p><strong>Agent：</strong>我只能查询当前天气，无法预测明天。当前上海的天气是：上海今天是晴，温度 35℃/28℃</p>
+      </div>
+
+      <h2>七、故障排除指南</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>问题现象</th>
+            <th>原因分析</th>
+            <th>解决方案</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Reached maximum retries</td><td>Dify 无法访问 localhost</td><td>必须使用公网 URL，不能用 localhost</td></tr>
+          <tr><td>&#123;"detail":"Not Found"&#125;</td><td>路由路径错误</td><td>检查代码中是 @app.post("/weather")</td></tr>
+          <tr><td>403 Forbidden</td><td>token 不匹配</td><td>确认 VALID_TOKEN = "itcast" 与 Dify 配置一致</td></tr>
+          <tr><td>连接超时</td><td>localtunnel 断开</td><td>重启 lt --port 8081，更新 Dify 中的 URL</td></tr>
+          <tr><td>城市未找到</td><td>城市不在 CITY_CODES 中</td><td>在代码中添加该城市编码</td></tr>
+        </tbody>
+      </table>
+
+      <h3>快速诊断命令</h3>
+      <div class="code-block"># 1. 检查服务是否运行
+lsof -i :8081                    # Mac/Linux
+netstat -ano | findstr 8081      # Windows
+
+# 2. 检查公网可达性
+curl -I https://your-url.loca.lt
+
+# 3. 完整测试命令
+curl -X POST https://your-url.loca.lt/weather \
+  -H "Authorization: Bearer itcast" \
+  -H "Content-Type: application/json" \
+  -d '&#123;"location": "杭州"&#125;'</div>
+
+      <h2>八、维护与优化建议</h2>
+
+      <h3>8.1 临时方案（日常使用）</h3>
+      <ul>
+        <li><strong>保持终端开启：</strong>FastAPI + localtunnel 两个终端需一直运行</li>
+        <li><strong>每日重启：</strong>localtunnel 链接 24 小时后可能失效，每天重启一次</li>
+        <li><strong>快速更新 URL：</strong>可写脚本自动更新 Dify 配置</li>
+      </ul>
+
+      <h3>8.2 永久方案（推荐升级）</h3>
+      <div class="code-block"># 部署到免费云服务（以 Render.com 为例）
+# 1. 创建 render.com 账号
+# 2. 创建 Web Service
+# 3. 连接 GitHub 仓库
+# 4. 设置环境变量（如果需要）
+# 5. 部署完成，获取永久 URL</div>
+
+      <h3>8.3 功能扩展</h3>
+      <ul>
+        <li><strong>添加更多城市：</strong>在 CITY_CODES 字典中补充新城市</li>
+        <li><strong>丰富天气信息：</strong>返回湿度、风力等更多字段</li>
+        <li><strong>错误重试机制：</strong>给外部请求加重试逻辑</li>
+        <li><strong>缓存机制：</strong>避免频繁请求天气 API</li>
+      </ul>
+
+      <div class="highlight-box">
+        <p><strong>一句话总结：</strong>Dify 自定义插件本质就是把一个 HTTP 接口通过 OpenAPI Schema 描述给大模型，模型按需 Function Calling 调用。本地用 FastAPI 写逻辑、localtunnel 暴露公网、Dify 配 Schema + Bearer 鉴权，三步就能跑通，验证可行后再迁到云端做永久部署。</p>
+      </div>
+
+      <div style="text-align: center;">
+        <a href={`${import.meta.env.BASE_URL}`} class="back-link">← 返回首页</a>
+      </div>
+    </div>
+  </body>
+</html>
