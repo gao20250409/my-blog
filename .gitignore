@@ -24,3 +24,6 @@ pnpm-debug.log*
 
 # personal notes (do not commit)
 myself/
+
+# 副业工具：本地开发，不上传 / 不部署
+jiutu-generator/
